@@ -1,11 +1,8 @@
 package towerdefense.screens
 
 import com.badlogic.ashley.core.Engine
-import com.badlogic.gdx.scenes.scene2d.Stage
-import com.badlogic.gdx.utils.I18NBundle
-import com.badlogic.gdx.utils.viewport.Viewport
+import towerdefense.event.GameEventManager
 import ktx.app.KtxScreen
-import ktx.log.debug
 import towerdefense.MainGame
 
 /**
@@ -13,6 +10,8 @@ import towerdefense.MainGame
  */
 abstract class AbstractScreen(
     val game: MainGame, // Singleton
+    var engine: Engine = game.engine,
+    val gameEventManager: GameEventManager = game.gameEventManager
 //    private val musicAsset: MusicAsset
 ) : KtxScreen
 //    GameEventListener

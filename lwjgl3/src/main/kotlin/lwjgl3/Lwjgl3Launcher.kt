@@ -18,33 +18,3 @@ fun main() {
             setWindowIcon("libgdx128.png", "libgdx64.png", "libgdx32.png", "libgdx16.png")
         })
 }
-//
-//fun main() {
-//    val test = MyClass(arrayOf("January", "February", "March"))
-//    println(test[0])
-//    println(test["Just srt"])
-//
-//    val cont: Container<String> = Container("STR")
-//    val rsl = cont.show {}
-//    println(rsl)
-//}
-
-class MyClass(var arr: Array<String>) {
-
-    operator fun get(index: Int): String {
-        return arr[index]
-    }
-
-    operator fun get(str: String): String {
-        return str
-    }
-}
-
-class Container<T>(var content: T) {
-
-}
-
-inline fun <T> Container<T>.show(param: Any): String {
-    return this.content.toString();
-}
-

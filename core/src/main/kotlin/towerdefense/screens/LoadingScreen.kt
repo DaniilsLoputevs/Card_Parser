@@ -7,17 +7,16 @@ package towerdefense.screens
 //import ktx.scene2d.table
 //import ktx.scene2d.textButton
 import com.badlogic.gdx.scenes.scene2d.Stage
-import towerdefense.asset.TextureAsset
-import towerdefense.asset.TextureAtlasAsset
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import ktx.assets.async.AssetStorage
 import ktx.async.KtxAsync
 import ktx.collections.gdxArrayOf
-import ktx.log.debug
 import ktx.log.info
 import ktx.log.logger
 import towerdefense.MainGame
+import towerdefense.asset.TextureAsset
+import towerdefense.asset.TextureAtlasAsset
 
 /**
  * Screen for loading assert, init and setup requirement elements for app:
@@ -31,26 +30,26 @@ class LoadingScreen(
     private val assets: AssetStorage = game.assets
 ) : AbstractScreen(game) {
     private val logger = logger<LoadingScreen>()
- /*   UI things
-    private val ACTOR_FADE_IN_TIME = 0.5f
-    private val ACTOR_FADE_OUT_TIME = 1f
-    private val OFFSET_TITLE_Y = 15f
-    private val ELEMENT_PADDING = 7f
-    private val MENU_ELEMENT_OFFSET_TITLE_Y = 20f
+    /*   UI things
+       private val ACTOR_FADE_IN_TIME = 0.5f
+       private val ACTOR_FADE_OUT_TIME = 1f
+       private val OFFSET_TITLE_Y = 15f
+       private val ELEMENT_PADDING = 7f
+       private val MENU_ELEMENT_OFFSET_TITLE_Y = 20f
 
-    private val bundle = assets[I18NBundleAsset.DEFAULT.descriptor]
-    */
+       private val bundle = assets[I18NBundleAsset.DEFAULT.descriptor]
+       */
 
-//    private lateinit var progressBar: Image
-//    private lateinit var progressText: TextButton
-//    private lateinit var touchToBegin: Label
-    private var isLoadingFinish = false
+    /** custom async lock, - wait until assert will be full loaded */
+    private var isAssetsLoadingFinish = false
 
     override fun show() {
-        logger.info { "Loading Screen : Load assets - START" }
+        logger.info { "Loading Screen : Shown" }
+        logger.info { "Loading Screen : Load Main assets - START" }
+        val logStartTime = System.currentTimeMillis()
         loadMainAssets()
-        !isLoadingFinish
-        logger.info { "Loading Screen : Load assets - FINISH" }
+
+        logger.info { "Loading Screen : Load Main assets - FINISH ### load time: ${(System.currentTimeMillis() - logStartTime) * 0.001f} sec" }
 
 //        game.addScreen(GameScreen(game))
 //        game.addScreen(GameOverScreen(game))
@@ -60,18 +59,18 @@ class LoadingScreen(
     }
 
     private fun loadMainAssets() {
-        logger.info { "loading main assets" }
-        val logStartTime = System.currentTimeMillis()
+
         val assetRefs = gdxArrayOf(
             TextureAtlasAsset.values().filter { !it.isSkinAtlas }.map { assets.loadAsync(it.descriptor) },
             TextureAsset.values().map { assets.loadAsync(it.descriptor) },
 //            SoundAsset.values().map { assets.loadAsync(it.descriptor) },
 //            ShaderProgramAsset.values().map { assets.loadAsync(it.descriptor) }
+
         ).flatten()
         KtxAsync.launch {
             assetRefs.joinAll()
-            logger.debug { "loading main assets - Finish! It took: ${(System.currentTimeMillis() - logStartTime) * 0.001f}" }
 //            assetsLoaded()
+            isAssetsLoadingFinish = true
         }
     }
 
@@ -85,16 +84,17 @@ class LoadingScreen(
     }
 
     override fun render(delta: Float) {
+        println("LoadingScreen :: render invoke time")
 //        if (assets.progress.isFinished && Gdx.input.justTouched() && game.containsScreen<MenuScreen>()) {
-        if (assets.progress.isFinished && isLoadingFinish) {
+        if (assets.progress.isFinished && isAssetsLoadingFinish) {
+            println("LoadingScreen :: render -- in if")
 //            game.removeScreen(LoadingScreen::class.java)
             game.removeScreen<LoadingScreen>()
             dispose()
             game.addScreen(GameScreen(game))
             game.setScreen<GameScreen>()
         }
-
-      renderProgressBar()
+        renderProgressBar()
     }
 
     private fun renderProgressBar() {
@@ -107,10 +107,8 @@ class LoadingScreen(
     }
 
     override fun dispose() {
-        logger.info { "Loading Screen : dispose" }
+        logger.info { "Loading Screen : disposed" }
     }
-
-
 
 
 //    private fun setupUI() {

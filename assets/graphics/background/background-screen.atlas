@@ -1,0 +1,13 @@
+
+background-screen.png
+size: 1024, 512
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+main-screan-background
+  rotate: false
+  xy: 1, 1
+  size: 626, 365
+  orig: 626, 365
+  offset: 0, 0
+  index: -1

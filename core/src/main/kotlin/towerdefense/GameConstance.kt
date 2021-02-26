@@ -2,6 +2,8 @@ package towerdefense
 
 const val V_WIDTH_PIXELS = 135
 const val V_HEIGHT_PIXELS = 240
+//const val V_WIDTH_PIXELS = 365
+//const val V_HEIGHT_PIXELS = 626
 const val V_WIDTH = 9
 const val V_HEIGHT = 16
 const val UNIT_SCALE = 1 / 8f

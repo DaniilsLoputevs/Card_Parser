@@ -32,12 +32,13 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas
 enum class TextureAtlasAsset(
     val isSkinAtlas: Boolean,
     fileName: String,
-    directory: String = "graphics/card-back",
+    directory: String = "graphics",
     val descriptor: AssetDescriptor<TextureAtlas> = AssetDescriptor("$directory/$fileName", TextureAtlas::class.java)
 ) {
 //    GRAPHICS(false, "graphics.atlas"),
 //    UI(true, "ui.atlas", "ui"),
-    MY_FIRST_ATLAS(true, "test_0.atlas")
+//    MY_FIRST_ATLAS(false, "test.atlas", "graphics/card-back"),
+//    BACKGROUND(false, "background-screen.atlas")
 }
 
 enum class TextureAsset(
@@ -45,7 +46,7 @@ enum class TextureAsset(
     directory: String = "graphics",
     val descriptor: AssetDescriptor<Texture> = AssetDescriptor("$directory/$fileName", Texture::class.java)
 ) {
-    BACKGROUND("background.png")
+    BACKGROUND("screen.jpg")
 }
 
 //enum class ShaderProgramAsset(
