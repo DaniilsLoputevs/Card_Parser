@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.viewport.FitViewport
+import com.badlogic.gdx.utils.viewport.Viewport
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.joinAll
 import towerdefense.ashley.systems.RenderSystem
@@ -32,10 +33,29 @@ import towerdefense.screens.LoadingScreen
 class MainGame : KtxGame<KtxScreen>() {
 
     private val logger = logger<MainGame>()
-//    val gameViewport = FitViewport(2f, 2f)
-    val gameViewport = FitViewport(64f, 32f)
-//    val gameViewport = FitViewport(V_WIDTH.toFloat(), V_HEIGHT.toFloat())
-    val stage: Stage by lazy { initStage() }
+
+    //    val gameViewport = FitViewport(2f, 2f)
+    val gameViewport: Viewport by lazy {
+        val camera = OrthographicCamera(V_WORLD_WIDTH_UNITS.toFloat(),
+                V_WORLD_HEIGHT_UNITS.toFloat())
+//        camera.
+//        FitViewport(15f, 10f, camera)
+        FitViewport(15f, 10f)
+    }
+
+    //    val gameViewport = FitViewport(V_WIDTH.toFloat(), V_HEIGHT.toFloat())
+    val stage: Stage by lazy {
+        val camera = OrthographicCamera(V_WORLD_WIDTH_UNITS.toFloat(),
+                V_WORLD_HEIGHT_UNITS.toFloat())
+//        val result = Stage(FitViewport(77f,50f, camera))
+        val result = Stage(FitViewport(1280f, 720f, camera))
+//        val result = Stage(FitViewport(15f,10f))
+//        val result = Stage(FitViewport(V_UI_WIDTH_PIXELS.toFloat(), V_UI_HEIGHT_PIXELS.toFloat(), camera))
+        Gdx.input.inputProcessor = result
+        result
+    }
+
+    //    val stage: Stage by lazy { initStage() }
     val assets: AssetStorage by lazy { initAssetStorage() }
     val gameEventManager by lazy { GameEventManager() }
     val engine: Engine by lazy { initEngine() }
@@ -51,7 +71,7 @@ class MainGame : KtxGame<KtxScreen>() {
         println("gameViewport screenY ${gameViewport.screenY}")
         println("gameViewport worldHeight ${gameViewport.worldHeight}")
         println("gameViewport worldWidth ${gameViewport.worldWidth}")
-        println("gameViewport scaling ${gameViewport.scaling}")
+//        println("gameViewport scaling ${gameViewport.scaling}")
         println("gameViewport camera combined \n${gameViewport.camera.combined}")
         println("gameViewport camera position \n${gameViewport.camera.position}")
         println("gameViewport camera view \r\n${gameViewport.camera.view}")

@@ -45,15 +45,31 @@ class RenderSystem(
         private var outlineShader: ShaderProgram,
         private val gameViewport: Viewport,
         private val gameEventManager: GameEventManager,
-    backgroundTexture: Texture
+        backgroundTexture: Texture
 //        private val background: Sprite
 ) : SortedIteratingSystem(
-    allOf(GraphicComponent::class, TransformComponent::class).get(),
-    compareBy { entity -> entity[TransformComponent.mapper] }
+        allOf(GraphicComponent::class, TransformComponent::class).get(),
+        compareBy { entity -> entity[TransformComponent.mapper] }
 ), GameEventListener {
     private val batch: Batch = stage.batch
     private val camera: Camera = gameViewport.camera
-    private val background = Sprite(backgroundTexture)
+
+    //    private val background = Sprite(backgroundTexture.apply {
+//        setWrap(Texture.TextureWrap.MirroredRepeat, Texture.TextureWrap.MirroredRepeat)
+//    })
+    private val background = Sprite(backgroundTexture).apply {
+        println("DEV")
+        println("background h " + this.height)
+        println("background w " + this.width)
+        println("DEV")
+//        setScale(3.1f, 2.8f)
+        val scale = 3.13f
+//        setScale(2.8f, 2.8f)
+        setScale(scale, scale)
+//        this.
+    }
+
+
 //    private val backgroundScrollSpeed = vec2(BGD_SCROLL_SPEED_X, MIN_BGD_SCROLL_SPEED_Y)
 //    private val textureSizeLoc = outlineShader.getUniformLocation("u_textureSize")
 //    private val outlineColorLoc = outlineShader.getUniformLocation("u_outlineColor")
@@ -71,6 +87,7 @@ class RenderSystem(
     override fun addedToEngine(engine: Engine?) {
         super.addedToEngine(engine)
         println("DEV")
+
 //        println("background boundingRectangle " + background.boundingRectangle)
 //        println("background height " + background.height)
 //        println("background width " + background.width)
