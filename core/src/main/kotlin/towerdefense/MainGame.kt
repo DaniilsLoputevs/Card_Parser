@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.PooledEngine
 import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.viewport.FitViewport
@@ -21,7 +22,6 @@ import ktx.collections.gdxArrayOf
 import ktx.log.debug
 import ktx.log.info
 import ktx.log.logger
-import towerdefense.ashley.systems.MoveSystem
 import towerdefense.asset.TextureAsset
 import towerdefense.stubs.ShaderProgramStub
 import towerdefense.screens.LoadingScreen
@@ -32,7 +32,9 @@ import towerdefense.screens.LoadingScreen
 class MainGame : KtxGame<KtxScreen>() {
 
     private val logger = logger<MainGame>()
-    val gameViewport = FitViewport(V_WIDTH.toFloat(), V_HEIGHT.toFloat())
+//    val gameViewport = FitViewport(2f, 2f)
+    val gameViewport = FitViewport(64f, 32f)
+//    val gameViewport = FitViewport(V_WIDTH.toFloat(), V_HEIGHT.toFloat())
     val stage: Stage by lazy { initStage() }
     val assets: AssetStorage by lazy { initAssetStorage() }
     val gameEventManager by lazy { GameEventManager() }
@@ -41,6 +43,19 @@ class MainGame : KtxGame<KtxScreen>() {
 
     override fun create() {
         Gdx.app.logLevel = Application.LOG_DEBUG
+
+        println("DEV")
+        println("gameViewport screenHeight ${gameViewport.screenHeight}")
+        println("gameViewport screenWidth ${gameViewport.screenWidth}")
+        println("gameViewport screenX ${gameViewport.screenX}")
+        println("gameViewport screenY ${gameViewport.screenY}")
+        println("gameViewport worldHeight ${gameViewport.worldHeight}")
+        println("gameViewport worldWidth ${gameViewport.worldWidth}")
+        println("gameViewport scaling ${gameViewport.scaling}")
+        println("gameViewport camera combined \n${gameViewport.camera.combined}")
+        println("gameViewport camera position \n${gameViewport.camera.position}")
+        println("gameViewport camera view \r\n${gameViewport.camera.view}")
+        println("DEV")
 
         logger.debug { "MainGame :: create() ## START" }
         logger.info { "MainGame :: Load Initialization assets - START" }
@@ -70,20 +85,12 @@ class MainGame : KtxGame<KtxScreen>() {
      */
     override fun render() {
         super.render()
-//        println("MainGame :: render invoke time")
-//        if (assets.progress.isFinished && isAssertLoadingFinish && !isFirstLoading) {
-//            println("MainGame :: render -- in if")
-//            addScreen(LoadingScreen(this@MainGame))
-//            setScreen<LoadingScreen>()
-//            isFirstLoading = true
-//            return
-//        }
     }
 
     /** Init part */
 
     private fun initStage(): Stage {
-        val result = Stage(FitViewport(V_WIDTH_PIXELS.toFloat(), V_HEIGHT_PIXELS.toFloat()))
+        val result = Stage(FitViewport(V_UI_WIDTH_PIXELS.toFloat(), V_UI_HEIGHT_PIXELS.toFloat()))
         Gdx.input.inputProcessor = result
         return result
     }
@@ -103,8 +110,6 @@ class MainGame : KtxGame<KtxScreen>() {
         return gdxArrayOf(
                 TextureAtlasAsset.values().map { assets.loadAsync(it.descriptor) },
                 TextureAsset.values().map { assets.loadAsync(it.descriptor) },
-//            BitmapFontAsset.values().map { assets.loadAsync(it.descriptor) },
-//            I18NBundleAsset.values().map { assets.loadAsync(it.descriptor) }
         ).flatten()
     }
 
@@ -113,28 +118,10 @@ class MainGame : KtxGame<KtxScreen>() {
 //            val atlas = assets[TextureAtlasAsset.GRAPHICS.descriptor]
 
 //            addSystem(DebugSystem(gameEventManager, audioService))
-//            addSystem(PowerUpSystem(gameEventManager, audioService).apply {
+//            addSystem(MoveSystem(gameEventManager).apply {
 //                setProcessing(false)
 //            })
-//            addSystem(PlayerInputSystem(gameViewport))
-            addSystem(MoveSystem(gameEventManager).apply {
-                setProcessing(false)
-            })
-//            addSystem(DamageSystem(gameEventManager, audioService))
-//            addSystem(
-//                PlayerAnimationSystem(
-//                    atlas.findRegion("ship_base"),
-//                    atlas.findRegion("ship_left"),
-//                    atlas.findRegion("ship_right")
-//                ).apply {
-//                    setProcessing(false)
-//                }
-//            )
 //            addSystem(AttachSystem())
-//            addSystem(AnimationSystem(atlas))
-//            addSystem(CameraShakeSystem(gameViewport.camera, gameEventManager))
-//            addSystem(PlayerColorSystem(gameEventManager))
-
             addSystem(
                     RenderSystem(
                             stage,
@@ -144,12 +131,11 @@ class MainGame : KtxGame<KtxScreen>() {
                             gameEventManager,
 //                            Sprite(assets[TextureAtlasAsset.MY_FIRST_ATLAS.descriptor].createSprites()[0])
 //                    assets[TextureAtlasAsset.BACKGROUND.descriptor].createSprite("main-screen-background")
-                            assets[TextureAsset.BACKGROUND.descriptor]
+                            assets[TextureAsset.DEFAULT_BACKGROUND.descriptor]
                     )
             )
 //            addSystem(RemoveSystem(gameEventManager))
 //        }
-
 
         }
     }

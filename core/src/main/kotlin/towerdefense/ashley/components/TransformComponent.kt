@@ -1,4 +1,4 @@
-package com.github.quillraven.darkmatter.ecs.component
+package towerdefense.ashley.components
 
 import com.badlogic.ashley.core.Component
 import com.badlogic.gdx.math.Vector3
@@ -8,9 +8,9 @@ import ktx.math.vec2
 import ktx.math.vec3
 
 class TransformComponent : Component, Pool.Poolable, Comparable<TransformComponent> {
-    val prevPosition = vec3()
-    val position = vec3()
-    val interpolatedPosition = vec3()
+    val prevPosition = vec3()           // Vector3(0, 0, 0)
+    val position = vec3()               // Vector3(0, 0, 0)
+    val interpolatedPosition = vec3()   // Vector3(0, 0, 0)
     val size = vec2(1f, 1f)
     var rotationDeg = 0f
 
@@ -23,8 +23,8 @@ class TransformComponent : Component, Pool.Poolable, Comparable<TransformCompone
     }
 
     fun setInitialPosition(x: Float, y: Float, z: Float) {
-        position.set(x, y, z)
         prevPosition.set(x, y, z)
+        position.set(x, y, z)
         interpolatedPosition.set(x, y, z)
     }
 

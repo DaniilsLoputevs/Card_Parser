@@ -25,9 +25,7 @@ import towerdefense.asset.TextureAtlasAsset
  * -- prepare all others Screens for app
  */
 class LoadingScreen(
-    game: MainGame,
-    private val stage: Stage = game.stage,
-    private val assets: AssetStorage = game.assets
+    game: MainGame
 ) : AbstractScreen(game) {
     private val logger = logger<LoadingScreen>()
     /*   UI things
@@ -81,6 +79,7 @@ class LoadingScreen(
 
     override fun resize(width: Int, height: Int) {
         stage.viewport.update(width, height, true)
+        game.gameViewport.update(width, height)
     }
 
     override fun render(delta: Float) {

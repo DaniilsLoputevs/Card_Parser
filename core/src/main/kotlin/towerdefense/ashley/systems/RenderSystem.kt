@@ -11,7 +11,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.Viewport
 import towerdefense.ashley.components.GraphicComponent
-import com.github.quillraven.darkmatter.ecs.component.TransformComponent
+import towerdefense.ashley.components.TransformComponent
 import towerdefense.event.GameEvent
 import towerdefense.event.GameEventListener
 import towerdefense.event.GameEventManager
@@ -22,7 +22,6 @@ import ktx.log.error
 import ktx.log.logger
 import ktx.math.component1
 import ktx.math.component2
-import ktx.math.vec2
 
 private val LOG = logger<RenderSystem>()
 private const val BGD_SCROLL_SPEED_X = 0.03f
@@ -35,6 +34,12 @@ private const val BGD_SCROLL_SPEED_GAIN_BOOST_1 = 0.25f
 private const val BGD_SCROLL_SPEED_GAIN_BOOST_2 = 0.5f
 private const val TIME_TO_RESET_BGD_SCROLL_SPEED = 10f // in seconds
 
+/**
+ * Component processor && Game Event Listener.
+ * Rendering all [Entity] with components:
+ * [GraphicComponent]
+ * [TransformComponent]
+ */
 class RenderSystem(
         private val stage: Stage,
         private var outlineShader: ShaderProgram,
@@ -49,7 +54,7 @@ class RenderSystem(
     private val batch: Batch = stage.batch
     private val camera: Camera = gameViewport.camera
     private val background = Sprite(backgroundTexture)
-    private val backgroundScrollSpeed = vec2(BGD_SCROLL_SPEED_X, MIN_BGD_SCROLL_SPEED_Y)
+//    private val backgroundScrollSpeed = vec2(BGD_SCROLL_SPEED_X, MIN_BGD_SCROLL_SPEED_Y)
 //    private val textureSizeLoc = outlineShader.getUniformLocation("u_textureSize")
 //    private val outlineColorLoc = outlineShader.getUniformLocation("u_outlineColor")
 //    private val outlineColor = Color(OUTLINE_COLOR_RED, OUTLINE_COLOR_GREEN, OUTLINE_COLOR_BLUE, 1f)
@@ -59,8 +64,37 @@ class RenderSystem(
 //        )
 //    }
 
+    /**
+     * Called when this EntitySystem is added to an {@link Engine}.
+     * @param engine The {@link Engine} this system was added to.
+     */
     override fun addedToEngine(engine: Engine?) {
         super.addedToEngine(engine)
+        println("DEV")
+//        println("background boundingRectangle " + background.boundingRectangle)
+//        println("background height " + background.height)
+//        println("background width " + background.width)
+//        println("background" + background)
+//        println("batch " + gameViewport.screenX)
+//        println("batch " + gameViewport.screenY)
+//        println("batch " + gameViewport.worldWidth)
+//        println("batch " + gameViewport.worldHeight)
+//        println("batch " + gameViewport.)
+
+
+        println("stage height ${stage.height}")
+        println("stage width ${stage.width}")
+        println("stage camera position ${stage.camera.position}")
+//        println("gameViewport screenWidth ${gameViewport.screenWidth}")
+//        println("gameViewport screenX ${gameViewport.screenX}")
+//        println("gameViewport screenY ${gameViewport.screenY}")
+//        println("gameViewport worldHeight ${gameViewport.worldHeight}")
+//        println("gameViewport worldWidth ${gameViewport.worldWidth}")
+//        println("gameViewport scaling ${gameViewport.scaling}")
+//        println("gameViewport camera combined \n${gameViewport.camera.combined}")
+//        println("gameViewport camera position \n${gameViewport.camera.position}")
+//        println("gameViewport camera view \r\n${gameViewport.camera.view}")
+        println("DEV")
 //        gameEventManager.addListener(GameEvent.PowerUp::class, this)
     }
 
@@ -70,19 +104,21 @@ class RenderSystem(
     }
 
     override fun update(deltaTime: Float) {
-        // render scrolling background
+        // render background
         stage.viewport.apply()
         renderBackground(deltaTime)
 
         // render entities
+        // * set for "It must sort then Method sort() will be invoked", cause default it must not be.
         forceSort()
         gameViewport.apply()
-        batch.use(camera.combined) {
+        batch.use(gameViewport.camera.combined) {
+            // * in {super.update(deltaTime)} - invoke Method sort()
             super.update(deltaTime)
         }
 
-        // render player with outline shader in case he has a shield
-        renderEntityOutlines()
+//        // render player with outline shader in case he has a shield
+//        renderEntityOutlines()
     }
 
     private fun renderEntityOutlines() {
@@ -95,51 +131,27 @@ class RenderSystem(
 //        }
     }
 
-//    private fun renderPlayerOutlines(entity: Entity, it: Batch) {
-//        val player = entity[PlayerComponent.mapper]
-//        require(player != null) { "Entity |entity| must have a PlayerComponent. entity=$entity" }
-//
-//        if (player.shield > 0f) {
-//            outlineColor.a = max(OUTLINE_COLOR_MIN_ALPHA, player.shield / player.maxShield)
-//            outlineShader.setUniformf(outlineColorLoc, outlineColor)
-//            entity[GraphicComponent.mapper]?.let { graphic ->
-//                graphic.sprite.run {
-//                    outlineShader.setUniformf(textureSizeLoc, texture.width.toFloat(), texture.height.toFloat())
-//                    draw(it)
-//                }
-//            }
-//        }
-//    }
-
     private fun renderBackground(deltaTime: Float) {
         batch.use(stage.camera.combined) {
-            background.draw(batch)
-//            background.run {
-////                backgroundScrollSpeed.y = min(
-////                    MIN_BGD_SCROLL_SPEED_Y,
-////                    backgroundScrollSpeed.y + deltaTime * (1f / TIME_TO_RESET_BGD_SCROLL_SPEED)
-////                )
-////                scroll(deltaTime * backgroundScrollSpeed.x, deltaTime * backgroundScrollSpeed.y)
-//                draw(batch)
-//            }
+            background.draw(it)
         }
     }
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
-        val transform = entity[TransformComponent.mapper]
-        require(transform != null) { "Entity |entity| must have a TransformComponent. entity=$entity" }
-        val graphic = entity[GraphicComponent.mapper]
-        require(graphic != null) { "Entity |entity| must have a GraphicComponent. entity=$entity" }
+        val transformComp = entity[TransformComponent.mapper]
+        require(transformComp != null) { "Entity |entity| must have a TransformComponent. entity=$entity" }
+        val graphicComp = entity[GraphicComponent.mapper]
+        require(graphicComp != null) { "Entity |entity| must have a GraphicComponent. entity=$entity" }
 
-        val (posX, posY) = transform.interpolatedPosition
-        val (sizeX, sizeY) = transform.size
-        if (graphic.sprite.texture == null) {
+        val (posX, posY) = transformComp.interpolatedPosition
+        val (sizeX, sizeY) = transformComp.size
+        if (graphicComp.sprite.texture == null) {
             LOG.error { "Entity has no texture for rendering" }
             return
         }
 
-        graphic.sprite.run {
-            rotation = transform.rotationDeg
+        graphicComp.sprite.run {
+            rotation = transformComp.rotationDeg
             setBounds(posX, posY, sizeX, sizeY)
             draw(batch)
         }

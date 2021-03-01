@@ -1,20 +1,26 @@
 package towerdefense.screens
 
 import com.badlogic.ashley.core.Engine
+import com.badlogic.gdx.scenes.scene2d.Stage
+import com.badlogic.gdx.utils.viewport.Viewport
 import towerdefense.event.GameEventManager
 import ktx.app.KtxScreen
+import ktx.assets.async.AssetStorage
 import towerdefense.MainGame
 
 /**
  * Abstract base for any GameScreen
  */
 abstract class AbstractScreen(
-    val game: MainGame, // Singleton
-    var engine: Engine = game.engine,
-    val gameEventManager: GameEventManager = game.gameEventManager
+        val game: MainGame, // Singleton
+        val stage: Stage = game.stage,
+        val gameViewport :Viewport = game.gameViewport,
+        val assets: AssetStorage = game.assets,
+        var engine: Engine = game.engine,
+        val gameEventManager: GameEventManager = game.gameEventManager
 //    private val musicAsset: MusicAsset
 ) : KtxScreen
-//    GameEventListener
+//    ,GameEventListener
 {
 //    private val gameViewport: Viewport = game.gameViewport
 //    val stage: Stage = game.stage
@@ -53,8 +59,8 @@ abstract class AbstractScreen(
     }
 
     override fun resize(width: Int, height: Int) {
-//        gameViewport.update(width, height, true)
-//        stage.viewport.update(width, height, true)
+        gameViewport.update(width, height, true)
+        stage.viewport.update(width, height, true)
     }
 
 //    override fun onEvent(event: GameEvent) = Unit

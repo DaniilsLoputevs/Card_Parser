@@ -4,6 +4,8 @@ import com.badlogic.gdx.assets.AssetDescriptor
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 
+private const val GRAPHIC_DIR : String = "graphics"
+
 //enum class SoundAsset(
 //    fileName: String,
 //    directory: String = "sound",
@@ -39,14 +41,15 @@ enum class TextureAtlasAsset(
 //    UI(true, "ui.atlas", "ui"),
 //    MY_FIRST_ATLAS(false, "test.atlas", "graphics/card-back"),
 //    BACKGROUND(false, "background-screen.atlas")
+    TEST_CARD_BACK(false, "test-2.atlas", "$GRAPHIC_DIR/card-back")
 }
 
 enum class TextureAsset(
     fileName: String,
-    directory: String = "graphics",
+    directory: String,
     val descriptor: AssetDescriptor<Texture> = AssetDescriptor("$directory/$fileName", Texture::class.java)
 ) {
-    BACKGROUND("screen.jpg")
+    DEFAULT_BACKGROUND("default-background-screen.png", "$GRAPHIC_DIR/background")
 }
 
 //enum class ShaderProgramAsset(

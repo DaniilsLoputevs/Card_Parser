@@ -6,6 +6,7 @@ import towerdefense.event.GameEvent
 import ktx.ashley.getSystem
 import ktx.log.info
 import towerdefense.MainGame
+import towerdefense.ashley.createTestCardBack
 
 class GameScreen(
     game: MainGame
@@ -18,7 +19,9 @@ class GameScreen(
         engine.run {
             // remove any power ups and reset the spawn timer
 
-            getSystem<MoveSystem>().setProcessing(true)
+            createTestCardBack(game.assets)
+
+//            getSystem<MoveSystem>().setProcessing(true)
 //            getSystem<PlayerAnimationSystem>().setProcessing(true)
 //            createPlayer(assets)
 //            gameEventManager.dispatchEvent(GameEvent.PlayerSpawn)
@@ -29,5 +32,10 @@ class GameScreen(
     override fun render(delta: Float) {
 //        println("GameScreen :: render invoke time")
         renderSystem.update(delta)
+    }
+
+    override fun resize(width: Int, height: Int) {
+        game.stage.viewport.update(width, height, true)
+        game.gameViewport.update(width, height, true)
     }
 }

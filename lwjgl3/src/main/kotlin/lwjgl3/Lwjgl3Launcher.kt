@@ -10,11 +10,13 @@ import towerdefense.MainGame
  * Kotlin: main method  like in java
  */
 fun main() {
+
     Lwjgl3Application(
         MainGame(), // create game
         Lwjgl3ApplicationConfiguration().apply {
             setTitle("tower_defense")
-            setWindowedMode(640, 480)
+            setWindowedMode(1280 ,600)
+//            setWindowedMode(640, 480)
             setWindowIcon("libgdx128.png", "libgdx64.png", "libgdx32.png", "libgdx16.png")
         })
 }

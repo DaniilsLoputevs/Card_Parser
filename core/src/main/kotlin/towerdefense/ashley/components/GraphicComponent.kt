@@ -16,6 +16,13 @@ class GraphicComponent : Component, Pool.Poolable {
     }
 
     fun setSpriteRegion(region: TextureRegion) {
+
+        println("DEV")
+        println("region.regionWidth ${region.regionWidth}")
+        println("region.regionHeight ${region.regionHeight}")
+        println("region.regionWidth unit ${region.regionWidth * UNIT_SCALE}")
+        println("region.regionHeight unit ${region.regionHeight * UNIT_SCALE}")
+        println("DEV")
         sprite.run {
             setRegion(region)
             setSize(region.regionWidth * UNIT_SCALE, region.regionHeight * UNIT_SCALE)

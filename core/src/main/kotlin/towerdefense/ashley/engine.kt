@@ -1,13 +1,84 @@
 package towerdefense.ashley
 
-//import com.github.quillraven.darkmatter.UNIT_SCALE
-//import com.github.quillraven.darkmatter.V_WIDTH
-//import com.github.quillraven.darkmatter.ecs.component.MoveComponent
-//import com.github.quillraven.darkmatter.ecs.system.DAMAGE_AREA_HEIGHT
+import com.badlogic.ashley.core.Engine
+import com.badlogic.ashley.core.Entity
+import com.badlogic.gdx.graphics.g2d.TextureAtlas
+import towerdefense.ashley.components.TransformComponent
+import ktx.ashley.entity
+import ktx.ashley.with
+import ktx.assets.async.AssetStorage
+import towerdefense.UNIT_SCALE
+import towerdefense.V_WORLD_HEIGHT_UNITS
+import towerdefense.V_WORLD_WIDTH_UNITS
+import towerdefense.ashley.components.GraphicComponent
+import towerdefense.asset.TextureAtlasAsset
 
 private const val SHIP_FIRE_OFFSET_X = 1f // in pixels
 private const val SHIP_FIRE_OFFSET_Y = -6f // in pixels
 const val PLAYER_START_SPEED = 3f
+
+
+fun Engine.createTestCardBack(
+        assets: AssetStorage,
+        spawnX: Float = V_WORLD_WIDTH_UNITS * 0.5f,
+        spawnY: Float = V_WORLD_HEIGHT_UNITS * 0.5f
+): Entity {
+    /*ship*/
+
+    val testCardBack: Entity = entity {
+
+        val atlas : TextureAtlas = assets[TextureAtlasAsset.TEST_CARD_BACK.descriptor]
+        val texture : TextureAtlas.AtlasRegion = atlas.findRegion("dark")
+
+
+        with<TransformComponent> {
+
+            println("DEV")
+            println("texture.originalWidth ${texture.originalWidth}")
+            println("texture.originalHeight ${texture.originalHeight}")
+            println("texture.originalHeight * UNITS  ${ texture.originalWidth * UNIT_SCALE}")
+            println("texture.originalHeight * UNITS ${ texture.originalHeight * UNIT_SCALE}")
+            println("DEV END")
+            this.size.set(
+                    texture.originalWidth * UNIT_SCALE,
+                    texture.originalHeight * UNIT_SCALE
+            )
+
+//            val x = spawnX - size.x * 0.5f
+//            val y = spawnY - size.y * 0.5f
+            val x = 0f
+            val y = 0f
+            println("DEV")
+            println("position x $x")
+            println("position y $y")
+            println("DEV")
+            this.setInitialPosition(
+                    x, y,
+//                    spawnX - size.x * 0.5f,
+//                    spawnY - size.y * 0.5f,
+//                    -5f,0f,
+                    1f
+            )
+        }
+        with<GraphicComponent>() {
+
+//            val atlas : TextureAtlas = assets[TextureAtlasAsset.TEST_CARD_BACK.descriptor]
+//            val playerGraphicRegion = atlas.findRegion("dark")
+//            println("DEV")
+//            println("atlas ${atlas.regions}")
+//            println("playerGraphicRegion ${playerGraphicRegion}")
+//            println("DEV")
+
+            setSpriteRegion(texture)
+        }
+    }
+
+    return testCardBack;
+}
+
+
+/* Simon part */
+
 
 //fun Engine.createPlayer(
 //    assets: AssetStorage,

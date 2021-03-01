@@ -4,13 +4,13 @@ import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.systems.IteratingSystem
 import com.badlogic.gdx.math.MathUtils
 import towerdefense.ashley.components.RemoveComponent
-import com.github.quillraven.darkmatter.ecs.component.TransformComponent
+import towerdefense.ashley.components.TransformComponent
 import towerdefense.event.GameEventManager
 import ktx.ashley.allOf
 import ktx.ashley.exclude
 import ktx.ashley.get
-import towerdefense.V_HEIGHT
-import towerdefense.V_WIDTH
+import towerdefense.V_WORLD_HEIGHT_UNITS
+import towerdefense.V_WORLD_WIDTH_UNITS
 import towerdefense.ashley.components.MoveComponent
 
 private const val VER_ACCELERATION = 2.25f
@@ -102,19 +102,19 @@ class MoveSystem(
 //    }
 
     private fun moveEntity(
-        transform: TransformComponent,
-        move: MoveComponent,
-        deltaTime: Float
+            transform: TransformComponent,
+            move: MoveComponent,
+            deltaTime: Float
     ) {
         transform.position.x = MathUtils.clamp(
             transform.position.x + move.speed.x * deltaTime,
             0f,
-            V_WIDTH - transform.size.x
+            V_WORLD_WIDTH_UNITS - transform.size.x
         )
         transform.position.y = MathUtils.clamp(
             transform.position.y + move.speed.y * deltaTime,
             1f,
-            V_HEIGHT + 1f - transform.size.y
+            V_WORLD_HEIGHT_UNITS + 1f - transform.size.y
         )
     }
 }
