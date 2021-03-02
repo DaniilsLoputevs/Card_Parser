@@ -33,22 +33,15 @@ import towerdefense.screens.LoadingScreen
 class MainGame : KtxGame<KtxScreen>() {
 
     private val logger = logger<MainGame>()
-
-    //    val gameViewport = FitViewport(2f, 2f)
     val gameViewport: Viewport by lazy {
-        val camera = OrthographicCamera(V_WORLD_WIDTH_UNITS.toFloat(),
-                V_WORLD_HEIGHT_UNITS.toFloat())
-//        camera.
-//        FitViewport(15f, 10f, camera)
-        FitViewport(15f, 10f)
+        FitViewport(V_WORLD_WIDTH_UNITS.toFloat(), V_WORLD_HEIGHT_UNITS.toFloat())
     }
-
-    //    val gameViewport = FitViewport(V_WIDTH.toFloat(), V_HEIGHT.toFloat())
     val stage: Stage by lazy {
-        val camera = OrthographicCamera(V_WORLD_WIDTH_UNITS.toFloat(),
-                V_WORLD_HEIGHT_UNITS.toFloat())
+//        val camera = OrthographicCamera(V_WORLD_WIDTH_UNITS.toFloat(),
+//                V_WORLD_HEIGHT_UNITS.toFloat())
 //        val result = Stage(FitViewport(77f,50f, camera))
-        val result = Stage(FitViewport(1280f, 720f, camera))
+//        val result = Stage(FitViewport(1280f, 720f, camera))
+        val result = Stage(FitViewport(1280f, 720f))
 //        val result = Stage(FitViewport(15f,10f))
 //        val result = Stage(FitViewport(V_UI_WIDTH_PIXELS.toFloat(), V_UI_HEIGHT_PIXELS.toFloat(), camera))
         Gdx.input.inputProcessor = result

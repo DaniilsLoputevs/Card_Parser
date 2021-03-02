@@ -40,8 +40,11 @@ fun Engine.createTestCardBack(
             println("texture.originalHeight * UNITS ${ texture.originalHeight * UNIT_SCALE}")
             println("DEV END")
             this.size.set(
-                    texture.originalWidth * UNIT_SCALE,
-                    texture.originalHeight * UNIT_SCALE
+//                    50f, 70f
+//                    texture.originalWidth * UNIT_SCALE,
+//                    texture.originalHeight * UNIT_SCALE
+                    texture.originalWidth.toFloat(),
+                    texture.originalHeight.toFloat()
             )
 
 //            val x = spawnX - size.x * 0.5f

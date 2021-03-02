@@ -22,6 +22,8 @@ import ktx.log.error
 import ktx.log.logger
 import ktx.math.component1
 import ktx.math.component2
+import towerdefense.V_WORLD_HEIGHT_UNITS
+import towerdefense.V_WORLD_WIDTH_UNITS
 
 private val LOG = logger<RenderSystem>()
 private const val BGD_SCROLL_SPEED_X = 0.03f
@@ -46,27 +48,25 @@ class RenderSystem(
         private val gameViewport: Viewport,
         private val gameEventManager: GameEventManager,
         backgroundTexture: Texture
-//        private val background: Sprite
 ) : SortedIteratingSystem(
         allOf(GraphicComponent::class, TransformComponent::class).get(),
         compareBy { entity -> entity[TransformComponent.mapper] }
 ), GameEventListener {
     private val batch: Batch = stage.batch
-    private val camera: Camera = gameViewport.camera
 
-    //    private val background = Sprite(backgroundTexture.apply {
-//        setWrap(Texture.TextureWrap.MirroredRepeat, Texture.TextureWrap.MirroredRepeat)
-//    })
     private val background = Sprite(backgroundTexture).apply {
-        println("DEV")
+        println("DEV background")
         println("background h " + this.height)
         println("background w " + this.width)
-        println("DEV")
-//        setScale(3.1f, 2.8f)
-        val scale = 3.13f
-//        setScale(2.8f, 2.8f)
-        setScale(scale, scale)
-//        this.
+        println("DEV BEFORE")
+
+        // pixels but equals to WU, so World is 1280 x 720, - background as well
+        setSize(V_WORLD_WIDTH_UNITS.toFloat(),   V_WORLD_HEIGHT_UNITS.toFloat())
+
+        println("DEV AFTER")
+        println("background h " + this.height)
+        println("background w " + this.width)
+        println("DEV background")
     }
 
 
@@ -122,17 +122,10 @@ class RenderSystem(
 
     override fun update(deltaTime: Float) {
         // render background
-        stage.viewport.apply()
         renderBackground(deltaTime)
 
         // render entities
-        // * set for "It must sort then Method sort() will be invoked", cause default it must not be.
-        forceSort()
-        gameViewport.apply()
-        batch.use(gameViewport.camera.combined) {
-            // * in {super.update(deltaTime)} - invoke Method sort()
-            super.update(deltaTime)
-        }
+        renderEntity(deltaTime)
 
 //        // render player with outline shader in case he has a shield
 //        renderEntityOutlines()
@@ -149,8 +142,18 @@ class RenderSystem(
     }
 
     private fun renderBackground(deltaTime: Float) {
+        stage.viewport.apply()
         batch.use(stage.camera.combined) {
             background.draw(it)
+        }
+    }
+    private fun renderEntity(deltaTime: Float) {
+        // * set for "It must sort then Method sort() will be invoked", cause default it must not be.
+        forceSort()
+        gameViewport.apply()
+        batch.use(gameViewport.camera.combined) {
+            // * in {super.update(deltaTime)} - invoke Method sort()
+            super.update(deltaTime)
         }
     }
 
