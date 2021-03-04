@@ -11,7 +11,9 @@ import ktx.ashley.exclude
 import ktx.ashley.get
 import towerdefense.V_WORLD_HEIGHT_UNITS
 import towerdefense.V_WORLD_WIDTH_UNITS
+import towerdefense.ashley.components.GraphicComponent
 import towerdefense.ashley.components.MoveComponent
+import towerdefense.findComponent
 
 private const val VER_ACCELERATION = 2.25f
 private const val HOR_ACCELERATION = 16.5f
@@ -54,10 +56,8 @@ class MoveSystem(
     }
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
-        val transform = entity[TransformComponent.mapper]
-        require(transform != null) { "Entity |entity| must have a TransformComponent. entity=$entity" }
-        val move = entity[MoveComponent.mapper]
-        require(move != null) { "Entity |entity| must have a MoveComponent. entity=$entity" }
+        val transformComp = entity.findComponent(TransformComponent.mapper)
+        val moveComp = entity.findComponent(MoveComponent.mapper)
 
 //        val player = entity[PlayerComponent.mapper]
 //        if (player != null) {
@@ -65,7 +65,7 @@ class MoveSystem(
 //                movePlayer(transform, move, player, facing, deltaTime)
 //            }
 //        } else {
-            moveEntity(transform, move, deltaTime)
+            moveEntity(transformComp, moveComp, deltaTime)
 //        }
     }
 

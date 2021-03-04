@@ -10,7 +10,7 @@ package lwjgl3
 //    }
 //}
 
-inline fun Class.someFun() :Int = 12
+inline fun Class.someFun(): Int = 12
 
 class Class {
 
@@ -18,13 +18,32 @@ class Class {
 
 
 fun main() {
-    val test = MyClass(arrayOf("January", "February", "March"))
-    println(test[0])
-    println(test["Just srt"])
+//    val height = 480f
+//    val width = 342f
+//    val textureAspectRation = (height / width)
+//    println("textureAspectRation = $textureAspectRation")
+//    val newHeight = 140
+//    println("newHeight = $newHeight && newWidth = ${newHeight * textureAspectRation}")
 
-    val cont: Container<String> = Container("STR")
-    val rsl = cont.show {}
-    println(rsl)
+
+    val height = 750f
+    val width = 500f
+    val ratio = height / width // (750 / 500)
+
+    val newHeight = 1500
+    val newWidth = newHeight / ratio
+    println("newWidth = $newWidth")
+
+
+
+
+//    val test = MyClass(arrayOf("January", "February", "March"))
+//    println(test[0])
+//    println(test["Just srt"])
+//
+//    val cont: Container<String> = Container("STR")
+//    val rsl = cont.show {}
+//    println(rsl)
 }
 
 class MyClass(var arr: Array<String>) {

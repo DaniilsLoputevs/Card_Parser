@@ -1,6 +1,7 @@
 package towerdefense.ashley.components
 
 import com.badlogic.ashley.core.Component
+import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Pool
 import ktx.ashley.mapperFor
@@ -36,4 +37,47 @@ class TransformComponent : Component, Pool.Poolable, Comparable<TransformCompone
     companion object {
         val mapper = mapperFor<TransformComponent>()
     }
+
+
+    /* CUSTOM STAFF */
+
+    fun initTransformComp(textureForSize : TextureAtlas.AtlasRegion,
+//                      width : Float, height : Float,
+                          positionX : Float = 0f, positionY : Float = 0f,
+                          rotationDeg : Float = 0f) {
+        this.size.set(textureForSize.originalWidth.toFloat(), textureForSize.originalHeight.toFloat())
+//    this.size.set(width, height)
+        this.rotationDeg = rotationDeg
+        this.setInitialPosition(positionX, positionY, 1f)
+
+    }
+
+    /**
+     * Set new this.size by set ne height and save Aspect Ration, - find and set new Width for new height.
+     * Example:
+     * 1000 x 1500 (width x height)
+     * newHeight = 750 =>>
+     * 500 x 750 (width x height)
+     * automatically find and set new values.
+     */
+    fun setSizeByHeightSAR(newHeight: Float) {
+        val ratio = size.y / size.x //  (height / width)
+        val newWidth = newHeight / ratio
+        size.set(newWidth, newHeight)
+    }
+    /**
+     * Set new this.size by set new Width and save Aspect Ration, - find and set new Width for new height.
+     * Example:
+     * 1000 x 1500 (width x height)
+     * newWidth = 500 =>>
+     * 500 x 750 (width x height)
+     * automatically find and set new values.
+     */
+    fun setSizeByWidthSAR(newWidth: Float) {
+        val ratio = size.x / size.y //  (height / width)
+        val newHeight = newWidth / ratio
+        size.set(newWidth, newHeight)
+    }
+
+
 }

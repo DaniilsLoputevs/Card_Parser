@@ -24,6 +24,7 @@ import ktx.math.component1
 import ktx.math.component2
 import towerdefense.V_WORLD_HEIGHT_UNITS
 import towerdefense.V_WORLD_WIDTH_UNITS
+import towerdefense.findComponent
 
 private val LOG = logger<RenderSystem>()
 private const val BGD_SCROLL_SPEED_X = 0.03f
@@ -55,18 +56,18 @@ class RenderSystem(
     private val batch: Batch = stage.batch
 
     private val background = Sprite(backgroundTexture).apply {
-        println("DEV background")
-        println("background h " + this.height)
-        println("background w " + this.width)
-        println("DEV BEFORE")
-
+//        println("DEV background")
+//        println("background h " + this.height)
+//        println("background w " + this.width)
+//        println("DEV BEFORE")
+//
         // pixels but equals to WU, so World is 1280 x 720, - background as well
         setSize(V_WORLD_WIDTH_UNITS.toFloat(),   V_WORLD_HEIGHT_UNITS.toFloat())
-
-        println("DEV AFTER")
-        println("background h " + this.height)
-        println("background w " + this.width)
-        println("DEV background")
+//
+//        println("DEV AFTER")
+//        println("background h " + this.height)
+//        println("background w " + this.width)
+//        println("DEV background")
     }
 
 
@@ -86,7 +87,7 @@ class RenderSystem(
      */
     override fun addedToEngine(engine: Engine?) {
         super.addedToEngine(engine)
-        println("DEV")
+//        println("DEV")
 
 //        println("background boundingRectangle " + background.boundingRectangle)
 //        println("background height " + background.height)
@@ -99,9 +100,9 @@ class RenderSystem(
 //        println("batch " + gameViewport.)
 
 
-        println("stage height ${stage.height}")
-        println("stage width ${stage.width}")
-        println("stage camera position ${stage.camera.position}")
+//        println("stage height ${stage.height}")
+//        println("stage width ${stage.width}")
+//        println("stage camera position ${stage.camera.position}")
 //        println("gameViewport screenWidth ${gameViewport.screenWidth}")
 //        println("gameViewport screenX ${gameViewport.screenX}")
 //        println("gameViewport screenY ${gameViewport.screenY}")
@@ -111,7 +112,7 @@ class RenderSystem(
 //        println("gameViewport camera combined \n${gameViewport.camera.combined}")
 //        println("gameViewport camera position \n${gameViewport.camera.position}")
 //        println("gameViewport camera view \r\n${gameViewport.camera.view}")
-        println("DEV")
+//        println("DEV")
 //        gameEventManager.addListener(GameEvent.PowerUp::class, this)
     }
 
@@ -158,10 +159,8 @@ class RenderSystem(
     }
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
-        val transformComp = entity[TransformComponent.mapper]
-        require(transformComp != null) { "Entity |entity| must have a TransformComponent. entity=$entity" }
-        val graphicComp = entity[GraphicComponent.mapper]
-        require(graphicComp != null) { "Entity |entity| must have a GraphicComponent. entity=$entity" }
+        val transformComp = entity.findComponent(TransformComponent.mapper)
+        val graphicComp = entity.findComponent(GraphicComponent.mapper)
 
         val (posX, posY) = transformComp.interpolatedPosition
         val (sizeX, sizeY) = transformComp.size

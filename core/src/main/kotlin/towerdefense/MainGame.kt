@@ -57,18 +57,18 @@ class MainGame : KtxGame<KtxScreen>() {
     override fun create() {
         Gdx.app.logLevel = Application.LOG_DEBUG
 
-        println("DEV")
-        println("gameViewport screenHeight ${gameViewport.screenHeight}")
-        println("gameViewport screenWidth ${gameViewport.screenWidth}")
-        println("gameViewport screenX ${gameViewport.screenX}")
-        println("gameViewport screenY ${gameViewport.screenY}")
-        println("gameViewport worldHeight ${gameViewport.worldHeight}")
-        println("gameViewport worldWidth ${gameViewport.worldWidth}")
+//        println("DEV")
+//        println("gameViewport screenHeight ${gameViewport.screenHeight}")
+//        println("gameViewport screenWidth ${gameViewport.screenWidth}")
+//        println("gameViewport screenX ${gameViewport.screenX}")
+//        println("gameViewport screenY ${gameViewport.screenY}")
+//        println("gameViewport worldHeight ${gameViewport.worldHeight}")
+//        println("gameViewport worldWidth ${gameViewport.worldWidth}")
 //        println("gameViewport scaling ${gameViewport.scaling}")
-        println("gameViewport camera combined \n${gameViewport.camera.combined}")
-        println("gameViewport camera position \n${gameViewport.camera.position}")
-        println("gameViewport camera view \r\n${gameViewport.camera.view}")
-        println("DEV")
+//        println("gameViewport camera combined \n${gameViewport.camera.combined}")
+//        println("gameViewport camera position \n${gameViewport.camera.position}")
+//        println("gameViewport camera view \r\n${gameViewport.camera.view}")
+//        println("DEV")
 
         logger.debug { "MainGame :: create() ## START" }
         logger.info { "MainGame :: Load Initialization assets - START" }
@@ -85,7 +85,7 @@ class MainGame : KtxGame<KtxScreen>() {
         }
 
         logger.info { "MainGame :: Load Initialization assets - FINISH time: ${(System.currentTimeMillis() - logStartTime) * 0.001f} sec" }
-        println("GAME :: create() ## END")
+//        println("GAME :: create() ## END")
     }
 
     /**

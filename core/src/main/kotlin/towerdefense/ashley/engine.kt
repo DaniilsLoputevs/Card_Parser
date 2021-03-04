@@ -26,52 +26,15 @@ fun Engine.createTestCardBack(
     /*ship*/
 
     val testCardBack: Entity = entity {
-
-        val atlas : TextureAtlas = assets[TextureAtlasAsset.TEST_CARD_BACK.descriptor]
-        val texture : TextureAtlas.AtlasRegion = atlas.findRegion("dark")
-
+        val atlas: TextureAtlas = assets[TextureAtlasAsset.TEST_CARD_BACK.descriptor]
+        val texture: TextureAtlas.AtlasRegion = atlas.findRegion("dark")
 
         with<TransformComponent> {
-
-            println("DEV")
-            println("texture.originalWidth ${texture.originalWidth}")
-            println("texture.originalHeight ${texture.originalHeight}")
-            println("texture.originalHeight * UNITS  ${ texture.originalWidth * UNIT_SCALE}")
-            println("texture.originalHeight * UNITS ${ texture.originalHeight * UNIT_SCALE}")
-            println("DEV END")
-            this.size.set(
-//                    50f, 70f
-//                    texture.originalWidth * UNIT_SCALE,
-//                    texture.originalHeight * UNIT_SCALE
-                    texture.originalWidth.toFloat(),
-                    texture.originalHeight.toFloat()
-            )
-
-//            val x = spawnX - size.x * 0.5f
-//            val y = spawnY - size.y * 0.5f
-            val x = 0f
-            val y = 0f
-            println("DEV")
-            println("position x $x")
-            println("position y $y")
-            println("DEV")
-            this.setInitialPosition(
-                    x, y,
-//                    spawnX - size.x * 0.5f,
-//                    spawnY - size.y * 0.5f,
-//                    -5f,0f,
-                    1f
-            )
+            initTransformComp(texture)
+            this.setSizeByHeightSAR(160f)
+//            this.setSizeByWidthSAR(114f)
         }
         with<GraphicComponent>() {
-
-//            val atlas : TextureAtlas = assets[TextureAtlasAsset.TEST_CARD_BACK.descriptor]
-//            val playerGraphicRegion = atlas.findRegion("dark")
-//            println("DEV")
-//            println("atlas ${atlas.regions}")
-//            println("playerGraphicRegion ${playerGraphicRegion}")
-//            println("DEV")
-
             setSpriteRegion(texture)
         }
     }
