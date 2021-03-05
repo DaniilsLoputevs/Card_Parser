@@ -1,5 +1,7 @@
 package lwjgl3
 
+import com.badlogic.gdx.Gdx
+
 //fun main() {
 //        var t:Int = Class().someFun()
 //
@@ -26,13 +28,18 @@ fun main() {
 //    println("newHeight = $newHeight && newWidth = ${newHeight * textureAspectRation}")
 
 
-    val height = 750f
-    val width = 500f
-    val ratio = height / width // (750 / 500)
+//    val height = 750f
+//    val width = 500f
+//    val ratio = height / width // (750 / 500)
+//
+//    val newHeight = 1500
+//    val newWidth = newHeight / ratio
+//    println("newWidth = $newWidth")
 
-    val newHeight = 1500
-    val newWidth = newHeight / ratio
-    println("newWidth = $newWidth")
+    print("Enter a number")
+    var variableName:Int = readLine()!!.toInt()  // readLine() is used to accept the String value and ".toInt()" will convert the string to  Int.
+    var result:Int= variableName*6
+    print("The output is:$result")
 
 
 

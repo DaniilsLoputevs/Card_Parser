@@ -7,27 +7,49 @@ import towerdefense.ashley.components.TransformComponent
 import ktx.ashley.entity
 import ktx.ashley.with
 import ktx.assets.async.AssetStorage
-import towerdefense.UNIT_SCALE
-import towerdefense.V_WORLD_HEIGHT_UNITS
-import towerdefense.V_WORLD_WIDTH_UNITS
+import towerdefense.ashley.components.GameCardComponent
 import towerdefense.ashley.components.GraphicComponent
 import towerdefense.asset.TextureAtlasAsset
 
-private const val SHIP_FIRE_OFFSET_X = 1f // in pixels
-private const val SHIP_FIRE_OFFSET_Y = -6f // in pixels
-const val PLAYER_START_SPEED = 3f
 
 
 fun Engine.createTestCardBack(
-        assets: AssetStorage,
-        spawnX: Float = V_WORLD_WIDTH_UNITS * 0.5f,
-        spawnY: Float = V_WORLD_HEIGHT_UNITS * 0.5f
+        assets: AssetStorage
 ): Entity {
     /*ship*/
 
     val testCardBack: Entity = entity {
         val atlas: TextureAtlas = assets[TextureAtlasAsset.TEST_CARD_BACK.descriptor]
         val texture: TextureAtlas.AtlasRegion = atlas.findRegion("dark")
+
+        with<TransformComponent> {
+            initTransformComp(texture)
+            this.setSizeByHeightSAR(160f)
+//            this.setSizeByWidthSAR(114f)
+        }
+        with<GameCardComponent>() {}
+        with<GraphicComponent>() {
+            setSpriteRegion(texture)
+        }
+    }
+
+    return testCardBack;
+}
+
+
+/**
+ * positionX & positionY - count in WU.
+ */
+fun Engine.createStack(
+        assets: AssetStorage,
+        positionX: Float,
+        positionY: Float
+): Entity {
+    /*ship*/
+
+    val testCardBack: Entity = entity {
+        val atlas: TextureAtlas = assets[TextureAtlasAsset.TEST_CARD_BACK.descriptor]
+        val texture: TextureAtlas.AtlasRegion = atlas.findRegion("light")
 
         with<TransformComponent> {
             initTransformComp(texture)
@@ -41,7 +63,6 @@ fun Engine.createTestCardBack(
 
     return testCardBack;
 }
-
 
 /* Simon part */
 

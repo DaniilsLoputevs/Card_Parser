@@ -2,6 +2,8 @@ package towerdefense.ashley.components
 
 import com.badlogic.ashley.core.Component
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
+import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.math.Shape2D
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Pool
 import ktx.ashley.mapperFor
@@ -14,6 +16,7 @@ class TransformComponent : Component, Pool.Poolable, Comparable<TransformCompone
     val interpolatedPosition = vec3()   // Vector3(0, 0, 0)
     val size = vec2(1f, 1f)
     var rotationDeg = 0f
+    lateinit var shape : Rectangle
 
     override fun reset() {
         prevPosition.set(Vector3.Zero)
@@ -45,11 +48,13 @@ class TransformComponent : Component, Pool.Poolable, Comparable<TransformCompone
 //                      width : Float, height : Float,
                           positionX : Float = 0f, positionY : Float = 0f,
                           rotationDeg : Float = 0f) {
-        this.size.set(textureForSize.originalWidth.toFloat(), textureForSize.originalHeight.toFloat())
-//    this.size.set(width, height)
+        val width = textureForSize.originalWidth.toFloat()
+        val height = textureForSize.originalHeight.toFloat()
+        this.size.set(width, height)
         this.rotationDeg = rotationDeg
         this.setInitialPosition(positionX, positionY, 1f)
 
+        this.shape = Rectangle(positionX, positionY, width, height)
     }
 
     /**
@@ -64,6 +69,8 @@ class TransformComponent : Component, Pool.Poolable, Comparable<TransformCompone
         val ratio = size.y / size.x //  (height / width)
         val newWidth = newHeight / ratio
         size.set(newWidth, newHeight)
+        shape.setWidth(newWidth)
+        shape.setHeight(newHeight)
     }
     /**
      * Set new this.size by set new Width and save Aspect Ration, - find and set new Width for new height.
@@ -74,9 +81,11 @@ class TransformComponent : Component, Pool.Poolable, Comparable<TransformCompone
      * automatically find and set new values.
      */
     fun setSizeByWidthSAR(newWidth: Float) {
-        val ratio = size.x / size.y //  (height / width)
+        val ratio = size.x / size.y //  (width / height)
         val newHeight = newWidth / ratio
         size.set(newWidth, newHeight)
+        shape.setWidth(newWidth)
+        shape.setHeight(newHeight)
     }
 
 

@@ -16,3 +16,10 @@ fun <T : Component> Entity.findComponent(mapper: ComponentMapper<T>) : T {
     return rslComponent
 }
 
+
+//fun Any?.ifNotNull(f: ()-> Unit){
+//    if (this != null){
+//        f()
+//    }
+//}
+

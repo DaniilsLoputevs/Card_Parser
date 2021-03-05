@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.PooledEngine
 import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.viewport.FitViewport
@@ -118,7 +117,6 @@ class MainGame : KtxGame<KtxScreen>() {
      */
     private fun prepareLoadingForInitializationAssets(): List<Deferred<Disposable>> {
         KtxAsync.initiate()
-
         /* load skin and go to LoadingScreen for remaining asset loading*/
         return gdxArrayOf(
                 TextureAtlasAsset.values().map { assets.loadAsync(it.descriptor) },
