@@ -9,6 +9,7 @@ const val V_UI_HEIGHT_PIXELS = 626
 const val V_WORLD_WIDTH_UNITS = 1280
 const val V_WORLD_HEIGHT_UNITS = 720
 
+const val IDEAL_SCREEN_ASPECT_RATION : Float = 1.77f
 const val UNIT_SCALE = 1 / 64f //   1/8 == 0.125   ||   1/64f == 0,015625   || 1/128 == 0,0078125
 
 const val PREFERENCE_MUSIC_ENABLED_KEY = "musicEnabled"

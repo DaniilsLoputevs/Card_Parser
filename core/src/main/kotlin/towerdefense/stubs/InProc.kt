@@ -2,32 +2,33 @@ package towerdefense.stubs
 
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.utils.ImmutableArray
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.viewport.Viewport
 import ktx.app.KtxInputAdapter
 import ktx.ashley.contains
-import ktx.ashley.get
 import towerdefense.ashley.components.GameCardComponent
 import towerdefense.ashley.components.TransformComponent
+import towerdefense.cursorPositionToWorldUnits
 import towerdefense.findComponent
 
 class InProc(
         private val entities: ImmutableArray<Entity>,
         private val gameViewport: Viewport
 ) : KtxInputAdapter {
-    private var selectedEntity : Entity? = null
-    private var selected: String? = null
+    private var selectedEntity: Entity? = null
+    private var captureOffset: Vector2? = null
+
+
 
     override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
-        println("DOWN  screenX = $screenX  ##  screenY = $screenY  ##  pointer = $pointer")
+        println()
+        println("DOWN  screenX = $screenX  ##  screenY = $screenY  ##  pointer = $pointer  ##  button = $button")
         findEntity(screenX, screenY)
         return true
     }
 
     override fun touchUp(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
-        println("UP  screenX = $screenX  ##  screenY = $screenY  ##  pointer = $pointer")
+        println("UP  screenX = $screenX  ##  screenY = $screenY  ##  pointer = $pointer  ##  button = $button")
         dropSelectedEntity()
         return true
     }
@@ -35,7 +36,7 @@ class InProc(
     override fun touchDragged(screenX: Int, screenY: Int, pointer: Int): Boolean {
 //        println("Dragged screenX = $screenX  ##  screenY = $screenY  ##  pointer = $pointer")
         if (selectedEntity != null) {
-            moveSelectedTo(screenX, screenY)
+            moveSelectedTo(screenX.toFloat(), screenY.toFloat())
         }
         return true
     }
@@ -48,46 +49,54 @@ class InProc(
             if (!currEntity.contains(GameCardComponent.mapper)) {
                 continue
             }
-            val transformComp = currEntity.findComponent(TransformComponent.mapper)
-            println("DEV")
-            println("transformComp interpolatedPosition=  ${transformComp.interpolatedPosition}")
-            println("transformComp position=              ${transformComp.position}")
-            println("transformComp size=                  ${transformComp.size}")
-            println("transformComp shape=                 ${transformComp.shape}")
-            println("transformComp prevPosition=          ${transformComp.prevPosition}")
+            val transmComp = currEntity.findComponent(TransformComponent.mapper)
+//            println("DEV")
+//            println("transformComp interpolatedPosition=  ${transmComp.interpolatedPosition}")
+//            println("transformComp position=              ${transmComp.position}")
+//            println("transformComp size=                  ${transmComp.size}")
+//            println("transformComp shape=                 ${transmComp.shape}")
+//            println("transformComp prevPosition=          ${transmComp.prevPosition}")
             println("DEV")
 
-            println("findEntity cursor: x=$screenX  ##  y=$screenY")
-            val verticalCorrectY = Gdx.graphics.height - screenY
-//            val temp = gameViewport.project(Vector3(screenX.toFloat(), verticalCorrectY.toFloat(), 0f))
-//            val gameCoordinates = Vector2(temp.x, temp.y)
-            val gameCoordinates = gameViewport.project(Vector2(screenX.toFloat(),  verticalCorrectY.toFloat()))
-            println("findEntity coord: x=${gameCoordinates.x}  ##  y=${gameCoordinates.y}")
-//            println("transformComp.shape.contains(gameCoordinates) = ${transformComp.shape.contains(gameCoordinates)}")
-            println("transformComp.shape.contains(screenY.toFloat(), screenX.toFloat()) = ${transformComp.shape.contains(screenY.toFloat(), screenX.toFloat())}")
-            if (transformComp.shape.contains(gameCoordinates.x, gameCoordinates.y)) {
+//            println("COORD")
+//            println("findEntity cursor: x=$screenX  ##  y=$screenY")
+            val wuCoordinates = cursorPositionToWorldUnits(screenX.toFloat(), screenY.toFloat())
+//            println("findEntity coord:  x=${wuCoordinates.x}  ##  y=${wuCoordinates.y}")
+
+            val contains = transmComp.shape.contains(wuCoordinates)
+//            println("hitbox contains coord point = $contains")
+//            println("COORD")
+            if (contains) {
 //            if (transformComp.shape.contains(screenY.toFloat(), screenX.toFloat())) {
-                selected = "selected found"
                 selectedEntity = currEntity
-//                selectedEntityTransformComp = transformComp
+                captureOffset = findCaptureOffset(transmComp, wuCoordinates)
                 break
             }
         }
     }
 
-    private fun moveSelectedTo(screenX: Int, screenY: Int) {
+    private fun moveSelectedTo(screenX: Float, screenY: Float) {
         val transformComponent = selectedEntity!!.findComponent(TransformComponent.mapper)
-        val verticalCorrectY = Gdx.graphics.height - screenY
-        transformComponent.interpolatedPosition.x = screenX.toFloat()
-        transformComponent.interpolatedPosition.y = verticalCorrectY.toFloat()
-        transformComponent.shape.setPosition(screenX.toFloat(), verticalCorrectY.toFloat())
-        transformComponent.position.x = screenX.toFloat()
-        transformComponent.position.y = verticalCorrectY.toFloat()
+        val newPositionCoordinates = cursorPositionToWorldUnits(screenX, screenY).apply {
+            x -= captureOffset!!.x
+            y -= captureOffset!!.y
+        }
+
+        transformComponent.setTotalPosition(newPositionCoordinates)
     }
 
     private fun dropSelectedEntity() {
         println("dropSelectedEntity()")
-        selected = null
         selectedEntity = null
+        captureOffset = null
     }
+
+    private fun findCaptureOffset(transComp: TransformComponent, position: Vector2) : Vector2 {
+        val offsetX : Float = position.x - transComp.interpolatedPosition.x
+        val offsetY : Float = position.y - transComp.interpolatedPosition.y
+
+        return Vector2(offsetX, offsetY)
+    }
+
+
 }

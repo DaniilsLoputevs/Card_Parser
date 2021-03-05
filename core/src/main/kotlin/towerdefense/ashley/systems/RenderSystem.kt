@@ -154,6 +154,7 @@ class RenderSystem(
         gameViewport.apply()
         batch.use(gameViewport.camera.combined) {
             // * in {super.update(deltaTime)} - invoke Method sort()
+            // super.update(deltaTime) - call processEntity forEach in sortedEntities
             super.update(deltaTime)
         }
     }
@@ -171,6 +172,7 @@ class RenderSystem(
 
         graphicComp.sprite.run {
             rotation = transformComp.rotationDeg
+            // setBounds(...) == setPosition(...) && setSize(...)
             setBounds(posX, posY, sizeX, sizeY)
             draw(batch)
         }

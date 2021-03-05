@@ -3,7 +3,7 @@ package towerdefense.ashley.components
 import com.badlogic.ashley.core.Component
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.math.Rectangle
-import com.badlogic.gdx.math.Shape2D
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Pool
 import ktx.ashley.mapperFor
@@ -16,7 +16,7 @@ class TransformComponent : Component, Pool.Poolable, Comparable<TransformCompone
     val interpolatedPosition = vec3()   // Vector3(0, 0, 0)
     val size = vec2(1f, 1f)
     var rotationDeg = 0f
-    lateinit var shape : Rectangle
+    lateinit var shape: Rectangle
 
     override fun reset() {
         prevPosition.set(Vector3.Zero)
@@ -44,10 +44,16 @@ class TransformComponent : Component, Pool.Poolable, Comparable<TransformCompone
 
     /* CUSTOM STAFF */
 
-    fun initTransformComp(textureForSize : TextureAtlas.AtlasRegion,
+    fun initTransformComp(textureForSize: TextureAtlas.AtlasRegion,
 //                      width : Float, height : Float,
-                          positionX : Float = 0f, positionY : Float = 0f,
-                          rotationDeg : Float = 0f) {
+                          positionX: Float = 0f, positionY: Float = 0f,
+                          rotationDeg: Float = 0f) {
+//        println("DEV initTransformComp")
+//        println("textureForSize.originalWidth = ${textureForSize.originalWidth.toFloat()}")
+//        println("textureForSize.originalHeight = ${textureForSize.originalHeight.toFloat()}")
+//        println("textureForSize.regionWidth = ${textureForSize.regionWidth.toFloat()}")
+//        println("textureForSize.regionHeight = ${textureForSize.regionHeight.toFloat()}")
+//        println("DEV initTransformComp")
         val width = textureForSize.originalWidth.toFloat()
         val height = textureForSize.originalHeight.toFloat()
         this.size.set(width, height)
@@ -55,6 +61,17 @@ class TransformComponent : Component, Pool.Poolable, Comparable<TransformCompone
         this.setInitialPosition(positionX, positionY, 1f)
 
         this.shape = Rectangle(positionX, positionY, width, height)
+    }
+
+    /**
+     * set position for all part of component
+     */
+    fun setTotalPosition(newPosition: Vector2) {
+        interpolatedPosition.x = newPosition.x
+        interpolatedPosition.y = newPosition.y
+        shape.setPosition(newPosition.x, newPosition.y)
+        position.x = newPosition.x
+        position.y = newPosition.y
     }
 
     /**
@@ -72,6 +89,7 @@ class TransformComponent : Component, Pool.Poolable, Comparable<TransformCompone
         shape.setWidth(newWidth)
         shape.setHeight(newHeight)
     }
+
     /**
      * Set new this.size by set new Width and save Aspect Ration, - find and set new Width for new height.
      * Example:
