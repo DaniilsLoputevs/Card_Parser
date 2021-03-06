@@ -3,11 +3,8 @@ package towerdefense.ashley.components
 import com.badlogic.ashley.core.Component
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.math.Rectangle
-import com.badlogic.gdx.math.Shape2D
 import com.badlogic.gdx.utils.Pool
 import ktx.ashley.mapperFor
-import towerdefense.UNIT_SCALE
 
 class GraphicComponent : Component, Pool.Poolable {
     val sprite = Sprite()
@@ -28,7 +25,6 @@ class GraphicComponent : Component, Pool.Poolable {
         sprite.run {
             setRegion(region)
             setSize(region.regionWidth.toFloat() , region.regionHeight.toFloat())
-//            setOriginCenter()  // TODO - try it
         }
     }
 

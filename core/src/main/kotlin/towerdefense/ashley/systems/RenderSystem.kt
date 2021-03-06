@@ -3,18 +3,12 @@ package towerdefense.ashley.systems
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.systems.SortedIteratingSystem
-import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.Viewport
-import towerdefense.ashley.components.GraphicComponent
-import towerdefense.ashley.components.TransformComponent
-import towerdefense.event.GameEvent
-import towerdefense.event.GameEventListener
-import towerdefense.event.GameEventManager
 import ktx.ashley.allOf
 import ktx.ashley.get
 import ktx.graphics.use
@@ -24,7 +18,12 @@ import ktx.math.component1
 import ktx.math.component2
 import towerdefense.V_WORLD_HEIGHT_UNITS
 import towerdefense.V_WORLD_WIDTH_UNITS
-import towerdefense.findComponent
+import towerdefense.ashley.components.GraphicComponent
+import towerdefense.ashley.components.TransformComponent
+import towerdefense.ashley.findComponent
+import towerdefense.event.GameEvent
+import towerdefense.event.GameEventListener
+import towerdefense.event.GameEventManager
 
 private val LOG = logger<RenderSystem>()
 private const val BGD_SCROLL_SPEED_X = 0.03f

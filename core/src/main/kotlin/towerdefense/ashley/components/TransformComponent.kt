@@ -16,7 +16,7 @@ class TransformComponent : Component, Pool.Poolable, Comparable<TransformCompone
     val interpolatedPosition = vec3()   // Vector3(0, 0, 0)
     val size = vec2(1f, 1f)
     var rotationDeg = 0f
-    lateinit var shape: Rectangle
+    val shape = Rectangle()
 
     override fun reset() {
         prevPosition.set(Vector3.Zero)
@@ -59,8 +59,7 @@ class TransformComponent : Component, Pool.Poolable, Comparable<TransformCompone
         this.size.set(width, height)
         this.rotationDeg = rotationDeg
         this.setInitialPosition(positionX, positionY, 1f)
-
-        this.shape = Rectangle(positionX, positionY, width, height)
+        this.shape.set(positionX, positionY, width, height)
     }
 
     /**

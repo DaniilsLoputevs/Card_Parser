@@ -33,16 +33,10 @@ class MainGame : KtxGame<KtxScreen>() {
 
     private val logger = logger<MainGame>()
     val gameViewport: Viewport by lazy {
-        FitViewport(V_WORLD_WIDTH_UNITS.toFloat(), V_WORLD_HEIGHT_UNITS.toFloat())
+        FitViewport(V_WORLD_WIDTH_UNITS, V_WORLD_HEIGHT_UNITS)
     }
     val stage: Stage by lazy {
-//        val camera = OrthographicCamera(V_WORLD_WIDTH_UNITS.toFloat(),
-//                V_WORLD_HEIGHT_UNITS.toFloat())
-//        val result = Stage(FitViewport(77f,50f, camera))
-//        val result = Stage(FitViewport(1280f, 720f, camera))
         val result = Stage(FitViewport(1280f, 720f))
-//        val result = Stage(FitViewport(15f,10f))
-//        val result = Stage(FitViewport(V_UI_WIDTH_PIXELS.toFloat(), V_UI_HEIGHT_PIXELS.toFloat(), camera))
         Gdx.input.inputProcessor = result
         result
     }
@@ -100,12 +94,6 @@ class MainGame : KtxGame<KtxScreen>() {
     }
 
     /** Init part */
-
-    private fun initStage(): Stage {
-        val result = Stage(FitViewport(V_UI_WIDTH_PIXELS.toFloat(), V_UI_HEIGHT_PIXELS.toFloat()))
-        Gdx.input.inputProcessor = result
-        return result
-    }
 
     private fun initAssetStorage(): AssetStorage {
         KtxAsync.initiate()

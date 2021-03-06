@@ -2,13 +2,12 @@ package towerdefense.screens
 
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop
 import towerdefense.ashley.systems.RenderSystem
 import ktx.ashley.getSystem
 import ktx.log.info
 import towerdefense.MainGame
 import towerdefense.ashley.createTestCardBack
-import towerdefense.stubs.InProc
+import towerdefense.input.GameInputProcessor
 
 class GameScreen(
     game: MainGame
@@ -21,9 +20,7 @@ class GameScreen(
 
     init {
         logger.info { "Game Screen : Init Stage" }
-        Gdx.graphics.setVSync(false)
-        Gdx.input.inputProcessor = InProc(engine.entities, gameViewport)
-//        engine.
+        Gdx.input.inputProcessor = GameInputProcessor(engine, gameViewport, stage.batch)
 
         engine.run {
             // remove any power ups and reset the spawn timer

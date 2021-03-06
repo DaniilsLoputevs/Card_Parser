@@ -13,7 +13,7 @@ import towerdefense.V_WORLD_HEIGHT_UNITS
 import towerdefense.V_WORLD_WIDTH_UNITS
 import towerdefense.ashley.components.GraphicComponent
 import towerdefense.ashley.components.MoveComponent
-import towerdefense.findComponent
+import towerdefense.ashley.findComponent
 
 private const val VER_ACCELERATION = 2.25f
 private const val HOR_ACCELERATION = 16.5f
@@ -22,6 +22,7 @@ private const val MAX_VER_POS_PLAYER_SPEED = 5f
 private const val MAX_HOR_SPEED = 5.5f
 private const val UPDATE_RATE = 1 / 25f
 
+@Deprecated("Не разбирался с этой штукой")
 class MoveSystem(
     private val gameEventManager: GameEventManager
 ) : IteratingSystem(allOf(TransformComponent::class, MoveComponent::class).exclude(RemoveComponent::class).get()) {

@@ -1,20 +1,21 @@
-package towerdefense.stubs
+package towerdefense.input
 
+import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
-import com.badlogic.ashley.utils.ImmutableArray
+import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.Viewport
-import ktx.app.KtxInputAdapter
 import ktx.ashley.contains
 import towerdefense.ashley.components.GameCardComponent
 import towerdefense.ashley.components.TransformComponent
-import towerdefense.cursorPositionToWorldUnits
-import towerdefense.findComponent
+import towerdefense.ashley.findComponent
 
-class InProc(
-        private val entities: ImmutableArray<Entity>,
-        private val gameViewport: Viewport
-) : KtxInputAdapter {
+class GameInputProcessor(
+         private val engine : Engine,
+        viewport: Viewport,
+        batch: Batch
+) : Stage(viewport, batch) {
     private var selectedEntity: Entity? = null
     private var captureOffset: Vector2? = null
 
@@ -24,13 +25,13 @@ class InProc(
         println()
         println("DOWN  screenX = $screenX  ##  screenY = $screenY  ##  pointer = $pointer  ##  button = $button")
         findEntity(screenX, screenY)
-        return true
+        return super.touchDown(screenX, screenY, pointer, button)
     }
 
     override fun touchUp(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
         println("UP  screenX = $screenX  ##  screenY = $screenY  ##  pointer = $pointer  ##  button = $button")
         dropSelectedEntity()
-        return true
+        return super.touchUp(screenX, screenY, pointer, button)
     }
 
     override fun touchDragged(screenX: Int, screenY: Int, pointer: Int): Boolean {
@@ -38,13 +39,13 @@ class InProc(
         if (selectedEntity != null) {
             moveSelectedTo(screenX.toFloat(), screenY.toFloat())
         }
-        return true
+        return super.touchDragged(screenX, screenY, pointer)
     }
 
 
     private fun findEntity(screenX: Int, screenY: Int) {
 
-        for (currEntity in entities) {
+        for (currEntity in engine.entities) {
 //            val gameCardComp = currEntity[GameCardComponent.mapper] ?: continue
             if (!currEntity.contains(GameCardComponent.mapper)) {
                 continue
@@ -56,11 +57,11 @@ class InProc(
 //            println("transformComp size=                  ${transmComp.size}")
 //            println("transformComp shape=                 ${transmComp.shape}")
 //            println("transformComp prevPosition=          ${transmComp.prevPosition}")
-            println("DEV")
+//            println("DEV")
 
 //            println("COORD")
 //            println("findEntity cursor: x=$screenX  ##  y=$screenY")
-            val wuCoordinates = cursorPositionToWorldUnits(screenX.toFloat(), screenY.toFloat(), gameViewport)
+            val wuCoordinates = cursorPositionToWorldUnits(screenX.toFloat(), screenY.toFloat())
 //            println("findEntity coord:  x=${wuCoordinates.x}  ##  y=${wuCoordinates.y}")
 
             val contains = transmComp.shape.contains(wuCoordinates)
@@ -77,7 +78,7 @@ class InProc(
 
     private fun moveSelectedTo(screenX: Float, screenY: Float) {
         val transformComponent = selectedEntity!!.findComponent(TransformComponent.mapper)
-        val newPositionCoordinates = cursorPositionToWorldUnits(screenX, screenY, gameViewport).apply {
+        val newPositionCoordinates = cursorPositionToWorldUnits(screenX, screenY).apply {
             x -= captureOffset!!.x
             y -= captureOffset!!.y
         }

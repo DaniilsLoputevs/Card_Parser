@@ -2,14 +2,12 @@ package towerdefense.ashley.systems
 
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.systems.IteratingSystem
-import towerdefense.ashley.components.RemoveComponent
-import towerdefense.event.GameEventManager
 import ktx.ashley.allOf
-import ktx.ashley.get
-import towerdefense.ashley.components.MoveComponent
-import towerdefense.ashley.components.TransformComponent
-import towerdefense.findComponent
+import towerdefense.ashley.components.RemoveComponent
+import towerdefense.ashley.findComponent
+import towerdefense.event.GameEventManager
 
+@Deprecated("Не разбирался с этой штукой")
 class RemoveSystem(
     private val gameEventManager: GameEventManager
 ) : IteratingSystem(allOf(RemoveComponent::class).get()) {
