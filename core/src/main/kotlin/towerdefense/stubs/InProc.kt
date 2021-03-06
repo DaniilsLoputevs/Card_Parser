@@ -60,7 +60,7 @@ class InProc(
 
 //            println("COORD")
 //            println("findEntity cursor: x=$screenX  ##  y=$screenY")
-            val wuCoordinates = cursorPositionToWorldUnits(screenX.toFloat(), screenY.toFloat())
+            val wuCoordinates = cursorPositionToWorldUnits(screenX.toFloat(), screenY.toFloat(), gameViewport)
 //            println("findEntity coord:  x=${wuCoordinates.x}  ##  y=${wuCoordinates.y}")
 
             val contains = transmComp.shape.contains(wuCoordinates)
@@ -77,7 +77,7 @@ class InProc(
 
     private fun moveSelectedTo(screenX: Float, screenY: Float) {
         val transformComponent = selectedEntity!!.findComponent(TransformComponent.mapper)
-        val newPositionCoordinates = cursorPositionToWorldUnits(screenX, screenY).apply {
+        val newPositionCoordinates = cursorPositionToWorldUnits(screenX, screenY, gameViewport).apply {
             x -= captureOffset!!.x
             y -= captureOffset!!.y
         }
