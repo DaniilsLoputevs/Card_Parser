@@ -36,7 +36,7 @@ class MainGame : KtxGame<KtxScreen>() {
         FitViewport(V_WORLD_WIDTH_UNITS, V_WORLD_HEIGHT_UNITS)
     }
     val stage: Stage by lazy {
-        val result = Stage(FitViewport(1280f, 720f))
+        val result = Stage(gameViewport)
         Gdx.input.inputProcessor = result
         result
     }

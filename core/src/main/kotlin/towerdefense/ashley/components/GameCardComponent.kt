@@ -1,6 +1,7 @@
 package towerdefense.ashley.components
 
 import com.badlogic.ashley.core.Component
+import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.utils.Pool
 import ktx.ashley.mapperFor
 
@@ -10,7 +11,10 @@ import ktx.ashley.mapperFor
 class GameCardComponent : Component, Pool.Poolable {
     var cardSuit: CardSuit = CardSuit.NONE
     var cardRank: CardRank = CardRank.NONE
+
     var isCardOpen: Boolean = false
+    var next: Entity? = null
+    var isClickable: Boolean = false
 
     override fun reset() {
 

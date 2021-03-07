@@ -37,11 +37,8 @@ enum class TextureAtlasAsset(
     directory: String = "graphics",
     val descriptor: AssetDescriptor<TextureAtlas> = AssetDescriptor("$directory/$fileName", TextureAtlas::class.java)
 ) {
-//    GRAPHICS(false, "graphics.atlas"),
-//    UI(true, "ui.atlas", "ui"),
-//    MY_FIRST_ATLAS(false, "test.atlas", "graphics/card-back"),
-//    BACKGROUND(false, "background-screen.atlas")
-    TEST_CARD_BACK(false, "test-2.atlas", "$GRAPHIC_DIR/card-back")
+    TEST_CARD_BACK(false, "test-2.atlas", "$GRAPHIC_DIR/card-back"),
+    FIRST_CARD_DECK(false, "first-card-deck.atlas", "$GRAPHIC_DIR/card-deck")
 }
 
 enum class TextureAsset(

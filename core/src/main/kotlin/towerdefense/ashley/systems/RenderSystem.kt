@@ -20,7 +20,7 @@ import towerdefense.V_WORLD_HEIGHT_UNITS
 import towerdefense.V_WORLD_WIDTH_UNITS
 import towerdefense.ashley.components.GraphicComponent
 import towerdefense.ashley.components.TransformComponent
-import towerdefense.ashley.findComponent
+import towerdefense.ashley.findRequiredComponent
 import towerdefense.event.GameEvent
 import towerdefense.event.GameEventListener
 import towerdefense.event.GameEventManager
@@ -159,8 +159,8 @@ class RenderSystem(
     }
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
-        val transformComp = entity.findComponent(TransformComponent.mapper)
-        val graphicComp = entity.findComponent(GraphicComponent.mapper)
+        val transformComp = entity.findRequiredComponent(TransformComponent.mapper)
+        val graphicComp = entity.findRequiredComponent(GraphicComponent.mapper)
 
         val (posX, posY) = transformComp.interpolatedPosition
         val (sizeX, sizeY) = transformComp.size

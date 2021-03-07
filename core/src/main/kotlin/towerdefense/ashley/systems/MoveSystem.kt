@@ -11,21 +11,23 @@ import ktx.ashley.exclude
 import ktx.ashley.get
 import towerdefense.V_WORLD_HEIGHT_UNITS
 import towerdefense.V_WORLD_WIDTH_UNITS
-import towerdefense.ashley.components.GraphicComponent
 import towerdefense.ashley.components.MoveComponent
-import towerdefense.ashley.findComponent
+import towerdefense.ashley.findRequiredComponent
 
-private const val VER_ACCELERATION = 2.25f
-private const val HOR_ACCELERATION = 16.5f
-private const val MAX_VER_NEG_PLAYER_SPEED = 0.75f
-private const val MAX_VER_POS_PLAYER_SPEED = 5f
-private const val MAX_HOR_SPEED = 5.5f
-private const val UPDATE_RATE = 1 / 25f
 
 @Deprecated("Не разбирался с этой штукой")
 class MoveSystem(
-    private val gameEventManager: GameEventManager
+        private val gameEventManager: GameEventManager
 ) : IteratingSystem(allOf(TransformComponent::class, MoveComponent::class).exclude(RemoveComponent::class).get()) {
+
+    private val VER_ACCELERATION = 2.25f
+    private val HOR_ACCELERATION = 16.5f
+    private val MAX_VER_NEG_PLAYER_SPEED = 0.75f
+    private val MAX_VER_POS_PLAYER_SPEED = 5f
+    private val MAX_HOR_SPEED = 5.5f
+    private val UPDATE_RATE = 1 / 25f
+
+
     private var accumulator = 0f
 
     override fun update(deltaTime: Float) {
@@ -48,17 +50,17 @@ class MoveSystem(
         entities.forEach { entity ->
             entity[TransformComponent.mapper]?.let { transform ->
                 transform.interpolatedPosition.set(
-                    MathUtils.lerp(transform.prevPosition.x, transform.position.x, alpha),
-                    MathUtils.lerp(transform.prevPosition.y, transform.position.y, alpha),
-                    transform.position.z
+                        MathUtils.lerp(transform.prevPosition.x, transform.position.x, alpha),
+                        MathUtils.lerp(transform.prevPosition.y, transform.position.y, alpha),
+                        transform.position.z
                 )
             }
         }
     }
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
-        val transformComp = entity.findComponent(TransformComponent.mapper)
-        val moveComp = entity.findComponent(MoveComponent.mapper)
+        val transformComp = entity.findRequiredComponent(TransformComponent.mapper)
+        val moveComp = entity.findRequiredComponent(MoveComponent.mapper)
 
 //        val player = entity[PlayerComponent.mapper]
 //        if (player != null) {
@@ -66,7 +68,7 @@ class MoveSystem(
 //                movePlayer(transform, move, player, facing, deltaTime)
 //            }
 //        } else {
-            moveEntity(transformComp, moveComp, deltaTime)
+        moveEntity(transformComp, moveComp, deltaTime)
 //        }
     }
 
@@ -108,14 +110,14 @@ class MoveSystem(
             deltaTime: Float
     ) {
         transform.position.x = MathUtils.clamp(
-            transform.position.x + move.speed.x * deltaTime,
-            0f,
-            V_WORLD_WIDTH_UNITS - transform.size.x
+                transform.position.x + move.speed.x * deltaTime,
+                0f,
+                V_WORLD_WIDTH_UNITS - transform.size.x
         )
         transform.position.y = MathUtils.clamp(
-            transform.position.y + move.speed.y * deltaTime,
-            1f,
-            V_WORLD_HEIGHT_UNITS + 1f - transform.size.y
+                transform.position.y + move.speed.y * deltaTime,
+                1f,
+                V_WORLD_HEIGHT_UNITS + 1f - transform.size.y
         )
     }
 }

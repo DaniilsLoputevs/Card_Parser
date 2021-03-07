@@ -9,7 +9,7 @@ import com.badlogic.gdx.utils.viewport.Viewport
 import ktx.ashley.contains
 import towerdefense.ashley.components.GameCardComponent
 import towerdefense.ashley.components.TransformComponent
-import towerdefense.ashley.findComponent
+import towerdefense.ashley.findRequiredComponent
 
 class GameInputProcessor(
          private val engine : Engine,
@@ -28,18 +28,18 @@ class GameInputProcessor(
         return super.touchDown(screenX, screenY, pointer, button)
     }
 
-    override fun touchUp(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
-        println("UP  screenX = $screenX  ##  screenY = $screenY  ##  pointer = $pointer  ##  button = $button")
-        dropSelectedEntity()
-        return super.touchUp(screenX, screenY, pointer, button)
-    }
-
     override fun touchDragged(screenX: Int, screenY: Int, pointer: Int): Boolean {
 //        println("Dragged screenX = $screenX  ##  screenY = $screenY  ##  pointer = $pointer")
         if (selectedEntity != null) {
             moveSelectedTo(screenX.toFloat(), screenY.toFloat())
         }
         return super.touchDragged(screenX, screenY, pointer)
+    }
+
+    override fun touchUp(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
+        println("UP  screenX = $screenX  ##  screenY = $screenY  ##  pointer = $pointer  ##  button = $button")
+        dropSelectedEntity()
+        return super.touchUp(screenX, screenY, pointer, button)
     }
 
 
@@ -50,7 +50,11 @@ class GameInputProcessor(
             if (!currEntity.contains(GameCardComponent.mapper)) {
                 continue
             }
-            val transmComp = currEntity.findComponent(TransformComponent.mapper)
+//            if (!currEntity.findComponent(GameCardComponent.mapper).isClickable) {
+//                continue
+//            }
+
+            val transmComp = currEntity.findRequiredComponent(TransformComponent.mapper)
 //            println("DEV")
 //            println("transformComp interpolatedPosition=  ${transmComp.interpolatedPosition}")
 //            println("transformComp position=              ${transmComp.position}")
@@ -61,7 +65,8 @@ class GameInputProcessor(
 
 //            println("COORD")
 //            println("findEntity cursor: x=$screenX  ##  y=$screenY")
-            val wuCoordinates = cursorPositionToWorldUnits(screenX.toFloat(), screenY.toFloat())
+//            val wuCoordinates = cursorPositionToWorldUnits(screenX.toFloat(), screenY.toFloat(),viewport)
+            val wuCoordinates = viewport.unproject(Vector2(screenX.toFloat(), screenY.toFloat()))
 //            println("findEntity coord:  x=${wuCoordinates.x}  ##  y=${wuCoordinates.y}")
 
             val contains = transmComp.shape.contains(wuCoordinates)
@@ -77,8 +82,8 @@ class GameInputProcessor(
     }
 
     private fun moveSelectedTo(screenX: Float, screenY: Float) {
-        val transformComponent = selectedEntity!!.findComponent(TransformComponent.mapper)
-        val newPositionCoordinates = cursorPositionToWorldUnits(screenX, screenY).apply {
+        val transformComponent = selectedEntity!!.findRequiredComponent(TransformComponent.mapper)
+        val newPositionCoordinates = viewport.unproject(Vector2(screenX, screenY)).apply {
             x -= captureOffset!!.x
             y -= captureOffset!!.y
         }

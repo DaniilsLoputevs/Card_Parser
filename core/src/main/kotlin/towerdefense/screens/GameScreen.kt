@@ -18,6 +18,12 @@ class GameScreen(
 //    private  val dnd : DragAndDrop = DragAndDrop()
     private lateinit var stacks : Array<Entity>
 
+    /**
+     * Screen init Scenario: run all Scripts that make game game field:
+     * -- create cards
+     * -- create GameContext
+     * -- prepare UI and etc...
+     */
     init {
         logger.info { "Game Screen : Init Stage" }
         Gdx.input.inputProcessor = GameInputProcessor(engine, gameViewport, stage.batch)
@@ -41,6 +47,11 @@ class GameScreen(
 
     override fun render(delta: Float) {
 //        println("GameScreen :: render invoke time")
+//        println("DEV")
+//        println("is Touch: ${Gdx.input.isTouched}")
+//        println("is inputProcessor: ${Gdx.input.inputProcessor.touchDragged()}")
+//        println("DEV")
+
         renderSystem.update(delta)
     }
 

@@ -3,14 +3,13 @@ package towerdefense.ashley
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
-import towerdefense.ashley.components.TransformComponent
 import ktx.ashley.entity
 import ktx.ashley.with
 import ktx.assets.async.AssetStorage
 import towerdefense.ashley.components.GameCardComponent
 import towerdefense.ashley.components.GraphicComponent
+import towerdefense.ashley.components.TransformComponent
 import towerdefense.asset.TextureAtlasAsset
-
 
 
 fun Engine.createTestCardBack(
@@ -19,8 +18,13 @@ fun Engine.createTestCardBack(
     /*ship*/
 
     val testCardBack: Entity = entity {
-        val atlas: TextureAtlas = assets[TextureAtlasAsset.TEST_CARD_BACK.descriptor]
-        val texture: TextureAtlas.AtlasRegion = atlas.findRegion("dark")
+//        val atlas: TextureAtlas = assets[TextureAtlasAsset.TEST_CARD_BACK.descriptor]
+//        val texture: TextureAtlas.AtlasRegion = atlas.findRegion("dark")
+
+
+        val atlas: TextureAtlas = assets[TextureAtlasAsset.FIRST_CARD_DECK.descriptor]
+        val texture: TextureAtlas.AtlasRegion = atlas.findRegion("ace")
+//        val texture: TextureAtlas.AtlasRegion = atlas.findRegion("two")
 
         with<TransformComponent> {
             initTransformComp(texture)
