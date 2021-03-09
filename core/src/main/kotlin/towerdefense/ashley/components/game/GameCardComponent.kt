@@ -1,8 +1,9 @@
-package towerdefense.ashley.components
+package towerdefense.ashley.components.game
 
 import com.badlogic.ashley.core.Component
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.utils.Pool
+import com.badlogic.gdx.utils.Predicate
 import ktx.ashley.mapperFor
 
 /**
@@ -15,16 +16,17 @@ class GameCardComponent : Component, Pool.Poolable {
     var isCardOpen: Boolean = false
     var next: Entity? = null
     var isClickable: Boolean = false
+    lateinit var setNextPredicate: Predicate<Entity>
 
     override fun reset() {
 
     }
 
-    fun intCard(suit: CardSuit, rank: CardRank, cardOpen: Boolean = false) {
-        cardSuit = suit
-        cardRank = rank
-        isCardOpen = cardOpen
-    }
+//    fun intCard(suit: CardSuit, rank: CardRank, cardOpen: Boolean = false) {
+//        cardSuit = suit
+//        cardRank = rank
+//        isCardOpen = cardOpen
+//    }
 
     companion object {
         val mapper = mapperFor<GameCardComponent>()

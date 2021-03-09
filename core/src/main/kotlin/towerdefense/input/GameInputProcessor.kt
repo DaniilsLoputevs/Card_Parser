@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.Viewport
 import ktx.ashley.contains
-import towerdefense.ashley.components.GameCardComponent
+import towerdefense.ashley.components.game.GameCardComponent
 import towerdefense.ashley.components.TransformComponent
 import towerdefense.ashley.findRequiredComponent
 

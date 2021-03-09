@@ -7,7 +7,7 @@ import ktx.ashley.entity
 import ktx.ashley.with
 import ktx.assets.async.AssetStorage
 import towerdefense.ashley.components.DragAndDropComponent
-import towerdefense.ashley.components.GameCardComponent
+import towerdefense.ashley.components.game.GameCardComponent
 import towerdefense.ashley.components.GraphicComponent
 import towerdefense.ashley.components.TransformComponent
 import towerdefense.asset.TextureAtlasAsset
@@ -40,7 +40,9 @@ fun Engine.createTestCardBack(
         with<GraphicComponent>() {
             setSpriteRegion(texture)
         }
-        with<GameCardComponent>() {}
+        with<GameCardComponent>() {
+            isClickable = true
+        }
         with<DragAndDropComponent>() {}
     }
 

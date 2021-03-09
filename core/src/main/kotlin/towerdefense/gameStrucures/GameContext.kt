@@ -12,8 +12,8 @@ class GameContext {
 
     /* DragAndDrop part*/
 
-    lateinit var dndSelectedEntity: Entity
+    var dndSelectedEntity: Entity? = null
     /** DragAndDrop status */
-    var dndDragAndDropStatus: DragAndDropManager.DragAndDropStatus = NONE
+    var dndEntityStatus: DragAndDropManager.DragAndDropStatus = NONE
 
 }

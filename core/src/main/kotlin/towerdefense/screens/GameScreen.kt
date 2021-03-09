@@ -1,11 +1,13 @@
 package towerdefense.screens
 
+import ktx.ashley.contains
 import ktx.ashley.getSystem
 import ktx.log.info
 import towerdefense.MainGame
+import towerdefense.ashley.components.game.GameCardComponent
 import towerdefense.ashley.createTestCardDeck
 import towerdefense.ashley.systems.BindingSystem
-import towerdefense.ashley.systems.RenderSystem
+import towerdefense.ashley.systems.DebugSystem
 import towerdefense.ashley.systems.ScreenInputSystem
 import towerdefense.gameStrucures.DragAndDropManager
 import towerdefense.gameStrucures.GameContext
@@ -14,7 +16,6 @@ class GameScreen(
         game: MainGame
 ) : AbstractScreen(game) {
     private val logger = ktx.log.logger<GameScreen>()
-    private val renderSystem = game.engine.getSystem<RenderSystem>()
     private val gameContext = GameContext()
 
 
@@ -35,9 +36,11 @@ class GameScreen(
 //            println("SYS")
 
             gameContext.cards = this.createTestCardDeck(game.assets)
+            getSystem<DebugSystem>().apply {
+                this.gameContext = this@GameScreen.gameContext
+            }
             getSystem<ScreenInputSystem>().apply {
-//                this.gameContext = this@GameScreen.gameContext
-                this.inputProcessors = arrayOf(DragAndDropManager(gameContext))
+                this.inputProcessors = arrayOf(DragAndDropManager(gameContext, gameViewport))
                 setProcessing(true)
             }
             getSystem<BindingSystem>().apply {
@@ -45,13 +48,13 @@ class GameScreen(
                 setProcessing(true)
             }
 
-            println("SYS")
+//            println("SYS")
 //            println(engine.systems)
 //            engine.systems.forEach { println("$it :: ${it.checkProcessing()}") }
 //            engine.systems.forEach { println("$it :: ${it.checkProcessing()}") }
 //            println(engine.entities)
 
-            println("SYS")
+//            println("SYS")
 
 
 
@@ -76,7 +79,6 @@ class GameScreen(
 //        println("is inputProcessor: ${Gdx.input.inputProcessor.touchDragged()}")
 //        println("DEV")
 
-//        renderSystem.update(delta)
         engine.update(delta)
     }
 

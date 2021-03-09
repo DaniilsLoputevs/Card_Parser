@@ -66,11 +66,10 @@ class TransformComponent : Component, Pool.Poolable, Comparable<TransformCompone
      * set position for all part of component
      */
     fun setTotalPosition(newPosition: Vector2) {
-        interpolatedPosition.x = newPosition.x
-        interpolatedPosition.y = newPosition.y
+        prevPosition.set(position)
+        position.set(newPosition, 0f)
+        interpolatedPosition.set(newPosition, 0f)
         shape.setPosition(newPosition.x, newPosition.y)
-        position.x = newPosition.x
-        position.y = newPosition.y
     }
 
     /**
