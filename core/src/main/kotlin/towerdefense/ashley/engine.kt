@@ -6,18 +6,24 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import ktx.ashley.entity
 import ktx.ashley.with
 import ktx.assets.async.AssetStorage
+import towerdefense.ashley.components.DragAndDropComponent
 import towerdefense.ashley.components.GameCardComponent
 import towerdefense.ashley.components.GraphicComponent
 import towerdefense.ashley.components.TransformComponent
 import towerdefense.asset.TextureAtlasAsset
 
+fun Engine.createTestCardDeck(
+        assets: AssetStorage
+): Array<Entity> {
+    return arrayOf(createTestCardBack(assets));
+}
 
 fun Engine.createTestCardBack(
         assets: AssetStorage
 ): Entity {
     /*ship*/
 
-    val testCardBack: Entity = entity {
+    val testCardBack: Entity = this.entity {
 //        val atlas: TextureAtlas = assets[TextureAtlasAsset.TEST_CARD_BACK.descriptor]
 //        val texture: TextureAtlas.AtlasRegion = atlas.findRegion("dark")
 
@@ -31,10 +37,11 @@ fun Engine.createTestCardBack(
             this.setSizeByHeightSAR(160f)
 //            this.setSizeByWidthSAR(114f)
         }
-        with<GameCardComponent>() {}
         with<GraphicComponent>() {
             setSpriteRegion(texture)
         }
+        with<GameCardComponent>() {}
+        with<DragAndDropComponent>() {}
     }
 
     return testCardBack;

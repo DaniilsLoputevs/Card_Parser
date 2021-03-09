@@ -25,17 +25,6 @@ import towerdefense.event.GameEvent
 import towerdefense.event.GameEventListener
 import towerdefense.event.GameEventManager
 
-private val LOG = logger<RenderSystem>()
-private const val BGD_SCROLL_SPEED_X = 0.03f
-private const val MIN_BGD_SCROLL_SPEED_Y = -0.25f
-private const val OUTLINE_COLOR_RED = 0f
-private const val OUTLINE_COLOR_GREEN = 113f / 255f
-private const val OUTLINE_COLOR_BLUE = 214f / 255f
-private const val OUTLINE_COLOR_MIN_ALPHA = 0.35f
-private const val BGD_SCROLL_SPEED_GAIN_BOOST_1 = 0.25f
-private const val BGD_SCROLL_SPEED_GAIN_BOOST_2 = 0.5f
-private const val TIME_TO_RESET_BGD_SCROLL_SPEED = 10f // in seconds
-
 /**
  * Component processor && Game Event Listener.
  * Rendering all [Entity] with components:
@@ -52,8 +41,19 @@ class RenderSystem(
         allOf(GraphicComponent::class, TransformComponent::class).get(),
         compareBy { entity -> entity[TransformComponent.mapper] }
 ), GameEventListener {
-    private val batch: Batch = stage.batch
+    private val logger = logger<RenderSystem>()
+//    private val BGD_SCROLL_SPEED_X = 0.03f
+//    private val MIN_BGD_SCROLL_SPEED_Y = -0.25f
+//    private val OUTLINE_COLOR_RED = 0f
+//    private val OUTLINE_COLOR_GREEN = 113f / 255f
+//    private val OUTLINE_COLOR_BLUE = 214f / 255f
+//    private val OUTLINE_COLOR_MIN_ALPHA = 0.35f
+//    private val BGD_SCROLL_SPEED_GAIN_BOOST_1 = 0.25f
+//    private val BGD_SCROLL_SPEED_GAIN_BOOST_2 = 0.5f
+//    private val TIME_TO_RESET_BGD_SCROLL_SPEED = 10f // in seconds
 
+
+    private val batch: Batch = stage.batch
     private val background = Sprite(backgroundTexture).apply {
 //        println("DEV background")
 //        println("background h " + this.height)
@@ -121,6 +121,9 @@ class RenderSystem(
     }
 
     override fun update(deltaTime: Float) {
+
+//        println("Render :: upd invoke")
+
         // render background
         renderBackground(deltaTime)
 
@@ -165,7 +168,7 @@ class RenderSystem(
         val (posX, posY) = transformComp.interpolatedPosition
         val (sizeX, sizeY) = transformComp.size
         if (graphicComp.sprite.texture == null) {
-            LOG.error { "Entity has no texture for rendering" }
+            logger.error { "Entity has no texture for rendering" }
             return
         }
 

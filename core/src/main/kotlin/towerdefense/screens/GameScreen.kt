@@ -1,22 +1,22 @@
 package towerdefense.screens
 
-import com.badlogic.ashley.core.Entity
-import com.badlogic.gdx.Gdx
-import towerdefense.ashley.systems.RenderSystem
 import ktx.ashley.getSystem
 import ktx.log.info
 import towerdefense.MainGame
-import towerdefense.ashley.createTestCardBack
-import towerdefense.input.GameInputProcessor
+import towerdefense.ashley.createTestCardDeck
+import towerdefense.ashley.systems.BindingSystem
+import towerdefense.ashley.systems.RenderSystem
+import towerdefense.ashley.systems.ScreenInputSystem
+import towerdefense.gameStrucures.DragAndDropManager
+import towerdefense.gameStrucures.GameContext
 
 class GameScreen(
-    game: MainGame
+        game: MainGame
 ) : AbstractScreen(game) {
     private val logger = ktx.log.logger<GameScreen>()
     private val renderSystem = game.engine.getSystem<RenderSystem>()
+    private val gameContext = GameContext()
 
-//    private  val dnd : DragAndDrop = DragAndDrop()
-    private lateinit var stacks : Array<Entity>
 
     /**
      * Screen init Scenario: run all Scripts that make game game field:
@@ -26,12 +26,34 @@ class GameScreen(
      */
     init {
         logger.info { "Game Screen : Init Stage" }
-        Gdx.input.inputProcessor = GameInputProcessor(engine, gameViewport, stage.batch)
+//        Gdx.input.inputProcessor = GameInputProcessor(engine, gameViewport, stage.batch)
 
         engine.run {
-            // remove any power ups and reset the spawn timer
 
-            createTestCardBack(game.assets)
+//            println("SYS")
+//            engine.systems.forEach { println("$it :: ${it.checkProcessing()}") }
+//            println("SYS")
+
+            gameContext.cards = this.createTestCardDeck(game.assets)
+            getSystem<ScreenInputSystem>().apply {
+//                this.gameContext = this@GameScreen.gameContext
+                this.inputProcessors = arrayOf(DragAndDropManager(gameContext))
+                setProcessing(true)
+            }
+            getSystem<BindingSystem>().apply {
+                this.gameContext = this@GameScreen.gameContext
+                setProcessing(true)
+            }
+
+            println("SYS")
+//            println(engine.systems)
+//            engine.systems.forEach { println("$it :: ${it.checkProcessing()}") }
+//            engine.systems.forEach { println("$it :: ${it.checkProcessing()}") }
+//            println(engine.entities)
+
+            println("SYS")
+
+
 
 //            getSystem<MoveSystem>().setProcessing(true)
 //            getSystem<PlayerAnimationSystem>().setProcessing(true)
@@ -39,6 +61,8 @@ class GameScreen(
 //            gameEventManager.dispatchEvent(GameEvent.PlayerSpawn)
 //            createDarkMatter()
         }
+
+
     }
 
     override fun show() {
@@ -52,7 +76,8 @@ class GameScreen(
 //        println("is inputProcessor: ${Gdx.input.inputProcessor.touchDragged()}")
 //        println("DEV")
 
-        renderSystem.update(delta)
+//        renderSystem.update(delta)
+        engine.update(delta)
     }
 
     override fun resize(width: Int, height: Int) {

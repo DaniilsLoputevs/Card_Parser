@@ -11,8 +11,9 @@ import ktx.math.vec3
 /**
  * Entity with this property can be moved to other place by drag&drop'ed.
  */
-@Deprecated("")
 class DragAndDropComponent : Component, Pool.Poolable{
+    var isClickable = true
+
 //    val prevPosition = vec3()           // Vector3(0, 0, 0)
 //    val position = vec3()               // Vector3(0, 0, 0)
 //    val interpolatedPosition = vec3()   // Vector3(0, 0, 0)

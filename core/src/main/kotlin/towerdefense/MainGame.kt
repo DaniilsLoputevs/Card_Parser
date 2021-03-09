@@ -22,7 +22,9 @@ import ktx.collections.gdxArrayOf
 import ktx.log.debug
 import ktx.log.info
 import ktx.log.logger
+import towerdefense.ashley.systems.BindingSystem
 import towerdefense.asset.TextureAsset
+import towerdefense.ashley.systems.ScreenInputSystem
 import towerdefense.stubs.ShaderProgramStub
 import towerdefense.screens.LoadingScreen
 
@@ -121,6 +123,16 @@ class MainGame : KtxGame<KtxScreen>() {
 //                setProcessing(false)
 //            })
 //            addSystem(AttachSystem())
+            addSystem(
+                    ScreenInputSystem().apply {
+                        setProcessing(false)
+                    }
+            )
+            addSystem(
+                    BindingSystem(gameEventManager).apply {
+                        setProcessing(false)
+                    }
+            )
             addSystem(
                     RenderSystem(
                             stage,
