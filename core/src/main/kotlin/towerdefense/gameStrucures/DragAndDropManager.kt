@@ -10,6 +10,7 @@ class DragAndDropManager(
         private val gameContext: GameContext,
         private val gameViewport: Viewport
 ) : ScreenInputProcessor {
+    private var touchPosition: Vector2 = Vector2(-1f, -1f)
     private var captureOffset: Vector2 = Vector2(-1f, -1f)
 
     override fun onTouchDown(currentPosition: Vector2) {
@@ -70,6 +71,7 @@ class DragAndDropManager(
             if (contains) {
                 println("DND : find entity!!!")
 //            if (transformComp.shape.contains(screenY.toFloat(), screenX.toFloat())) {
+                touchPosition = currentPosition
                 gameContext.dndSelectedEntity = currEntity
                 captureOffset.set(
                         wuCoordinates.x - transComp.interpolatedPosition.x,
@@ -107,6 +109,8 @@ class DragAndDropManager(
         NONE,
         TOUCH,
         DRAGGED,
-        DROPPED
+        DROPPED,
+//        BINDING_SUCCESS,
+//        BINDING_FAIL
     }
 }

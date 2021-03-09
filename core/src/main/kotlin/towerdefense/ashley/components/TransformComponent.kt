@@ -26,7 +26,7 @@ class TransformComponent : Component, Pool.Poolable, Comparable<TransformCompone
         rotationDeg = 0f
     }
 
-    fun setInitialPosition(x: Float, y: Float, z: Float) {
+    private fun setInitialPosition(x: Float, y: Float, z: Float) {
         prevPosition.set(x, y, z)
         position.set(x, y, z)
         interpolatedPosition.set(x, y, z)
@@ -103,6 +103,5 @@ class TransformComponent : Component, Pool.Poolable, Comparable<TransformCompone
         shape.setWidth(newWidth)
         shape.setHeight(newHeight)
     }
-
 
 }

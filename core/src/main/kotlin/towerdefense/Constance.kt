@@ -1,7 +1,9 @@
 package towerdefense
 
-const val V_WORLD_WIDTH_UNITS = 1280f
-const val V_WORLD_HEIGHT_UNITS = 720f
+const val V_WORLD_WIDTH_UNITS = 1280f // world units
+const val V_WORLD_HEIGHT_UNITS = 720f // world units
+
+const val CARD_STACK_OFFSET = 0.75f // world units
 
 /* Simon part */
 

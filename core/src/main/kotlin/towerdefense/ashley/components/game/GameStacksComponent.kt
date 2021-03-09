@@ -5,12 +5,14 @@ import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.utils.Pool
 import ktx.ashley.mapperFor
 
-class GameStacksComponent: Component, Pool.Poolable {
-     var cardStack : MutableList<Entity> = mutableListOf()
+class GameStacksComponent : Component, Pool.Poolable {
+    var cardStack: MutableList<Entity> = mutableListOf()
 
-    fun getLastCard() : Entity {
-        return cardStack.removeAt(cardStack.size)
-    }
+    fun isEmpty() = cardStack.isEmpty()
+    fun addGameCard(card: Entity) = cardStack.add(card)
+    fun getLastCard() = cardStack.removeAt(cardStack.size.coerceAtMost(0))
+    fun removeGameCard(card: Entity) = cardStack.remove(card)
+    fun contains(card: Entity) = cardStack.contains(card)
 
     override fun reset() {
         TODO("Not yet implemented")

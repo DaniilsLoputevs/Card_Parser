@@ -2,9 +2,13 @@ package towerdefense.ashley.components.game
 
 import com.badlogic.ashley.core.Component
 import com.badlogic.ashley.core.Entity
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Pool
 import com.badlogic.gdx.utils.Predicate
 import ktx.ashley.mapperFor
+import towerdefense.CARD_STACK_OFFSET
+import towerdefense.ashley.components.TransformComponent
+import towerdefense.ashley.findRequiredComponent
 
 /**
  * This component say: This Entity is Game Card.
@@ -16,11 +20,24 @@ class GameCardComponent : Component, Pool.Poolable {
     var isCardOpen: Boolean = false
     var next: Entity? = null
     var isClickable: Boolean = false
-    lateinit var setNextPredicate: Predicate<Entity>
+    lateinit var setNextPredicate: Predicate<GameCardComponent>
+
+    fun moveNextCards(newPosition : Vector2) {
+        recursiveMoveNextCard(this, newPosition.apply { y += CARD_STACK_OFFSET })
+    }
+    private fun recursiveMoveNextCard(gameCardComp: GameCardComponent, newPosition : Vector2) {
+        if (gameCardComp.next == null) return
+        val transComp = gameCardComp.next!!.findRequiredComponent(TransformComponent.mapper)
+        transComp.setTotalPosition(newPosition)
+        val nextGameCardComp = gameCardComp.next!!.findRequiredComponent(GameCardComponent.mapper)
+        recursiveMoveNextCard(nextGameCardComp, newPosition.apply { y += CARD_STACK_OFFSET })
+    }
 
     override fun reset() {
 
     }
+
+
 
 //    fun intCard(suit: CardSuit, rank: CardRank, cardOpen: Boolean = false) {
 //        cardSuit = suit
