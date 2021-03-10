@@ -12,6 +12,10 @@ class GameStacksComponent : Component, Pool.Poolable {
     fun addGameCard(card: Entity) = cardStack.add(card)
     fun getLastCard() = cardStack.removeAt(cardStack.size.coerceAtMost(0))
     fun removeGameCard(card: Entity) = cardStack.remove(card)
+
+    /**
+     * TODO - maybe nee to implement "manual contains", cause Entity DON'T override equals
+     */
     fun contains(card: Entity) = cardStack.contains(card)
 
     override fun reset() {

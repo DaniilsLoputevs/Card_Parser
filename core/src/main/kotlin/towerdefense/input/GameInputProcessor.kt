@@ -11,6 +11,7 @@ import towerdefense.ashley.components.game.GameCardComponent
 import towerdefense.ashley.components.TransformComponent
 import towerdefense.ashley.findRequiredComponent
 
+@Deprecated("")
 class GameInputProcessor(
          private val engine : Engine,
         viewport: Viewport,

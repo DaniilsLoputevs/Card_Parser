@@ -61,6 +61,7 @@ class ScreenInputSystem
             refreshCurrentPosition()
 
             inputProcessors.forEach { it.onTouchUp(currPosition) }
+            // TODO - сделать клик на Stack -> перекинуть карту
             prevPosition.set(-1f, -1f)
             touchStatus = NONE
         }

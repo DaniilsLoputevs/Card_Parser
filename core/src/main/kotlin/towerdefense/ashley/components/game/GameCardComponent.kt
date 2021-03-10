@@ -4,11 +4,11 @@ import com.badlogic.ashley.core.Component
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Pool
-import com.badlogic.gdx.utils.Predicate
 import ktx.ashley.mapperFor
 import towerdefense.CARD_STACK_OFFSET
 import towerdefense.ashley.components.TransformComponent
 import towerdefense.ashley.findRequiredComponent
+import java.util.function.Predicate
 
 /**
  * This component say: This Entity is Game Card.
@@ -22,6 +22,9 @@ class GameCardComponent : Component, Pool.Poolable {
     var isClickable: Boolean = false
     lateinit var setNextPredicate: Predicate<GameCardComponent>
 
+    /**
+     * TODO - TEST IT!!!
+     */
     fun moveNextCards(newPosition : Vector2) {
         recursiveMoveNextCard(this, newPosition.apply { y += CARD_STACK_OFFSET })
     }
