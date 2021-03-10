@@ -14,8 +14,8 @@ import towerdefense.ashley.findRequiredComponent
 import towerdefense.gameStrucures.DragAndDropManager.DragAndDropStatus.*
 import towerdefense.gameStrucures.GameContext
 
-class BindingSystem(
-) : IteratingSystem(allOf(GameCardComponent::class).exclude(RemoveComponent::class.java).get()) {
+class BindingSystem
+    : IteratingSystem(allOf(GameCardComponent::class).exclude(RemoveComponent::class.java).get()) {
     lateinit var gameContext: GameContext
 
     /** just for optimization, only */
@@ -36,7 +36,7 @@ class BindingSystem(
         for (stack in gameContext.stacks) {
             val stackComp = stack.findRequiredComponent(GameStacksComponent.mapper)
 
-            cardApplyIntoStack = when(stackComp.isEmpty()) {
+            cardApplyIntoStack = when (stackComp.isEmpty()) {
                 true -> applyCardToEmptyStack(entity, stack, stackComp)
                 false -> applyCardToNotEmptyStack(entity, stackComp)
             }

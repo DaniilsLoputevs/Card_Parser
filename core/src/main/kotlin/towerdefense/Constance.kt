@@ -5,6 +5,9 @@ const val V_WORLD_HEIGHT_UNITS = 720f // world units
 
 const val CARD_STACK_OFFSET = 25f // world units
 
+const val CARD_WIDTH = 114f // world units
+const val CARD_HEIGHT = 160f // world units
+
 /* Simon part */
 
 //const val UNIT_SCALE = 1 / 64f //   1/8 == 0.125   ||   1/64f == 0,015625   || 1/128 == 0,0078125

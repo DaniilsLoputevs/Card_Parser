@@ -5,6 +5,7 @@ import ktx.ashley.getSystem
 import ktx.log.info
 import towerdefense.MainGame
 import towerdefense.ashley.components.game.GameCardComponent
+import towerdefense.ashley.createStacks
 import towerdefense.ashley.createTestCardDeck
 import towerdefense.ashley.systems.BindingSystem
 import towerdefense.ashley.systems.DebugSystem
@@ -47,6 +48,7 @@ class GameScreen(
                 this.gameContext = this@GameScreen.gameContext
                 setProcessing(true)
             }
+            gameContext.stacks = this.createStacks(game.assets)
 
 //            println("SYS")
 //            println(engine.systems)

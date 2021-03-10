@@ -19,7 +19,7 @@ class DragAndDropManager(
     }
 
     override fun onTouchDragged(currentPosition: Vector2) {
-        println("DRAG  screenX = ${currentPosition.x}  ##  screenY = ${currentPosition.y}")
+//        println("DRAG  screenX = ${currentPosition.x}  ##  screenY = ${currentPosition.y}")
         if (gameContext.dndSelectedEntity != null) {
             moveSelectedTo(currentPosition)
         }
@@ -36,21 +36,12 @@ class DragAndDropManager(
      * && change gameContext.dndStatus
      */
     private fun findEntity(currentPosition: Vector2) {
-        println("findEntity()")
-//        println("len: ${gameContext.cards.size}")
-
         for (currEntity in gameContext.cards) {
-//            val gameCardComp = currEntity[GameCardComponent.mapper] ?: continue
-//            if (!currEntity.contains(GameCardComponent.mapper)) {
-//                continue
-//            }
-            println("step 1")
+
             if (!currEntity.findRequiredComponent(GameCardComponent.mapper).isClickable) {
                 continue
             }
-            println("step 2")
             val transComp = currEntity.findRequiredComponent(TransformComponent.mapper)
-            println("step 3")
 //            println("DEV")
 //            println("transformComp interpolatedPosition=  ${transmComp.interpolatedPosition}")
 //            println("transformComp position=              ${transmComp.position}")
@@ -63,7 +54,7 @@ class DragAndDropManager(
 //            println("findEntity cursor: x=$screenX  ##  y=$screenY")
 //            val wuCoordinates = cursorPositionToWorldUnits(screenX.toFloat(), screenY.toFloat(),viewport)
             val wuCoordinates = gameViewport.unproject(currentPosition)
-            println("findEntity coord:  x=${wuCoordinates.x}  ##  y=${wuCoordinates.y}")
+//            println("findEntity coord:  x=${wuCoordinates.x}  ##  y=${wuCoordinates.y}")
 
             val contains = transComp.shape.contains(wuCoordinates)
 //            println("hitbox contains coord point = $contains")
@@ -83,7 +74,7 @@ class DragAndDropManager(
         }
     }
     private fun moveSelectedTo(currentPosition: Vector2) {
-        println("moveSelectedTo()")
+//        println("moveSelectedTo()")
         if (gameContext.dndSelectedEntity != null) {
             val transformComponent = gameContext.dndSelectedEntity!!.findRequiredComponent(TransformComponent.mapper)
             val newEntityPosition = gameViewport.unproject(currentPosition).apply {
@@ -96,7 +87,7 @@ class DragAndDropManager(
     }
 
     private fun dropSelectedEntity() {
-        println("DND M :: dropSelectedEntity()")
+//        println("DND M :: dropSelectedEntity()")
         if (gameContext.dndSelectedEntity != null) {
 //            gameContext.dndSelectedEntity = null
             captureOffset.set(-1f, -1f)

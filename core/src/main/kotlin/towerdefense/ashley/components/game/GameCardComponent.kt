@@ -28,6 +28,10 @@ class GameCardComponent : Component, Pool.Poolable {
     fun moveNextCards(newPosition : Vector2) {
         recursiveMoveNextCard(this, newPosition.apply { y += CARD_STACK_OFFSET })
     }
+
+    /**
+     * TODO - rewrite to while-list run
+     */
     private fun recursiveMoveNextCard(gameCardComp: GameCardComponent, newPosition : Vector2) {
         if (gameCardComp.next == null) return
         val transComp = gameCardComp.next!!.findRequiredComponent(TransformComponent.mapper)

@@ -72,6 +72,11 @@ class TransformComponent : Component, Pool.Poolable, Comparable<TransformCompone
         shape.setPosition(newPosition.x, newPosition.y)
     }
 
+    fun setSize(width : Float, height : Float ) {
+        size.set(width, height)
+        shape.setSize(width, height)
+    }
+
     /**
      * Set new this.size by set ne height and save Aspect Ration, - find and set new Width for new height.
      * Example:
@@ -84,8 +89,7 @@ class TransformComponent : Component, Pool.Poolable, Comparable<TransformCompone
         val ratio = size.y / size.x //  (height / width)
         val newWidth = newHeight / ratio
         size.set(newWidth, newHeight)
-        shape.setWidth(newWidth)
-        shape.setHeight(newHeight)
+        shape.setSize(newWidth, newHeight)
     }
 
     /**
