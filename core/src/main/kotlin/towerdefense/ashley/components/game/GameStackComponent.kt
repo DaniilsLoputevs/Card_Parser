@@ -5,13 +5,17 @@ import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.utils.Pool
 import ktx.ashley.mapperFor
 
-class GameStacksComponent : Component, Pool.Poolable {
+class GameStackComponent : Component, Pool.Poolable {
     var cardStack: MutableList<Entity> = mutableListOf()
 
     fun isEmpty() = cardStack.isEmpty()
     fun addGameCard(card: Entity) = cardStack.add(card)
-    fun getLastCard() = cardStack.removeAt(cardStack.size.coerceAtMost(0))
+    fun getLastCard() = cardStack[cardStack.size.coerceAtMost(0)]
+
+    //    fun getRemoveCard() = cardStack.removeAt(cardStack.size.coerceAtMost(0))
     fun removeGameCard(card: Entity) = cardStack.remove(card)
+
+    fun size() = cardStack.size
 
     /**
      * TODO - maybe nee to implement "manual contains", cause Entity DON'T override equals
@@ -23,7 +27,7 @@ class GameStacksComponent : Component, Pool.Poolable {
     }
 
     companion object {
-        val mapper = mapperFor<GameStacksComponent>()
+        val mapper = mapperFor<GameStackComponent>()
     }
 
     override fun toString(): String {

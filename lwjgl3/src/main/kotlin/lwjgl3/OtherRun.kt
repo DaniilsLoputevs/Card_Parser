@@ -1,28 +1,26 @@
 package lwjgl3
 
 import com.badlogic.ashley.core.Entity
-import com.badlogic.gdx.math.Vector2
+import towerdefense.ashley.components.game.GameCardComponent
+import towerdefense.ashley.components.game.GameStackComponent
 
 
 fun main() {
 
+    val stack = GameStackComponent()
+    val card = Entity().apply {
+        addAndReturn(GameCardComponent())
+    }
+    val card2 = Entity().apply {
+        addAndReturn(GameCardComponent())
+    }
+    stack.addGameCard(card)
 
-//    var list = listOf("asd", "asda")
+    println(card)
+    println(card2)
+    println(stack.contains(card2))
 
-//    for (element in list) {
-//        if (element != null) {
-//            println(element)
-//        }
-//    }
-//
-//    for (element in list) {
-//        if (element == null) return
-//        println(element)
-//    }
 
-    val v = Vector2(0f, 0f)
-    v.set(1f, 1f)
-    print(v)
 
 
 

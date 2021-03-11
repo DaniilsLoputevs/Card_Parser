@@ -14,7 +14,7 @@ import towerdefense.ashley.components.game.GameCardComponent.CardSuit.*
 import towerdefense.ashley.components.game.GameCardComponent.CardRank.*
 import towerdefense.ashley.components.GraphicComponent
 import towerdefense.ashley.components.TransformComponent
-import towerdefense.ashley.components.game.GameStacksComponent
+import towerdefense.ashley.components.game.GameStackComponent
 import towerdefense.asset.TextureAtlasAsset
 import java.util.function.Predicate
 
@@ -22,10 +22,10 @@ fun Engine.createTestCardDeck(
         assets: AssetStorage
 ): Array<Entity> {
     return arrayOf(
-            createTestGameCard(assets[TextureAtlasAsset.FIRST_CARD_DECK.descriptor],
+            this.createTestGameCard(assets[TextureAtlasAsset.FIRST_CARD_DECK.descriptor],
                     "ace", SPADES, ACE),
-//            createTestGameCard(assets[TextureAtlasAsset.FIRST_CARD_DECK.descriptor],
-//                    "ace", SPADES, ACE)
+            this.createTestGameCard(assets[TextureAtlasAsset.FIRST_CARD_DECK.descriptor],
+                    "ace", SPADES, ACE)
     )
 }
 
@@ -35,7 +35,7 @@ fun Engine.createTestGameCard(
         cardSuit: GameCardComponent.CardSuit,
         cardRank: GameCardComponent.CardRank
 ): Entity {
-    return entity {
+    return this.entity {
 //        val atlas: TextureAtlas = assets[TextureAtlasAsset.TEST_CARD_BACK.descriptor]
 //        val texture: TextureAtlas.AtlasRegion = atlas.findRegion("dark")
 
@@ -97,6 +97,6 @@ fun Engine.createStack(
         with<GraphicComponent>() {
             setSpriteRegion(texture)
         }
-        with<GameStacksComponent>()
+        with<GameStackComponent>()
     }
 }
