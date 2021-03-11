@@ -25,4 +25,8 @@ class GameStacksComponent : Component, Pool.Poolable {
     companion object {
         val mapper = mapperFor<GameStacksComponent>()
     }
+
+    override fun toString(): String {
+        return cardStack.toString()
+    }
 }

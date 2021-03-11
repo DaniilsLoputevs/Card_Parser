@@ -12,14 +12,20 @@ import towerdefense.ashley.components.TransformComponent
 import towerdefense.ashley.components.game.GameStacksComponent
 import towerdefense.ashley.findRequiredComponent
 import towerdefense.gameStrucures.DragAndDropManager.DragAndDropStatus.*
+import towerdefense.gameStrucures.GameCardAdapter
 import towerdefense.gameStrucures.GameContext
 
 class BindingSystem
     : IteratingSystem(allOf(GameCardComponent::class).exclude(RemoveComponent::class.java).get()) {
     lateinit var gameContext: GameContext
 
-    /** just for optimization, only */
-    private val coordinateContainer = Vector2(-1f, -1f)
+
+    /**
+     * just for optimization, only for it.
+     * buffer that using like the container for get and hold hitbox center of newCard in:
+     * applyCardToNotEmptyStack(...)
+     */
+    private val newCardCenter = Vector2(-1f, -1f)
 
     override fun update(deltaTime: Float) {
         if (gameContext.dndSelectedEntity != null
@@ -74,13 +80,16 @@ class BindingSystem
     }
 
     private fun applyCardToEmptyStack(entity: Entity, stack: Entity, stackStackComp: GameStacksComponent): Boolean {
+        println("EMPTY")
         val entityTransComp = entity.findRequiredComponent(TransformComponent.mapper)
         val stackTransComp = stack.findRequiredComponent(TransformComponent.mapper)
 
-        if (stackTransComp.shape.contains(entityTransComp.shape.getCenter(coordinateContainer))) {
+//        if (newCard != stackLastCard) return false
+
+        if (stackTransComp.shape.contains(entityTransComp.shape.getCenter(newCardCenter))) {
             val entityGameCardComp = entity.findRequiredComponent(GameCardComponent.mapper)
 
-            deleteGameCardFromStack(entity)
+            unbindCardFromStack(entity)
             stackStackComp.addGameCard(entity)
 
             val newPos = Vector2(
@@ -94,33 +103,67 @@ class BindingSystem
     }
 
     private fun applyCardToNotEmptyStack(entity: Entity, stackComp: GameStacksComponent): Boolean {
-        val entityTransComp = entity.findRequiredComponent(TransformComponent.mapper)
-        val lastCard = stackComp.getLastCard()
-        val stackLastCardTransComp = lastCard.findRequiredComponent(TransformComponent.mapper)
+        println("NOT EMPTY")
+        val newCard = GameCardAdapter(entity)
+        val stackLastCard = GameCardAdapter(stackComp.getLastCard())
+        newCard.transfComp.shape.getCenter(newCardCenter)
 
-        if (stackLastCardTransComp.shape.contains(entityTransComp.shape.getCenter(coordinateContainer))) {
-            val entityGameCardComp = entity.findRequiredComponent(GameCardComponent.mapper)
-            val stackLastGameCardComp = lastCard.findRequiredComponent(GameCardComponent.mapper)
+        println("DEB")
+        println("newCard =       ${newCard.hashCode()}")
+        println("stackLastCard = ${stackLastCard.hashCode()}")
+        println("DEB")
+        if (newCard == stackLastCard) return false
 
-            if (!stackLastGameCardComp.setNextPredicate.test(entityGameCardComp)) return false
-            deleteGameCardFromStack(entity)
-            stackLastGameCardComp.next = entity
+        if (stackLastCard.transfComp.shape.contains(newCardCenter)) {
+
+            if (!stackLastCard.gameCardComp.setNextPredicate.test(newCard.gameCardComp)) return false
+            unbindCardFromStack(entity)
+            stackLastCard.gameCardComp.next = entity
             stackComp.addGameCard(entity)
 
             val newPos = Vector2(
-                    stackLastCardTransComp.interpolatedPosition.x,
-                    stackLastCardTransComp.interpolatedPosition.y - CARD_STACK_OFFSET,
+                    stackLastCard.transfComp.interpolatedPosition.x,
+                    stackLastCard.transfComp.interpolatedPosition.y - CARD_STACK_OFFSET,
             )
-            entityTransComp.setTotalPosition(newPos)
-            entityGameCardComp.moveNextCards(newPos)
+            newCard.transfComp.setTotalPosition(newPos)
+            newCard.gameCardComp.moveNextCards(newPos)
             return true
         } else return false
     }
+//    private fun applyCardToNotEmptyStack(entity: Entity, stackComp: GameStacksComponent): Boolean {
+//        val entityTransComp = entity.findRequiredComponent(TransformComponent.mapper)
+//        val lastCard = stackComp.getLastCard()
+//        val stackLastCardTransComp = lastCard.findRequiredComponent(TransformComponent.mapper)
+//
+//        if (stackLastCardTransComp.shape.contains(entityTransComp.shape.getCenter(coordinateContainer))) {
+//            val entityGameCardComp = entity.findRequiredComponent(GameCardComponent.mapper)
+//            val stackLastGameCardComp = lastCard.findRequiredComponent(GameCardComponent.mapper)
+//
+//            if (!stackLastGameCardComp.setNextPredicate.test(entityGameCardComp)) return false
+//            deleteGameCardFromStack(entity)
+//            stackLastGameCardComp.next = entity
+//            stackComp.addGameCard(entity)
+//
+//            val newPos = Vector2(
+//                    stackLastCardTransComp.interpolatedPosition.x,
+//                    stackLastCardTransComp.interpolatedPosition.y - CARD_STACK_OFFSET,
+//            )
+//            entityTransComp.setTotalPosition(newPos)
+//            entityGameCardComp.moveNextCards(newPos)
+//            return true
+//        } else return false
+//    }
 
-    private fun deleteGameCardFromStack(card: Entity) {
+    /**
+     * Unbinding card from it's stack.
+     */
+    private fun unbindCardFromStack(card: Entity) {
         for (stack in gameContext.stacks) {
             val stackComp = stack.findRequiredComponent(GameStacksComponent.mapper)
-            if (stackComp.contains(card)) stackComp.removeGameCard(card)
+            if (stackComp.contains(card)) {
+                stackComp.removeGameCard(card)
+                return
+            }
         }
     }
 

@@ -20,3 +20,7 @@ inline fun <reified T : Component> Entity.findRequiredComponent(mapper: Componen
     require(rslComponent != null) { "Entity |entity| must have a ${T::class.simpleName}. entity=$this" }
     return rslComponent
 }
+
+fun Entity.toPrint(): String {
+    return this.components.toString()
+}

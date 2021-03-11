@@ -33,11 +33,20 @@ class GameCardComponent : Component, Pool.Poolable {
      * TODO - rewrite to while-list run
      */
     private fun recursiveMoveNextCard(gameCardComp: GameCardComponent, newPosition : Vector2) {
+        println("REC START")
+        println("this  =                    ${this.hashCode()}")
+        println("gameCardComp.next =        ${gameCardComp.next.hashCode()}")
         if (gameCardComp.next == null) return
         val transComp = gameCardComp.next!!.findRequiredComponent(TransformComponent.mapper)
         transComp.setTotalPosition(newPosition)
         val nextGameCardComp = gameCardComp.next!!.findRequiredComponent(GameCardComponent.mapper)
+
+        if (nextGameCardComp.next == null) return
+
+        println("nextGameCardComp =         ${nextGameCardComp.hashCode()}")
+        println("nextGameCardComp.next =    ${nextGameCardComp.next.hashCode()}")
         recursiveMoveNextCard(nextGameCardComp, newPosition.apply { y += CARD_STACK_OFFSET })
+        println("REC END")
     }
 
     override fun reset() {

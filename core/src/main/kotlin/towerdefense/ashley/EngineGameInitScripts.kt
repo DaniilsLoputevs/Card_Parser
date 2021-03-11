@@ -24,8 +24,8 @@ fun Engine.createTestCardDeck(
     return arrayOf(
             createTestGameCard(assets[TextureAtlasAsset.FIRST_CARD_DECK.descriptor],
                     "ace", SPADES, ACE),
-            createTestGameCard(assets[TextureAtlasAsset.FIRST_CARD_DECK.descriptor],
-                    "ace", SPADES, ACE)
+//            createTestGameCard(assets[TextureAtlasAsset.FIRST_CARD_DECK.descriptor],
+//                    "ace", SPADES, ACE)
     )
 }
 
