@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.Pool
 import ktx.ashley.mapperFor
 import ktx.math.vec2
 
+@Deprecated("")
 class MoveComponent : Component, Pool.Poolable {
     val speed = vec2()
 

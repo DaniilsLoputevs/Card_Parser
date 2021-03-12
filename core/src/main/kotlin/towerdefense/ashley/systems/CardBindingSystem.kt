@@ -11,13 +11,13 @@ import towerdefense.ashley.components.TransformComponent
 import towerdefense.ashley.components.game.GameCardComponent
 import towerdefense.ashley.components.game.GameStackComponent
 import towerdefense.ashley.findRequiredComponent
-import towerdefense.gameStrucures.DragAndDropManager.DragAndDropStatus.DROPPED
-import towerdefense.gameStrucures.DragAndDropManager.DragAndDropStatus.NONE
+import towerdefense.gameStrucures.CardMoveProcessor.DragAndDropStatus.DROPPED
+import towerdefense.gameStrucures.CardMoveProcessor.DragAndDropStatus.NONE
 import towerdefense.gameStrucures.GameContext
 import towerdefense.gameStrucures.adapters.GameCardAdapter
 import towerdefense.gameStrucures.adapters.GameStackAdapter
 
-class BindingSystem
+class CardBindingSystem
     : IteratingSystem(allOf(GameCardComponent::class).exclude(RemoveComponent::class.java).get()) {
     lateinit var gameContext: GameContext
 
@@ -83,11 +83,11 @@ class BindingSystem
         val stackTransComp = stack.findRequiredComponent(TransformComponent.mapper)
 
 //        if (newCard != stackLastCard) return false
-        println("EMPTY contains = ${stackTransComp.shape.contains(entityTransComp.shape.getCenter(newCardCenter))}")
+//        println("EMPTY contains = ${stackTransComp.shape.contains(entityTransComp.shape.getCenter(newCardCenter))}")
         if (stackTransComp.shape.contains(entityTransComp.shape.getCenter(newCardCenter))) {
             val entityGameCardComp = entity.findRequiredComponent(GameCardComponent.mapper)
 
-            println("UNBOUND - EMPTY")
+//            println("UNBOUND - EMPTY")
             unbindCardFromStack(entity)
             stackStackComp.addGameCard(entity)
 
@@ -104,13 +104,13 @@ class BindingSystem
     private fun applyCardToNotEmptyStack(entity: Entity, stackComp: GameStackComponent): Boolean {
         val newCard = GameCardAdapter(entity)
         val stackLastCard = GameCardAdapter(stackComp.getLastCard())
-        newCard.transfComp.shape.getCenter(newCardCenter)
+        newCard.transComp.shape.getCenter(newCardCenter)
 
         // check: is it try to add card to current stack.
         // we can't add card to stack, what already contains this card.
         if (newCard == stackLastCard) return false
 
-        if (stackLastCard.transfComp.shape.contains(newCardCenter)) {
+        if (stackLastCard.transComp.shape.contains(newCardCenter)) {
 
             // check: can we add card to current stack(stack last card)
             if (!stackLastCard.gameCardComp.setNextPredicate.test(newCard.gameCardComp)) return false
@@ -120,10 +120,10 @@ class BindingSystem
             stackComp.addGameCard(entity)
 
             val newPos = Vector2(
-                    stackLastCard.transfComp.interpolatedPosition.x,
-                    stackLastCard.transfComp.interpolatedPosition.y - CARD_STACK_OFFSET,
+                    stackLastCard.transComp.interpolatedPosition.x,
+                    stackLastCard.transComp.interpolatedPosition.y - CARD_STACK_OFFSET,
             )
-            newCard.transfComp.setTotalPosition(newPos)
+            newCard.transComp.setTotalPosition(newPos)
             newCard.gameCardComp.moveNextCards(newPos)
             return true
         } else return false
@@ -149,11 +149,11 @@ class BindingSystem
             if (stack.gameStackComp.contains(cardEntity)) {
                 val offsetY = stack.gameStackComp.size() + CARD_STACK_OFFSET
                 val newPos = Vector2(
-                        stack.transfComp.interpolatedPosition.x,
-                        stack.transfComp.interpolatedPosition.y - offsetY,
+                        stack.transComp.interpolatedPosition.x,
+                        stack.transComp.interpolatedPosition.y - offsetY,
                 )
                 GameCardAdapter(cardEntity).apply {
-                    transfComp.setTotalPosition(newPos)
+                    transComp.setTotalPosition(newPos)
                     gameCardComp.moveNextCards(newPos)
                 }
                 return

@@ -12,7 +12,7 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.joinAll
 import towerdefense.ashley.systems.RenderSystem
 import towerdefense.event.GameEventManager
-import towerdefense.asset.TextureAtlasAsset
+import towerdefense.asset.CardDeckAtlas
 import kotlinx.coroutines.launch
 import ktx.app.KtxGame
 import ktx.app.KtxScreen
@@ -22,9 +22,9 @@ import ktx.collections.gdxArrayOf
 import ktx.log.debug
 import ktx.log.info
 import ktx.log.logger
-import towerdefense.ashley.systems.BindingSystem
+import towerdefense.ashley.systems.CardBindingSystem
 import towerdefense.ashley.systems.DebugSystem
-import towerdefense.asset.TextureAsset
+import towerdefense.asset.ImgAsset
 import towerdefense.ashley.systems.ScreenInputSystem
 import towerdefense.stubs.ShaderProgramStub
 import towerdefense.screens.LoadingScreen
@@ -110,8 +110,8 @@ class MainGame : KtxGame<KtxScreen>() {
         KtxAsync.initiate()
         /* load skin and go to LoadingScreen for remaining asset loading*/
         return gdxArrayOf(
-                TextureAtlasAsset.values().map { assets.loadAsync(it.descriptor) },
-                TextureAsset.values().map { assets.loadAsync(it.descriptor) },
+                CardDeckAtlas.values().map { assets.loadAsync(it.desc) },
+                ImgAsset.values().map { assets.loadAsync(it.desc) },
         ).flatten()
     }
 
@@ -131,7 +131,7 @@ class MainGame : KtxGame<KtxScreen>() {
                     }
             )
             addSystem(
-                    BindingSystem().apply {
+                    CardBindingSystem().apply {
                         setProcessing(false)
                     }
             )
@@ -144,7 +144,7 @@ class MainGame : KtxGame<KtxScreen>() {
                             gameEventManager,
 //                            Sprite(assets[TextureAtlasAsset.MY_FIRST_ATLAS.descriptor].createSprites()[0])
 //                    assets[TextureAtlasAsset.BACKGROUND.descriptor].createSprite("main-screen-background")
-                            assets[TextureAsset.DEFAULT_BACKGROUND.descriptor]
+                            assets[ImgAsset.BACKGROUND_DEFAULT.desc]
                     )
             )
 //            addSystem(RemoveSystem(gameEventManager))

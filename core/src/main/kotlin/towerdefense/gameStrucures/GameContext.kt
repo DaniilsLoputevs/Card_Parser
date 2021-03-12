@@ -2,7 +2,7 @@ package towerdefense.gameStrucures
 
 import com.badlogic.ashley.core.Entity
 
-import towerdefense.gameStrucures.DragAndDropManager.DragAndDropStatus.*
+import towerdefense.gameStrucures.CardMoveProcessor.DragAndDropStatus.*
 
 class GameContext {
     lateinit var stacks: Array<Entity>
@@ -14,6 +14,6 @@ class GameContext {
 
     var dndSelectedEntity: Entity? = null
     /** DragAndDrop status */
-    var dndEntityStatus: DragAndDropManager.DragAndDropStatus = NONE
+    var dndEntityStatus: CardMoveProcessor.DragAndDropStatus = NONE
 
 }

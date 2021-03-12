@@ -24,6 +24,7 @@ class TransformComponent : Component, Pool.Poolable, Comparable<TransformCompone
         interpolatedPosition.set(Vector3.Zero)
         size.set(1f, 1f)
         rotationDeg = 0f
+        shape.set(0f,0f,0f,0f)
     }
 
     private fun setInitialPosition(x: Float, y: Float, z: Float) {

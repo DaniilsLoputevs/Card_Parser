@@ -1,16 +1,14 @@
 package towerdefense.screens
 
-import ktx.ashley.contains
 import ktx.ashley.getSystem
 import ktx.log.info
 import towerdefense.MainGame
-import towerdefense.ashley.components.game.GameCardComponent
-import towerdefense.ashley.createStacks
-import towerdefense.ashley.createTestCardDeck
-import towerdefense.ashley.systems.BindingSystem
+import towerdefense.ashley.engine.createStacksDefault
+import towerdefense.ashley.engine.initGameDefault
+import towerdefense.ashley.systems.CardBindingSystem
 import towerdefense.ashley.systems.DebugSystem
 import towerdefense.ashley.systems.ScreenInputSystem
-import towerdefense.gameStrucures.DragAndDropManager
+import towerdefense.gameStrucures.CardMoveProcessor
 import towerdefense.gameStrucures.GameContext
 
 class GameScreen(
@@ -28,46 +26,23 @@ class GameScreen(
      */
     init {
         logger.info { "Game Screen : Init Stage" }
-//        Gdx.input.inputProcessor = GameInputProcessor(engine, gameViewport, stage.batch)
 
         engine.run {
+            this.initGameDefault(gameContext, game.assets)
 
-//            println("SYS")
-//            engine.systems.forEach { println("$it :: ${it.checkProcessing()}") }
-//            println("SYS")
-
-            gameContext.cards = this.createTestCardDeck(game.assets)
             getSystem<DebugSystem>().apply {
                 this.gameContext = this@GameScreen.gameContext
             }
             getSystem<ScreenInputSystem>().apply {
-                this.inputProcessors = arrayOf(DragAndDropManager(gameContext, gameViewport))
+                this.inputProcessors = arrayOf(CardMoveProcessor(gameContext, gameViewport))
                 setProcessing(true)
             }
-            getSystem<BindingSystem>().apply {
+            getSystem<CardBindingSystem>().apply {
                 this.gameContext = this@GameScreen.gameContext
                 setProcessing(true)
             }
-            gameContext.stacks = this.createStacks(game.assets)
-
-//            println("SYS")
-//            println(engine.systems)
-//            engine.systems.forEach { println("$it :: ${it.checkProcessing()}") }
-//            engine.systems.forEach { println("$it :: ${it.checkProcessing()}") }
-//            println(engine.entities)
-
-//            println("SYS")
-
-
-
-//            getSystem<MoveSystem>().setProcessing(true)
-//            getSystem<PlayerAnimationSystem>().setProcessing(true)
-//            createPlayer(assets)
-//            gameEventManager.dispatchEvent(GameEvent.PlayerSpawn)
-//            createDarkMatter()
+            this.createStacksDefault(game.assets)
         }
-
-
     }
 
     override fun show() {

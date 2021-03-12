@@ -1,16 +1,5 @@
 package towerdefense.ashley
 
-import com.badlogic.ashley.core.Engine
-import com.badlogic.ashley.core.Entity
-import com.badlogic.gdx.graphics.g2d.TextureAtlas
-import ktx.ashley.entity
-import ktx.ashley.with
-import ktx.assets.async.AssetStorage
-import towerdefense.ashley.components.DragAndDropComponent
-import towerdefense.ashley.components.game.GameCardComponent
-import towerdefense.ashley.components.GraphicComponent
-import towerdefense.ashley.components.TransformComponent
-import towerdefense.asset.TextureAtlasAsset
 //
 //fun Engine.createTestCardDeck(
 //        assets: AssetStorage

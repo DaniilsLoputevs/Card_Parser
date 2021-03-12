@@ -6,17 +6,16 @@ package towerdefense.screens
 //import ktx.scene2d.stack
 //import ktx.scene2d.table
 //import ktx.scene2d.textButton
-import com.badlogic.gdx.scenes.scene2d.Stage
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
-import ktx.assets.async.AssetStorage
 import ktx.async.KtxAsync
 import ktx.collections.gdxArrayOf
 import ktx.log.info
 import ktx.log.logger
 import towerdefense.MainGame
-import towerdefense.asset.TextureAsset
-import towerdefense.asset.TextureAtlasAsset
+import towerdefense.asset.CardBackAtlas
+import towerdefense.asset.ImgAsset
+import towerdefense.asset.CardDeckAtlas
 
 /**
  * Screen for loading assert, init and setup requirement elements for app:
@@ -25,7 +24,7 @@ import towerdefense.asset.TextureAtlasAsset
  * -- prepare all others Screens for app
  */
 class LoadingScreen(
-    game: MainGame
+        game: MainGame
 ) : AbstractScreen(game) {
     private val logger = logger<LoadingScreen>()
     /*   UI things
@@ -59,15 +58,13 @@ class LoadingScreen(
     private fun loadMainAssets() {
 
         val assetRefs = gdxArrayOf(
-            TextureAtlasAsset.values().filter { !it.isSkinAtlas }.map { assets.loadAsync(it.descriptor) },
-            TextureAsset.values().map { assets.loadAsync(it.descriptor) },
-//            SoundAsset.values().map { assets.loadAsync(it.descriptor) },
-//            ShaderProgramAsset.values().map { assets.loadAsync(it.descriptor) }
+                CardDeckAtlas.values().map { assets.loadAsync(it.desc) },
+                CardBackAtlas.values().map { assets.loadAsync(it.desc) },
+                ImgAsset.values().map { assets.loadAsync(it.desc) },
 
-        ).flatten()
+                ).flatten()
         KtxAsync.launch {
             assetRefs.joinAll()
-//            assetsLoaded()
             isAssetsLoadingFinish = true
         }
     }
@@ -148,11 +145,4 @@ class LoadingScreen(
 //        }
 //    }
 
-    private fun assetsLoaded() {
-//        game.addScreen(GameScreen(game))
-//        game.addScreen(GameOverScreen(game))
-//        game.addScreen(MenuScreen(game))
-//        touchToBegin += forever(sequence(fadeIn(ACTOR_FADE_IN_TIME) + fadeOut(ACTOR_FADE_OUT_TIME)))
-//        progressText.label.setText(bundle["loaded"])
-    }
 }

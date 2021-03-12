@@ -31,17 +31,7 @@ class ScreenInputSystem
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
             refreshCurrentPosition()
 //            println("SI :: button press")
-//            if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
-//                println("SI DEBUG")
-//                println("prevPosition = $prevPosition")
-//                println("currPosition = $currPosition")
-//                println("currPosition = $touchStatus")
-//                println("dragged cond = ${(touchStatus == DOWN || touchStatus == HOLD)
-//                        && !isPositionEquals(currPosition, prevPosition)}")
-//                println("SI DEBUG")
-//            }
 
-//            if (prevPosition.x == -1f) { // touchDown
             if (touchStatus == NONE) { // touchDown
 //                println("SI :: touchDown")
                 inputProcessors.forEach { it.onTouchDown(currPosition) }
@@ -66,12 +56,6 @@ class ScreenInputSystem
             touchStatus = NONE
         }
 
-//        if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
-//            println("SI DEBUG")
-//            println("prevPosition = ${prevPosition}")
-//            println("currPosition = ${currPosition}")
-//            println("SI DEBUG")
-//        }
     }
 
     override fun processEntity(entity: Entity?, deltaTime: Float) {

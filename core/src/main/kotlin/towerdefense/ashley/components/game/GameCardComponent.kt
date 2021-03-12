@@ -22,17 +22,18 @@ class GameCardComponent : Component, Pool.Poolable {
     var isClickable: Boolean = false
     lateinit var setNextPredicate: Predicate<GameCardComponent>
 
+
     /**
      * TODO - TEST IT!!!
      */
-    fun moveNextCards(newPosition : Vector2) {
+    fun moveNextCards(newPosition: Vector2) {
         recursiveMoveNextCard(this, newPosition.apply { y += CARD_STACK_OFFSET })
     }
 
     /**
      * TODO - rewrite to while-list run
      */
-    private fun recursiveMoveNextCard(gameCardComp: GameCardComponent, newPosition : Vector2) {
+    private fun recursiveMoveNextCard(gameCardComp: GameCardComponent, newPosition: Vector2) {
         println("REC START")
         println("this  =                    ${this.hashCode()}")
         println("gameCardComp.next =        ${gameCardComp.next.hashCode()}")
@@ -50,9 +51,13 @@ class GameCardComponent : Component, Pool.Poolable {
     }
 
     override fun reset() {
+        cardSuit = CardSuit.NONE
+        cardRank = CardRank.NONE
 
+        isCardOpen = false
+        next = null
+        isClickable = false
     }
-
 
 
 //    fun intCard(suit: CardSuit, rank: CardRank, cardOpen: Boolean = false) {

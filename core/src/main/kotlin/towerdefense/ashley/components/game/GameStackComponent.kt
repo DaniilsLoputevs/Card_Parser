@@ -23,7 +23,7 @@ class GameStackComponent : Component, Pool.Poolable {
     fun contains(card: Entity) = cardStack.contains(card)
 
     override fun reset() {
-        TODO("Not yet implemented")
+        cardStack = mutableListOf()
     }
 
     companion object {

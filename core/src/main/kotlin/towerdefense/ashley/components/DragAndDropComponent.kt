@@ -21,6 +21,7 @@ class DragAndDropComponent : Component, Pool.Poolable{
 //    var rotationDeg = 0f
 
     override fun reset() {
+        isClickable = true
 //        prevPosition.set(Vector3.Zero)
 //        position.set(Vector3.Zero)
 //        interpolatedPosition.set(Vector3.Zero)
