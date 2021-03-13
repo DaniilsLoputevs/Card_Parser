@@ -7,18 +7,19 @@ import towerdefense.ashley.components.game.GameStackComponent
 
 fun main() {
 
-    val stack = GameStackComponent()
-    val card = Entity().apply {
-        addAndReturn(GameCardComponent())
-    }
-    val card2 = Entity().apply {
-        addAndReturn(GameCardComponent())
-    }
-    stack.addGameCard(card)
+    var s : String? = find("asd")
+//    s = null
 
-    println(card)
-    println(card2)
-    println(stack.contains(card2))
+    s?.let {
+        println("before: $it")
+    }
+
+    println("after: $s")
+
+
+
+
+
 
 
 
@@ -36,6 +37,10 @@ fun main() {
 //    println(t.getLastCard())
 //    println(t.getLastCard())
 //    println(t.getLastCard())
+}
+
+fun find(s : String) : String? {
+    return s
 }
 
 class MyClass {

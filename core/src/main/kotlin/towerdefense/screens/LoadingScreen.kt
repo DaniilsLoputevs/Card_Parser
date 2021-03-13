@@ -80,10 +80,10 @@ class LoadingScreen(
     }
 
     override fun render(delta: Float) {
-        println("LoadingScreen :: render invoke time")
+//        println("LoadingScreen :: render invoke time")
 //        if (assets.progress.isFinished && Gdx.input.justTouched() && game.containsScreen<MenuScreen>()) {
         if (assets.progress.isFinished && isAssetsLoadingFinish) {
-            println("LoadingScreen :: render -- in if")
+//            println("LoadingScreen :: render -- in if")
 //            game.removeScreen(LoadingScreen::class.java)
             game.removeScreen<LoadingScreen>()
             dispose()

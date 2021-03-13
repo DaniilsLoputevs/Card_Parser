@@ -1,18 +1,18 @@
 package towerdefense.gameStrucures
 
-import com.badlogic.ashley.core.Entity
-
-import towerdefense.gameStrucures.CardMoveProcessor.DragAndDropStatus.*
+import towerdefense.gameStrucures.CardMoveProcessor.DragAndDropStatus.NONE
+import towerdefense.gameStrucures.adapters.GameCardAdapter
+import towerdefense.gameStrucures.adapters.GameStackAdapter
 
 class GameContext {
-    lateinit var stacks: Array<Entity>
-
-    lateinit var cards: Array<Entity>
+    lateinit var stacks: List<GameStackAdapter>
+    lateinit var cards: List<GameCardAdapter>
 
 
     /* DragAndDrop part*/
 
-    var dndSelectedEntity: Entity? = null
+    var dndSelectedCard: GameCardAdapter? = null
+
     /** DragAndDrop status */
     var dndEntityStatus: CardMoveProcessor.DragAndDropStatus = NONE
 

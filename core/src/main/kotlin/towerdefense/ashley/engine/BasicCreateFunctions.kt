@@ -1,7 +1,6 @@
 package towerdefense.ashley.engine
 
 import com.badlogic.ashley.core.Engine
-import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import ktx.ashley.entity
 import ktx.ashley.with
@@ -12,6 +11,8 @@ import towerdefense.ashley.components.GraphicComponent
 import towerdefense.ashley.components.TransformComponent
 import towerdefense.ashley.components.game.GameCardComponent
 import towerdefense.ashley.components.game.GameStackComponent
+import towerdefense.gameStrucures.adapters.GameCardAdapter
+import towerdefense.gameStrucures.adapters.GameStackAdapter
 import java.util.function.Predicate
 
 fun Engine.createCard(
@@ -20,20 +21,13 @@ fun Engine.createCard(
         cardSuit: GameCardComponent.CardSuit,
         cardRank: GameCardComponent.CardRank,
         posX: Float, posY: Float
-): Entity {
-    return this.entity {
-//        val atlas: TextureAtlas = assets[TextureAtlasAsset.TEST_CARD_BACK.descriptor]
-//        val texture: TextureAtlas.AtlasRegion = atlas.findRegion("dark")
-
-
-//        val atlas: TextureAtlas = assets[TextureAtlasAsset.FIRST_CARD_DECK.descriptor]
+): GameCardAdapter {
+    val rsl = this.entity {
         val texture: TextureAtlas.AtlasRegion = textureAtlas.findRegion(textureRegion)
-//        val texture: TextureAtlas.AtlasRegion = atlas.findRegion("two")
 
         with<TransformComponent> {
             initTransformComp(texture, posX, posY)
             setSizeByHeightSAR(160f)
-//            this.setSizeByWidthSAR(114f)
         }
         with<GraphicComponent>() {
             setSpriteRegion(texture)
@@ -48,6 +42,7 @@ fun Engine.createCard(
         }
         with<DragAndDropComponent>() {}
     }
+    return GameCardAdapter(rsl)
 }
 
 /**
@@ -56,10 +51,11 @@ fun Engine.createCard(
 fun Engine.createStack(
         textureAtlas: TextureAtlas,
         textureRegion: String,
-        posX: Float, posY: Float
-): Entity {
+        posX: Float, posY: Float,
+        onClickFun: () -> Unit = {}
+): GameStackAdapter {
 
-    return entity {
+    val rsl = entity {
         val texture: TextureAtlas.AtlasRegion = textureAtlas.findRegion(textureRegion)
 
         with<TransformComponent> {
@@ -67,6 +63,9 @@ fun Engine.createStack(
             setSize(CARD_WIDTH, CARD_HEIGHT)
         }
         with<GraphicComponent>() { setSpriteRegion(texture) }
-        with<GameStackComponent>()
+        with<GameStackComponent>() {
+            onClick = onClickFun
+        }
     }
+    return GameStackAdapter(rsl)
 }
