@@ -20,7 +20,6 @@ class GameCardComponent : Component, Pool.Poolable {
 
     var isCardOpen: Boolean = false
     var next: GameCardAdapter? = null
-    var isClickable: Boolean = false
     lateinit var setNextPredicate: Predicate<GameCardComponent>
 
 
@@ -67,7 +66,6 @@ class GameCardComponent : Component, Pool.Poolable {
 
         isCardOpen = false
         next = null
-        isClickable = false
     }
 
 

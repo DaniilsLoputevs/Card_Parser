@@ -14,7 +14,7 @@ import ktx.log.info
 import ktx.log.logger
 import towerdefense.MainGame
 import towerdefense.asset.CardBackAtlas
-import towerdefense.asset.ImgAsset
+import towerdefense.asset.GeneralAsset
 import towerdefense.asset.CardDeckAtlas
 
 /**
@@ -60,7 +60,7 @@ class LoadingScreen(
         val assetRefs = gdxArrayOf(
                 CardDeckAtlas.values().map { assets.loadAsync(it.desc) },
                 CardBackAtlas.values().map { assets.loadAsync(it.desc) },
-                ImgAsset.values().map { assets.loadAsync(it.desc) },
+                GeneralAsset.values().map { assets.loadAsync(it.desc) },
 
                 ).flatten()
         KtxAsync.launch {

@@ -10,23 +10,21 @@ import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.Viewport
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.joinAll
-import towerdefense.ashley.systems.RenderSystem
-import towerdefense.event.GameEventManager
-import towerdefense.asset.CardDeckAtlas
 import kotlinx.coroutines.launch
 import ktx.app.KtxGame
 import ktx.app.KtxScreen
 import ktx.assets.async.AssetStorage
 import ktx.async.KtxAsync
 import ktx.collections.gdxArrayOf
-import ktx.log.debug
 import ktx.log.info
 import ktx.log.logger
 import towerdefense.ashley.systems.CardBindingSystem
 import towerdefense.ashley.systems.DebugSystem
-import towerdefense.asset.ImgAsset
+import towerdefense.ashley.systems.RenderSystem
 import towerdefense.ashley.systems.ScreenInputSystem
-import towerdefense.stubs.ShaderProgramStub
+import towerdefense.asset.CardDeckAtlas
+import towerdefense.asset.GeneralAsset
+import towerdefense.event.GameEventManager
 import towerdefense.screens.LoadingScreen
 
 /**
@@ -53,20 +51,7 @@ class MainGame : KtxGame<KtxScreen>() {
     override fun create() {
         Gdx.app.logLevel = Application.LOG_DEBUG
 
-//        println("DEV")
-//        println("gameViewport screenHeight ${gameViewport.screenHeight}")
-//        println("gameViewport screenWidth ${gameViewport.screenWidth}")
-//        println("gameViewport screenX ${gameViewport.screenX}")
-//        println("gameViewport screenY ${gameViewport.screenY}")
-//        println("gameViewport worldHeight ${gameViewport.worldHeight}")
-//        println("gameViewport worldWidth ${gameViewport.worldWidth}")
-//        println("gameViewport scaling ${gameViewport.scaling}")
-//        println("gameViewport camera combined \n${gameViewport.camera.combined}")
-//        println("gameViewport camera position \n${gameViewport.camera.position}")
-//        println("gameViewport camera view \r\n${gameViewport.camera.view}")
-//        println("DEV")
-
-        logger.debug { "MainGame :: create() ## START" }
+        logger.info { "Application :: START" }
         logger.info { "MainGame :: Load Initialization assets - START" }
         val logStartTime = System.currentTimeMillis();
 
@@ -111,19 +96,12 @@ class MainGame : KtxGame<KtxScreen>() {
         /* load skin and go to LoadingScreen for remaining asset loading*/
         return gdxArrayOf(
                 CardDeckAtlas.values().map { assets.loadAsync(it.desc) },
-                ImgAsset.values().map { assets.loadAsync(it.desc) },
+                GeneralAsset.values().map { assets.loadAsync(it.desc) },
         ).flatten()
     }
 
     private fun initEngine(): Engine {
         return PooledEngine().apply {
-//            val atlas = assets[TextureAtlasAsset.GRAPHICS.descriptor]
-
-//            addSystem(DebugSystem(gameEventManager, audioService))
-//            addSystem(MoveSystem(gameEventManager).apply {
-//                setProcessing(false)
-//            })
-//            addSystem(AttachSystem())
             addSystem(DebugSystem())
             addSystem(
                     ScreenInputSystem().apply {
@@ -138,13 +116,13 @@ class MainGame : KtxGame<KtxScreen>() {
             addSystem(
                     RenderSystem(
                             stage,
-                            ShaderProgramStub(),
+//                            ShaderProgramStub(),
 //                    assets[ShaderProgramAsset.OUTLINE.descriptor],
                             gameViewport,
-                            gameEventManager,
+//                            gameEventManager,
 //                            Sprite(assets[TextureAtlasAsset.MY_FIRST_ATLAS.descriptor].createSprites()[0])
 //                    assets[TextureAtlasAsset.BACKGROUND.descriptor].createSprite("main-screen-background")
-                            assets[ImgAsset.BACKGROUND_DEFAULT.desc]
+//                            assets[ImgAsset.BACKGROUND_DEFAULT.desc]
                     )
             )
 //            addSystem(RemoveSystem(gameEventManager))

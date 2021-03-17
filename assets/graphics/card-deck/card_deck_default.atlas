@@ -1,0 +1,96 @@
+card_deck_default.png
+size: 820, 92
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+2_spades_two
+  rotate: false
+  xy: 0, 0
+  size: 63, 92
+  orig: 63, 92
+  offset: 0, 0
+  index: -1
+3_spades_three
+  rotate: false
+  xy: 63, 0
+  size: 63, 92
+  orig: 63, 92
+  offset: 0, 0
+  index: -1
+4_spades_four
+  rotate: false
+  xy: 126, 0
+  size: 63, 92
+  orig: 63, 92
+  offset: 0, 0
+  index: -1
+5_spades_five
+  rotate: false
+  xy: 189, 0
+  size: 63, 92
+  orig: 63, 92
+  offset: 0, 0
+  index: -1
+6_spades_six
+  rotate: false
+  xy: 252, 0
+  size: 63, 92
+  orig: 63, 92
+  offset: 0, 0
+  index: -1
+7_spades_seven
+  rotate: false
+  xy: 315, 0
+  size: 63, 92
+  orig: 63, 92
+  offset: 0, 0
+  index: -1
+8_spades_eight
+  rotate: false
+  xy: 378, 0
+  size: 63, 92
+  orig: 63, 92
+  offset: 0, 0
+  index: -1
+9_spades_nine
+  rotate: false
+  xy: 441, 0
+  size: 63, 92
+  orig: 63, 92
+  offset: 0, 0
+  index: -1
+10_spades_ten
+  rotate: false
+  xy: 504, 0
+  size: 64, 92
+  orig: 64, 92
+  offset: 0, 0
+  index: -1
+11_spades_jack
+  rotate: false
+  xy: 568, 0
+  size: 63, 92
+  orig: 63, 92
+  offset: 0, 0
+  index: -1
+12_spades_queen
+  rotate: false
+  xy: 631, 0
+  size: 63, 92
+  orig: 63, 92
+  offset: 0, 0
+  index: -1
+13_spades_king
+  rotate: false
+  xy: 694, 0
+  size: 63, 92
+  orig: 63, 92
+  offset: 0, 0
+  index: -1
+14_spades_ace
+  rotate: false
+  xy: 757, 0
+  size: 63, 92
+  orig: 63, 92
+  offset: 0, 0
+  index: -1

@@ -28,11 +28,11 @@ class CardBindingSystem
     /* Methods */
 
     override fun update(deltaTime: Float) {
-        if (gameContext.dndSelectedCard != null
-                && gameContext.dndEntityStatus == DROPPED) {
-            processSelectedCard(gameContext.dndSelectedCard!!)
-            gameContext.dndEntityStatus = NONE
-            gameContext.dndSelectedCard = null
+        if (gameContext.touchingCard != null
+                && gameContext.touchingCardStatus == DROPPED) {
+            processSelectedCard(gameContext.touchingCard!!)
+            gameContext.touchingCardStatus = NONE
+            gameContext.touchingCard = null
         }
     }
 

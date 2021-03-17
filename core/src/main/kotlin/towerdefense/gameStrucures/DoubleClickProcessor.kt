@@ -19,7 +19,7 @@ class DoubleClickProcessor(
 
     override fun onTouchDragged(currentPosition: Vector2) {
 //        println("TOUCH DRAG  screenX = ${currentPosition.x}  ##  screenY = ${currentPosition.y}")
-        if (gameContext.dndSelectedCard != null) {
+        if (gameContext.touchingCard != null) {
 //            moveSelectedTo(currentPosition)
         }
     }

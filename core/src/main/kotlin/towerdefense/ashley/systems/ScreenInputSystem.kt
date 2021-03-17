@@ -1,29 +1,21 @@
 package towerdefense.ashley.systems
 
 import com.badlogic.ashley.core.Engine
-import com.badlogic.ashley.core.Entity
-import com.badlogic.ashley.systems.IteratingSystem
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.math.Vector2
-import ktx.ashley.allOf
-import towerdefense.ashley.components.DragAndDropComponent
-import towerdefense.ashley.components.game.GameCardComponent
-import towerdefense.ashley.components.RemoveComponent
-import towerdefense.ashley.components.TransformComponent
 import towerdefense.ashley.systems.ScreenInputSystem.TouchStatus.*
 import towerdefense.gameStrucures.ScreenInputProcessor
+import towerdefense.stubs.StubIteratingSystem
 
-class ScreenInputSystem
-    : IteratingSystem(allOf(TransformComponent::class, DragAndDropComponent::class, GameCardComponent::class)
-        .exclude(RemoveComponent::class.java).get()) {
+class ScreenInputSystem : StubIteratingSystem() {
 
-   lateinit var inputProcessors: Array<ScreenInputProcessor>
+    lateinit var inputProcessors: Array<ScreenInputProcessor>
+
     /** current & previous touch/cursor position */
     private var currPosition: Vector2 = Vector2(-1f, -1f)
     private var prevPosition: Vector2 = Vector2(-1f, -1f)
-    private var touchStatus : TouchStatus = NONE
-
+    private var touchStatus: TouchStatus = NONE
 
 
     override fun update(deltaTime: Float) {
@@ -58,12 +50,9 @@ class ScreenInputSystem
 
     }
 
-    override fun processEntity(entity: Entity?, deltaTime: Float) {
-        TODO("STUB :: Maybe we don't need to implement this method")
-    }
-
 
     /* Private part */
+
 
     /**
      * Try to make a little bit optimization.
@@ -87,8 +76,8 @@ class ScreenInputSystem
         super.removedFromEngine(engine)
     }
 
-   enum class TouchStatus {
-       NONE, DOWN, HOLD
-   }
+    enum class TouchStatus {
+        NONE, DOWN, HOLD
+    }
 
 }

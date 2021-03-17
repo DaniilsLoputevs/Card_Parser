@@ -1,30 +1,19 @@
 package towerdefense.ashley.systems
 
 import com.badlogic.ashley.core.Entity
-import com.badlogic.ashley.systems.IteratingSystem
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
-import ktx.ashley.oneOf
-import towerdefense.ashley.components.DragAndDropComponent
-import towerdefense.ashley.components.GraphicComponent
-import towerdefense.ashley.components.MoveComponent
-import towerdefense.ashley.components.TransformComponent
-import towerdefense.ashley.components.game.GameCardComponent
-import towerdefense.ashley.components.game.GameStackComponent
 import towerdefense.gameStrucures.GameContext
+import towerdefense.stubs.StubIteratingSystem
 
-class DebugSystem
-    : IteratingSystem(
-        oneOf(GameCardComponent::class, GameStackComponent::class, DragAndDropComponent::class,
-                GraphicComponent::class, MoveComponent::class, TransformComponent::class
-        ).get()){
+class DebugSystem : StubIteratingSystem() {
     lateinit var gameContext: GameContext
 
     override fun update(deltaTime: Float) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {
             println("DEBUG")
-            println("gameContext entity = ${gameContext.dndSelectedCard}")
-            println("gameContext status = ${gameContext.dndEntityStatus}")
+            println("gameContext entity = ${gameContext.touchingCard}")
+            println("gameContext status = ${gameContext.touchingCardStatus}")
             println("DEBUG")
             println()
         }

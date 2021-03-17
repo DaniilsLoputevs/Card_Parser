@@ -7,7 +7,10 @@ import towerdefense.ashley.engine.createStacksDefault
 import towerdefense.ashley.engine.initGameDefault
 import towerdefense.ashley.systems.CardBindingSystem
 import towerdefense.ashley.systems.DebugSystem
+import towerdefense.ashley.systems.RenderSystem
 import towerdefense.ashley.systems.ScreenInputSystem
+import towerdefense.asset.CardBackAtlas
+import towerdefense.asset.GeneralAsset
 import towerdefense.gameStrucures.CardMoveProcessor
 import towerdefense.gameStrucures.GameContext
 
@@ -25,12 +28,20 @@ class GameScreen(
      * -- prepare UI and etc...
      */
     init {
-        logger.info { "Game Screen : Init Stage" }
+        logger.info { "Game Screen : Init Stage - START" }
+
+        gameContext.configByPlayerChose(
+                assets[GeneralAsset.BACKGROUND_DEFAULT.desc],
+                assets[CardBackAtlas.CARD_BACK_DEFAULT.desc].findRegion("light")
+        )
 
         engine.run {
             this.initGameDefault(gameContext, game.assets)
 
             getSystem<DebugSystem>().apply {
+                this.gameContext = this@GameScreen.gameContext
+            }
+            getSystem<RenderSystem>().apply {
                 this.gameContext = this@GameScreen.gameContext
             }
             getSystem<ScreenInputSystem>().apply {
@@ -43,6 +54,8 @@ class GameScreen(
             }
             this.createStacksDefault(game.assets)
         }
+
+        logger.info { "Game Screen : Init Stage - START" }
     }
 
     override fun show() {

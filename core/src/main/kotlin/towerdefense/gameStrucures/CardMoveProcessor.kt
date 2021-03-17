@@ -17,7 +17,7 @@ class CardMoveProcessor(
 
     override fun onTouchDragged(currentPosition: Vector2) {
 //        println("TOUCH DRAG  screenX = ${currentPosition.x}  ##  screenY = ${currentPosition.y}")
-        if (gameContext.dndSelectedCard != null) {
+        if (gameContext.touchingCard != null) {
             moveSelectedTo(currentPosition)
         }
     }
@@ -37,33 +37,33 @@ class CardMoveProcessor(
         gameViewport.unproject(cursorPosition)
 
         gameContext.cards
-                .find { it.gameCardComp.isClickable && it.transComp.shape.contains(cursorPosition) }
+                .find { it.touchComp.isTouchable && it.transComp.shape.contains(cursorPosition) }
                 ?.let {
                     touchPosition = cursorPosition
-                    gameContext.dndSelectedCard = it
+                    gameContext.touchingCard = it
                     captureOffset.set(
                             cursorPosition.x - it.transComp.interpolatedPosition.x,
                             cursorPosition.y - it.transComp.interpolatedPosition.y
                     )
-                    gameContext.dndEntityStatus = DragAndDropStatus.TOUCH
+                    gameContext.touchingCardStatus = DragAndDropStatus.TOUCH
                 }
     }
 
     private fun moveSelectedTo(currentPosition: Vector2) {
-        if (gameContext.dndSelectedCard != null) {
+        if (gameContext.touchingCard != null) {
             val newPos = gameViewport.unproject(currentPosition).apply {
                 x -= captureOffset.x
                 y -= captureOffset.y
             }
-            gameContext.dndSelectedCard!!.transComp.setTotalPosition(newPos)
-            gameContext.dndEntityStatus = DragAndDropStatus.DRAGGED
+            gameContext.touchingCard!!.transComp.setTotalPosition(newPos)
+            gameContext.touchingCardStatus = DragAndDropStatus.DRAGGED
         }
     }
 
     private fun dropSelectedEntity() {
-        if (gameContext.dndSelectedCard != null) {
+        if (gameContext.touchingCard != null) {
             captureOffset.set(-1f, -1f)
-            gameContext.dndEntityStatus = DragAndDropStatus.DROPPED
+            gameContext.touchingCardStatus = DragAndDropStatus.DROPPED
         }
     }
 

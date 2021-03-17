@@ -3,27 +3,25 @@ package towerdefense.ashley.systems
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.systems.SortedIteratingSystem
-import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Batch
-import com.badlogic.gdx.graphics.g2d.Sprite
-import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.Viewport
 import ktx.ashley.allOf
+import ktx.ashley.contains
 import ktx.ashley.get
 import ktx.graphics.use
 import ktx.log.error
 import ktx.log.logger
 import ktx.math.component1
 import ktx.math.component2
-import towerdefense.V_WORLD_HEIGHT_UNITS
-import towerdefense.V_WORLD_WIDTH_UNITS
 import towerdefense.ashley.components.GraphicComponent
 import towerdefense.ashley.components.TransformComponent
+import towerdefense.ashley.components.game.GameCardComponent
 import towerdefense.ashley.findRequiredComponent
 import towerdefense.event.GameEvent
 import towerdefense.event.GameEventListener
-import towerdefense.event.GameEventManager
+import towerdefense.gameStrucures.GameContext
+import towerdefense.gameStrucures.adapters.GameCardAdapter
 
 /**
  * Component processor && Game Event Listener.
@@ -33,52 +31,16 @@ import towerdefense.event.GameEventManager
  */
 class RenderSystem(
         private val stage: Stage,
-        private var outlineShader: ShaderProgram,
         private val gameViewport: Viewport,
-        private val gameEventManager: GameEventManager,
-        backgroundTexture: Texture
 ) : SortedIteratingSystem(
         allOf(GraphicComponent::class, TransformComponent::class).get(),
         compareBy { entity -> entity[TransformComponent.mapper] }
-), GameEventListener {
+){
     private val logger = logger<RenderSystem>()
-//    private val BGD_SCROLL_SPEED_X = 0.03f
-//    private val MIN_BGD_SCROLL_SPEED_Y = -0.25f
-//    private val OUTLINE_COLOR_RED = 0f
-//    private val OUTLINE_COLOR_GREEN = 113f / 255f
-//    private val OUTLINE_COLOR_BLUE = 214f / 255f
-//    private val OUTLINE_COLOR_MIN_ALPHA = 0.35f
-//    private val BGD_SCROLL_SPEED_GAIN_BOOST_1 = 0.25f
-//    private val BGD_SCROLL_SPEED_GAIN_BOOST_2 = 0.5f
-//    private val TIME_TO_RESET_BGD_SCROLL_SPEED = 10f // in seconds
-
-
     private val batch: Batch = stage.batch
-    private val background = Sprite(backgroundTexture).apply {
-//        println("DEV background")
-//        println("background h " + this.height)
-//        println("background w " + this.width)
-//        println("DEV BEFORE")
-//
-        // pixels but equals to WU, so World is 1280 x 720, - background as well
-        setSize(V_WORLD_WIDTH_UNITS.toFloat(),   V_WORLD_HEIGHT_UNITS.toFloat())
-//
-//        println("DEV AFTER")
-//        println("background h " + this.height)
-//        println("background w " + this.width)
-//        println("DEV background")
-    }
 
+    lateinit var gameContext: GameContext
 
-//    private val backgroundScrollSpeed = vec2(BGD_SCROLL_SPEED_X, MIN_BGD_SCROLL_SPEED_Y)
-//    private val textureSizeLoc = outlineShader.getUniformLocation("u_textureSize")
-//    private val outlineColorLoc = outlineShader.getUniformLocation("u_outlineColor")
-//    private val outlineColor = Color(OUTLINE_COLOR_RED, OUTLINE_COLOR_GREEN, OUTLINE_COLOR_BLUE, 1f)
-//    private val playerEntities by lazy {
-//        engine.getEntitiesFor(
-//            allOf(PlayerComponent::class).exclude(RemoveComponent::class).get()
-//        )
-//    }
 
     /**
      * Called when this EntitySystem is added to an {@link Engine}.
@@ -86,70 +48,29 @@ class RenderSystem(
      */
     override fun addedToEngine(engine: Engine?) {
         super.addedToEngine(engine)
-//        println("DEV")
-
-//        println("background boundingRectangle " + background.boundingRectangle)
-//        println("background height " + background.height)
-//        println("background width " + background.width)
-//        println("background" + background)
-//        println("batch " + gameViewport.screenX)
-//        println("batch " + gameViewport.screenY)
-//        println("batch " + gameViewport.worldWidth)
-//        println("batch " + gameViewport.worldHeight)
-//        println("batch " + gameViewport.)
-
-
-//        println("stage height ${stage.height}")
-//        println("stage width ${stage.width}")
-//        println("stage camera position ${stage.camera.position}")
-//        println("gameViewport screenWidth ${gameViewport.screenWidth}")
-//        println("gameViewport screenX ${gameViewport.screenX}")
-//        println("gameViewport screenY ${gameViewport.screenY}")
-//        println("gameViewport worldHeight ${gameViewport.worldHeight}")
-//        println("gameViewport worldWidth ${gameViewport.worldWidth}")
-//        println("gameViewport scaling ${gameViewport.scaling}")
-//        println("gameViewport camera combined \n${gameViewport.camera.combined}")
-//        println("gameViewport camera position \n${gameViewport.camera.position}")
-//        println("gameViewport camera view \r\n${gameViewport.camera.view}")
-//        println("DEV")
-//        gameEventManager.addListener(GameEvent.PowerUp::class, this)
     }
 
     override fun removedFromEngine(engine: Engine?) {
         super.removedFromEngine(engine)
-//        gameEventManager.removeListener(GameEvent.PowerUp::class, this)
     }
 
     override fun update(deltaTime: Float) {
 
-//        println("Render :: upd invoke")
-
         // render background
-        renderBackground(deltaTime)
+        renderBackground()
 
         // render entities
         renderEntity(deltaTime)
-
-//        // render player with outline shader in case he has a shield
-//        renderEntityOutlines()
     }
 
-    private fun renderEntityOutlines() {
-//        batch.use(camera.combined) {
-//            it.shader = outlineShader
-//            playerEntities.forEach { entity ->
-//                renderPlayerOutlines(entity, it)
-//            }
-//            it.shader = null
-//        }
-    }
-
-    private fun renderBackground(deltaTime: Float) {
+    private fun renderBackground() {
+        if (gameContext.background.texture == null) return
         stage.viewport.apply()
         batch.use(stage.camera.combined) {
-            background.draw(it)
+            gameContext.background.draw(it)
         }
     }
+
     private fun renderEntity(deltaTime: Float) {
         // * set for "It must sort then Method sort() will be invoked", cause default it must not be.
         forceSort()
@@ -165,12 +86,24 @@ class RenderSystem(
         val transformComp = entity.findRequiredComponent(TransformComponent.mapper)
         val graphicComp = entity.findRequiredComponent(GraphicComponent.mapper)
 
-        val (posX, posY) = transformComp.interpolatedPosition
-        val (sizeX, sizeY) = transformComp.size
         if (graphicComp.sprite.texture == null) {
             logger.error { "Entity has no texture for rendering" }
             return
         }
+
+        /* If card Closed we need to ignore card's texture and render card back texture,
+         after that finish method */
+        if (entity.contains(GameCardComponent.mapper)) {
+            val card = GameCardAdapter(entity)
+            if (!card.gameCardComp.isCardOpen) {
+                renderCardBack(card)
+                return
+            }
+
+        }
+
+        val (posX, posY) = transformComp.interpolatedPosition
+        val (sizeX, sizeY) = transformComp.size
 
         graphicComp.sprite.run {
             rotation = transformComp.rotationDeg
@@ -180,12 +113,16 @@ class RenderSystem(
         }
     }
 
-    override fun onEvent(event: GameEvent) {
-//        val eventPowerUp = event as GameEvent.PowerUp
-//        if (eventPowerUp.type == PowerUpType.SPEED_1) {
-//            backgroundScrollSpeed.y -= BGD_SCROLL_SPEED_GAIN_BOOST_1
-//        } else if (eventPowerUp.type == PowerUpType.SPEED_2) {
-//            backgroundScrollSpeed.y -= BGD_SCROLL_SPEED_GAIN_BOOST_2
-//        }
+    private fun renderCardBack(card: GameCardAdapter) {
+        val (posX, posY) = card.transComp.interpolatedPosition
+        val (sizeX, sizeY) = card.transComp.size
+
+        gameContext.cardBack.run {
+            rotation = card.transComp.rotationDeg
+            // setBounds(...) == setPosition(...) && setSize(...)
+            setBounds(posX, posY, sizeX, sizeY)
+            draw(batch)
+        }
     }
+
 }

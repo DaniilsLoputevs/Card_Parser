@@ -24,7 +24,7 @@ fun main() {
     Lwjgl3Application(
             MainGame(), // create game
             Lwjgl3ApplicationConfiguration().apply {
-                setTitle("tower_defense")
+                setTitle("Card Parser by Daniils & Maksim. ))))")
                 setWindowSizeLimits(426, 240, -1, -1)
 //                setWindowedMode(1280, 720) // 16 : 9
                 setWindowedMode(854, 480) // 16 : 9

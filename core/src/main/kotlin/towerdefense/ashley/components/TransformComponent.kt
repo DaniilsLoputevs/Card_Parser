@@ -1,6 +1,7 @@
 package towerdefense.ashley.components
 
 import com.badlogic.ashley.core.Component
+import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
@@ -46,23 +47,32 @@ class TransformComponent : Component, Pool.Poolable, Comparable<TransformCompone
     /* CUSTOM STAFF */
 
     fun initTransformComp(textureForSize: TextureAtlas.AtlasRegion,
-//                      width : Float, height : Float,
                           positionX: Float = 0f, positionY: Float = 0f,
                           rotationDeg: Float = 0f) {
-//        println("DEV initTransformComp")
-//        println("textureForSize.originalWidth = ${textureForSize.originalWidth.toFloat()}")
-//        println("textureForSize.originalHeight = ${textureForSize.originalHeight.toFloat()}")
-//        println("textureForSize.regionWidth = ${textureForSize.regionWidth.toFloat()}")
-//        println("textureForSize.regionHeight = ${textureForSize.regionHeight.toFloat()}")
-//        println("DEV initTransformComp")
-        val width = textureForSize.originalWidth.toFloat()
-        val height = textureForSize.originalHeight.toFloat()
+        initTransformComp(
+                textureForSize.originalWidth.toFloat(),
+                textureForSize.originalHeight.toFloat(),
+                positionX, positionY, rotationDeg
+        )
+    }
+
+    fun initTransformComp(textureForSize: Texture,
+                          positionX: Float = 0f, positionY: Float = 0f,
+                          rotationDeg: Float = 0f) {
+        initTransformComp(
+                textureForSize.width.toFloat(),
+                textureForSize.height.toFloat(),
+                positionX, positionY, rotationDeg
+        )
+    }
+    fun initTransformComp(width : Float, height : Float,
+                          positionX: Float = 0f, positionY: Float = 0f,
+                          rotationDeg: Float = 0f) {
         this.size.set(width, height)
         this.rotationDeg = rotationDeg
         this.setInitialPosition(positionX, positionY, 1f)
         this.shape.set(positionX, positionY, width, height)
     }
-
     /**
      * set position for all part of component
      */
