@@ -15,7 +15,7 @@ class TransformComponent : Component, Pool.Poolable, Comparable<TransformCompone
     val prevPosition = vec3()           // Vector3(0, 0, 0)
     val position = vec3()               // Vector3(0, 0, 0)
     val interpolatedPosition = vec3()   // Vector3(0, 0, 0)
-    val size = vec2(1f, 1f)
+    val size = vec2(1f, 1f)  // x = width, y = height
     var rotationDeg = 0f
     val shape = Rectangle()
 
@@ -47,31 +47,31 @@ class TransformComponent : Component, Pool.Poolable, Comparable<TransformCompone
     /* CUSTOM STAFF */
 
     fun initTransformComp(textureForSize: TextureAtlas.AtlasRegion,
-                          positionX: Float = 0f, positionY: Float = 0f,
+                          posX: Float = 0f, posY: Float = 0f, posZ : Float = 0f,
                           rotationDeg: Float = 0f) {
         initTransformComp(
                 textureForSize.originalWidth.toFloat(),
                 textureForSize.originalHeight.toFloat(),
-                positionX, positionY, rotationDeg
+                posX, posY, posZ, rotationDeg
         )
     }
 
     fun initTransformComp(textureForSize: Texture,
-                          positionX: Float = 0f, positionY: Float = 0f,
+                          posX: Float = 0f, posY: Float = 0f, posZ : Float = 0f,
                           rotationDeg: Float = 0f) {
         initTransformComp(
                 textureForSize.width.toFloat(),
                 textureForSize.height.toFloat(),
-                positionX, positionY, rotationDeg
+                posX, posY, posZ, rotationDeg
         )
     }
     fun initTransformComp(width : Float, height : Float,
-                          positionX: Float = 0f, positionY: Float = 0f,
+                          posX: Float = 0f, posY: Float = 0f, posZ : Float = 0f,
                           rotationDeg: Float = 0f) {
         this.size.set(width, height)
         this.rotationDeg = rotationDeg
-        this.setInitialPosition(positionX, positionY, 0f)
-        this.shape.set(positionX, positionY, width, height)
+        this.setInitialPosition(posX, posY, posZ)
+        this.shape.set(posX, posY, width, height)
     }
     /**
      * set position for all part of component

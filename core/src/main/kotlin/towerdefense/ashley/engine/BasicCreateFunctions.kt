@@ -22,13 +22,13 @@ fun Engine.createCard(
         cardSuit: GameCardComponent.CardSuit,
         cardRank: GameCardComponent.CardRank,
         isCardOpen: Boolean = false,
-        posX: Float = 0f, posY: Float = 0f
+        posX: Float = 0f, posY: Float = 0f, posZ : Float = 1f
 ): GameCardAdapter {
     val rsl = this.entity {
         val texture: TextureAtlas.AtlasRegion = textureAtlas.findRegion(textureRegion)
 
         with<TransformComponent> {
-            initTransformComp(texture, posX, posY)
+            initTransformComp(texture, posX, posY, posZ)
             setSize(CARD_WIDTH, CARD_HEIGHT)
 //            setSizeByHeightSAR(160f)
         }
@@ -51,14 +51,14 @@ fun Engine.createCard(
  */
 fun Engine.createStack(
         texture: Texture,
-        posX: Float, posY: Float,
+        posX: Float, posY: Float, posZ : Float = 0f,
         onClickFun: () -> Unit = {}
 ): GameStackAdapter {
 
     val rsl = entity {
 
         with<TransformComponent> {
-            initTransformComp(texture, posX, posY)
+            initTransformComp(texture, posX, posY, posZ)
             setSize(CARD_WIDTH, CARD_HEIGHT)
         }
         with<GraphicComponent>() { setSpriteRegion(texture) }

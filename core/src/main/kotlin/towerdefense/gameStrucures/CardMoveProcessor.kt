@@ -39,29 +39,17 @@ class CardMoveProcessor(
         gameViewport.unproject(cursorPosition)
         cards
                 .filter { it.touchComp.isTouchable && it.transComp.shape.contains(cursorPosition) }
-                .minByOrNull { it.transComp.interpolatedPosition.z }
+                .maxByOrNull { it.transComp.interpolatedPosition.z }
                 ?.let {
                     touchPosition = cursorPosition
                     gameContext.touchingCard = it
-//                    gameContext.touchingCard!!.transComp.setDepth(1000f)
+                    gameContext.touchingCard!!.transComp.setDepth(1000f)
                     captureOffset.set(
                             cursorPosition.x - it.transComp.interpolatedPosition.x,
                             cursorPosition.y - it.transComp.interpolatedPosition.y
                     )
-                    gameContext.touchingCardStatus = DragAndDropStatus.TOUCH }
-
-//        cards
-//                .find { it.touchComp.isTouchable && it.transComp.shape.contains(cursorPosition) }
-//                ?.let {
-//                    touchPosition = cursorPosition
-//                    gameContext.touchingCard = it
-////                    gameContext.touchingCard!!.transComp.setDepth(1000f)
-//                    captureOffset.set(
-//                            cursorPosition.x - it.transComp.interpolatedPosition.x,
-//                            cursorPosition.y - it.transComp.interpolatedPosition.y
-//                    )
-//                    gameContext.touchingCardStatus = DragAndDropStatus.TOUCH
-//                }
+                    gameContext.touchingCardStatus = DragAndDropStatus.TOUCH
+                }
     }
 
     private fun moveSelectedTo(currentPosition: Vector2) {
@@ -71,7 +59,6 @@ class CardMoveProcessor(
                 y -= captureOffset.y
             }
             gameContext.touchingCard!!.transComp.setTotalPosition(newPos)
-            gameContext.touchingCard!!.transComp.setDepth(1000f)
             gameContext.touchingCardStatus = DragAndDropStatus.DRAGGED
         }
     }
@@ -79,7 +66,7 @@ class CardMoveProcessor(
     private fun dropSelectedEntity() {
         if (gameContext.touchingCard != null) {
             captureOffset.set(-1f, -1f)
-            gameContext.touchingCard!!.transComp.setDepth(0f)
+            gameContext.touchingCard!!.transComp.setDepth(1f)
             gameContext.touchingCardStatus = DragAndDropStatus.DROPPED
         }
     }

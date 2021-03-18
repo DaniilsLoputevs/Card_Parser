@@ -7,9 +7,11 @@ import towerdefense.gameStrucures.adapters.GameCardAdapter
 
 class GameStackComponent : Component, Pool.Poolable {
     var cardStack: MutableList<GameCardAdapter> = mutableListOf()
+
+    @Deprecated("later, not now")
     var onClick: () -> Unit = {}
     var onAddCard: () -> Unit = {}
-    var addCardPredicate: (GameCardAdapter, GameCardAdapter) -> Boolean = { lastCard: GameCardAdapter, newCard: GameCardAdapter -> true }
+    var addCardPredicate: (GameCardAdapter, GameCardAdapter) -> Boolean = { _: GameCardAdapter, _: GameCardAdapter -> true }
 
     fun isEmpty() = cardStack.isEmpty()
 
@@ -23,10 +25,9 @@ class GameStackComponent : Component, Pool.Poolable {
      * 2) check: test by addCardPredicate can we can.
      */
     fun canAdd(card: GameCardAdapter): Boolean {
-        val stackLastCard = getLastCard()
         return when (this.isEmpty()) {
             true -> (card.gameCardComp.cardRank >= GameCardComponent.CardRank.KING)
-            false -> (stackLastCard !== card && addCardPredicate.invoke(stackLastCard, card))
+            false -> (getLastCard() !== card && addCardPredicate.invoke(getLastCard(), card))
         }
     }
 
@@ -38,8 +39,11 @@ class GameStackComponent : Component, Pool.Poolable {
 
     fun getLastCard() = cardStack[cardStack.size.coerceAtMost(0)]
 
-    //    fun getRemoveCard() = cardStack.removeAt(cardStack.size.coerceAtMost(0))
-    fun removeGameCard(card: GameCardAdapter) = cardStack.remove(card)
+    /**
+     * TODO - make cascade remove from {@param card} index in stack
+     */
+    fun removeGameCard(card: GameCardAdapter): Boolean = cardStack.remove(card)
+    fun indexOfCard(card: GameCardAdapter): Int = cardStack.indexOf(card)
 
     fun contains(card: GameCardAdapter) = cardStack.contains(card)
 

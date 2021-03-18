@@ -20,6 +20,7 @@ class CardBindingSystem : EntitySystem() {
      * applyCardToNotEmptyStack(...)
      */
     private val newCardCenter = Vector2(-1f, -1f)
+    private val cardReturnPos = Vector2(-1f, -1f)
 
     /* Methods */
 
@@ -47,34 +48,50 @@ class CardBindingSystem : EntitySystem() {
     private fun processSelectedCard(card: GameCardAdapter) {
         card.transComp.shape.getCenter(newCardCenter)
 
-        /* if we find stack by card pos, it must be NOT NULL, else return to prev stack */
-        val newStack = findStackByPos(newCardCenter)
-        if (newStack != null) {
-            when (newStack.gameStackComp.isEmpty()) {
-                true -> applyToEmptyStackNEW(card, newStack)
-                false -> applyToNotEmptyStackNEW(card, newStack)
-            }
-        } else returnCardToPrevStack(card)
-
-        var cardApplyIntoNewStack = false
-//        for (stack in stacks) {
-//            cardApplyIntoNewStack = when (stack.gameStackComp.isEmpty()) {
-//                true -> applyCardToEmptyStack(card, stack)
-//                false -> applyCardToNotEmptyStack(card, stack)
+        /* if we find stack by card pos, it must be NOT NULL, else return card to prev stack */
+        // TODO - TEST THIS API!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//        findStackByPos(newCardCenter)?.let {
+//            when (it.gameStackComp.isEmpty()) {
+//                true -> applyToEmptyStackNEW(card, it)
+//                false -> applyToNotEmptyStackNEW(card, it)
 //            }
-//            if (cardApplyIntoNewStack) break
-//        }
-//        if (!cardApplyIntoNewStack) returnCardToPrevStack(card)
+//        } ?: returnCardToPrevStack(card)
+
+
+        val newCardStack = findStackByPos(newCardCenter)
+        println("find Stack is Null: ${newCardStack == null}")
+        println("newCardCenter: ${newCardCenter}")
+        if (newCardStack != null) {
+//            when (newCardStack.gameStackComp.isEmpty()) {
+//                true -> applyToEmptyStackNEW(card, newCardStack)
+//                false -> applyToNotEmptyStackNEW(card, newCardStack)
+//            }
+            applyToStack(card, newCardStack)
+        } else returnCardToPrevStack(card)
     }
 
     private fun findStackByPos(newCardCenter: Vector2): GameStackAdapter? {
         for (stack in stacks) {
-            val temp = if (stack.gameStackComp.isEmpty()) stack.transComp
-             else stack.gameStackComp.getLastCard().transComp
-
-            if (temp.shape.contains(newCardCenter)) return stack
+            println("FIND")
+            println("stack = ${stack.transComp.interpolatedPosition}")
+            println("FIND")
+            if (stack.containsPosition(newCardCenter)) return stack
+//            if (stack.getActualHitBox().shape.contains(newCardCenter)) return stack
         }
         return null
+    }
+    private fun applyToStack(card: GameCardAdapter, newStack: GameStackAdapter) {
+        println("APPLY TO STACK")
+        if (!newStack.gameStackComp.canAdd(card)) return
+
+        /* Getting position for new card before add it into stack*/
+        val newCardPos = newStack.getNextCardPosition()
+        unbindCardFromStack(card)
+
+        newStack.gameStackComp.addGameCard(card)
+        card.transComp.setTotalPosition(newCardPos)
+        println("APPLY TO STACK END ")
+//        card.gameCardComp.moveNextCards(newPos)
     }
 
     private fun applyToEmptyStackNEW(card: GameCardAdapter, newStack: GameStackAdapter): Boolean {
@@ -96,6 +113,7 @@ class CardBindingSystem : EntitySystem() {
         card.gameCardComp.moveNextCards(newPos)
         return true
     }
+
 
     private fun applyToNotEmptyStackNEW(card: GameCardAdapter, newStack: GameStackAdapter): Boolean {
         val stackLastCard = newStack.gameStackComp.getLastCard()
@@ -175,14 +193,29 @@ class CardBindingSystem : EntitySystem() {
     }
 
     private fun returnCardToPrevStack(card: GameCardAdapter) {
+        println("RET")
+//        stacks
+//                .find { it.gameStackComp.contains(card) }
+//                ?.let {
+//                    val offsetY = it.gameStackComp.size() + CARD_STACK_OFFSET
+//                    val newPos = Vector2(
+//                            it.transComp.interpolatedPosition.x,
+//                            it.transComp.interpolatedPosition.y - offsetY,
+//                    )
+//                    card.apply {
+//                        transComp.setTotalPosition(newPos)
+//                        gameCardComp.moveNextCards(newPos)
+//                    }
+//                }
         stacks
                 .find { it.gameStackComp.contains(card) }
                 ?.let {
-                    val offsetY = it.gameStackComp.size() + CARD_STACK_OFFSET
-                    val newPos = Vector2(
-                            it.transComp.interpolatedPosition.x,
-                            it.transComp.interpolatedPosition.y - offsetY,
-                    )
+                    val newPos = it.getPosForCard(card, cardReturnPos)
+//                    val offsetY = it.gameStackComp.size() * CARD_STACK_OFFSET
+//                    val newPos = Vector2(
+//                            it.transComp.interpolatedPosition.x,
+//                            it.transComp.interpolatedPosition.y - offsetY,
+//                    )
                     card.apply {
                         transComp.setTotalPosition(newPos)
                         gameCardComp.moveNextCards(newPos)

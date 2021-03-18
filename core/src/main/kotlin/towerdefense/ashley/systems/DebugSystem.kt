@@ -22,6 +22,14 @@ class DebugSystem : EntitySystem() {
             println("DEBUG")
             println()
         }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
+            println("DEBUG")
+            var i = 0
+            stacks.forEach { println("Stack #${i++}   size = ${it.gameStackComp.size()}") }
+//            println("context: hold card z = ${gameContext.touchingCard?.transComp?.position?.z}")
+            println("DEBUG")
+            println()
+        }
 //        if (Gdx.input.isKeyJustPressed(Input.Keys.L)) {
 //            println("DEBUG")
 ////            println("gameContext stacks size  = ${gameContext.stacks.size}")

@@ -75,7 +75,7 @@ fun Engine.createCardDeckDefault(assets: AssetStorage): List<GameCardAdapter> {
 fun Engine.createStacksDefault(assets: AssetStorage): List<GameStackAdapter> {
     return listOf<GameStackAdapter>(
             createStack(assets[GeneralAsset.CARD_STACK.desc],
-                    45f, 520f, ::mainStackOnClick),
+                    45f, 520f, onClickFun = ::mainStackOnClick),
             createStack(assets[GeneralAsset.CARD_STACK.desc],
                     45f, 290f),
             createStack(assets[GeneralAsset.CARD_STACK.desc],
