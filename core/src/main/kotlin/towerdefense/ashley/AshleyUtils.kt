@@ -1,10 +1,20 @@
 package towerdefense.ashley
 
-import com.badlogic.ashley.core.Component
-import com.badlogic.ashley.core.ComponentMapper
-import com.badlogic.ashley.core.Entity
-import com.badlogic.ashley.core.EntitySystem
+import com.badlogic.ashley.core.*
+import ktx.ashley.allOf
 import ktx.ashley.get
+import towerdefense.ashley.components.GraphicComponent
+import towerdefense.ashley.components.TouchComponent
+import towerdefense.ashley.components.TransformComponent
+import towerdefense.ashley.components.game.GameCardComponent
+import towerdefense.ashley.components.game.GameStackComponent
+import towerdefense.gameStrucures.adapters.GameCardAdapter
+import towerdefense.gameStrucures.adapters.GameStackAdapter
+
+val GAME_STACK_FAMILY: Family = allOf(TransformComponent::class,
+        GraphicComponent::class, GameStackComponent::class).get()
+val GAME_CARDS_FAMILY: Family = allOf(TransformComponent::class,
+        GraphicComponent::class, GameCardComponent::class, TouchComponent::class).get()
 
 /**
  * For using in [EntitySystem].
@@ -19,6 +29,14 @@ inline fun <reified T : Component> Entity.findRequiredComponent(mapper: Componen
     val rslComponent = this[mapper]
     require(rslComponent != null) { "Entity |entity| must have a ${T::class.simpleName}. entity=$this" }
     return rslComponent
+}
+
+fun Engine.getOurGameStacks(): List<GameStackAdapter> {
+    return this.getEntitiesFor(GAME_STACK_FAMILY).toList().map { GameStackAdapter(it) }
+}
+
+fun Engine.getOurGameCards(): List<GameCardAdapter> {
+    return this.getEntitiesFor(GAME_CARDS_FAMILY).toList().map { GameCardAdapter(it) }
 }
 
 fun Entity.toPrint(): String {

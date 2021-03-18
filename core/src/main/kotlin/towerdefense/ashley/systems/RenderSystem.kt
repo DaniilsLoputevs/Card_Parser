@@ -3,7 +3,10 @@ package towerdefense.ashley.systems
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.systems.SortedIteratingSystem
+import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Batch
+import com.badlogic.gdx.graphics.g2d.Sprite
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.Viewport
 import ktx.ashley.allOf
@@ -14,6 +17,10 @@ import ktx.log.error
 import ktx.log.logger
 import ktx.math.component1
 import ktx.math.component2
+import towerdefense.CARD_HEIGHT
+import towerdefense.CARD_WIDTH
+import towerdefense.V_WORLD_HEIGHT_UNITS
+import towerdefense.V_WORLD_WIDTH_UNITS
 import towerdefense.ashley.components.GraphicComponent
 import towerdefense.ashley.components.TransformComponent
 import towerdefense.ashley.components.game.GameCardComponent
@@ -39,8 +46,24 @@ class RenderSystem(
     private val logger = logger<RenderSystem>()
     private val batch: Batch = stage.batch
 
-    lateinit var gameContext: GameContext
+    var background: Sprite = Sprite()
+    var cardBack: Sprite = Sprite()
 
+
+
+    fun configBackground(backgroundTexture: Texture) {
+        background.apply {
+            setRegion(backgroundTexture)
+            // pixels but equals to WU, so World is 1280 x 720, - background as well
+            setSize(V_WORLD_WIDTH_UNITS, V_WORLD_HEIGHT_UNITS)
+        }
+    }
+    fun configCardBack(cardBackTexture: TextureRegion) {
+        cardBack.apply {
+            setRegion(cardBackTexture)
+            setSize(CARD_WIDTH, CARD_HEIGHT)
+        }
+    }
 
     /**
      * Called when this EntitySystem is added to an {@link Engine}.
@@ -64,10 +87,10 @@ class RenderSystem(
     }
 
     private fun renderBackground() {
-        if (gameContext.background.texture == null) return
+        if (background.texture == null) return
         stage.viewport.apply()
         batch.use(stage.camera.combined) {
-            gameContext.background.draw(it)
+            background.draw(it)
         }
     }
 
@@ -117,7 +140,7 @@ class RenderSystem(
         val (posX, posY) = card.transComp.interpolatedPosition
         val (sizeX, sizeY) = card.transComp.size
 
-        gameContext.cardBack.run {
+        cardBack.run {
             rotation = card.transComp.rotationDeg
             // setBounds(...) == setPosition(...) && setSize(...)
             setBounds(posX, posY, sizeX, sizeY)

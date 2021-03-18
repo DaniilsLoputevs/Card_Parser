@@ -1,12 +1,11 @@
 package towerdefense.ashley.systems
 
-import com.badlogic.ashley.core.Entity
+import com.badlogic.ashley.core.EntitySystem
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import towerdefense.gameStrucures.GameContext
-import towerdefense.stubs.StubIteratingSystem
 
-class DebugSystem : StubIteratingSystem() {
+class DebugSystem : EntitySystem() {
     lateinit var gameContext: GameContext
 
     override fun update(deltaTime: Float) {
@@ -32,9 +31,5 @@ class DebugSystem : StubIteratingSystem() {
 //            println("DEBUG")
 //            println()
 //        }
-    }
-
-    override fun processEntity(entity: Entity?, deltaTime: Float) {
-        TODO("Not yet implemented")
     }
 }

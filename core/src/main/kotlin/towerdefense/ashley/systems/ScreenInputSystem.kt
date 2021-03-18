@@ -1,14 +1,14 @@
 package towerdefense.ashley.systems
 
 import com.badlogic.ashley.core.Engine
+import com.badlogic.ashley.core.EntitySystem
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.math.Vector2
 import towerdefense.ashley.systems.ScreenInputSystem.TouchStatus.*
 import towerdefense.gameStrucures.ScreenInputProcessor
-import towerdefense.stubs.StubIteratingSystem
 
-class ScreenInputSystem : StubIteratingSystem() {
+class ScreenInputSystem : EntitySystem() {
 
     lateinit var inputProcessors: Array<ScreenInputProcessor>
 

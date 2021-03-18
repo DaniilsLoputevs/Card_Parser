@@ -1,18 +1,50 @@
 package towerdefense.ashley.engine
 
 import com.badlogic.ashley.core.Engine
+import com.badlogic.gdx.utils.viewport.Viewport
+import ktx.ashley.getSystem
 import ktx.assets.async.AssetStorage
 import towerdefense.ashley.components.game.GameCardComponent.CardRank.*
 import towerdefense.ashley.components.game.GameCardComponent.CardSuit.SPADES
+import towerdefense.ashley.getOurGameCards
+import towerdefense.ashley.getOurGameStacks
+import towerdefense.ashley.systems.CardBindingSystem
+import towerdefense.ashley.systems.DebugSystem
+import towerdefense.ashley.systems.RenderSystem
+import towerdefense.ashley.systems.ScreenInputSystem
+import towerdefense.asset.CardBackAtlas
 import towerdefense.asset.CardDeckAtlas
 import towerdefense.asset.GeneralAsset
+import towerdefense.gameStrucures.CardMoveProcessor
 import towerdefense.gameStrucures.GameContext
 import towerdefense.gameStrucures.adapters.GameCardAdapter
 import towerdefense.gameStrucures.adapters.GameStackAdapter
 
-fun Engine.initGameDefault(gameContext: GameContext, assets: AssetStorage) {
-    gameContext.cards = createCardDeckDefault(assets)
-    gameContext.stacks = createStacksDefault(assets)
+fun Engine.initGameDefault(assets: AssetStorage, gameContext: GameContext, gameViewport : Viewport) {
+
+    this.run {
+        createCardDeckDefault(assets)
+        createStacksDefault(assets)
+
+        getSystem<DebugSystem>().apply {
+            this.gameContext = gameContext
+        }
+        getSystem<RenderSystem>().apply {
+            this.configBackground(assets[GeneralAsset.BACKGROUND_DEFAULT.desc])
+            this.configCardBack(assets[CardBackAtlas.CARD_BACK_DEFAULT.desc].findRegion("light"))
+        }
+        getSystem<ScreenInputSystem>().apply {
+            this.inputProcessors = arrayOf(
+                    CardMoveProcessor(gameContext, gameViewport, this@run.getOurGameCards())
+            )
+            setProcessing(true)
+        }
+        getSystem<CardBindingSystem>().apply {
+            this.gameContext = gameContext
+            this.stacks = this@run.getOurGameStacks()
+            setProcessing(true)
+        }
+    }
 }
 
 /**
@@ -29,6 +61,8 @@ fun Engine.createCardDeckDefault(assets: AssetStorage): List<GameCardAdapter> {
                     SPADES, THREE, false, 400f, 150f),
             this.createCard(assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc], "4_spades_four",
                     SPADES, FOUR, false, 600f, 150f),
+            this.createCard(assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc], "5_spades_five",
+                    SPADES, FIVE, true, 800f, 150f),
     )
 }
 

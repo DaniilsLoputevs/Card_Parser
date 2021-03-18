@@ -2,10 +2,12 @@ package towerdefense.gameStrucures
 
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.viewport.Viewport
+import towerdefense.gameStrucures.adapters.GameCardAdapter
 
 class CardMoveProcessor(
         private val gameContext: GameContext,
-        private val gameViewport: Viewport
+        private val gameViewport: Viewport,
+        private val cards: List<GameCardAdapter>
 ) : ScreenInputProcessor {
     private var touchPosition: Vector2 = Vector2(-1f, -1f)
     private var captureOffset: Vector2 = Vector2(-1f, -1f)
@@ -36,7 +38,7 @@ class CardMoveProcessor(
         // convert cursor position -> WU position
         gameViewport.unproject(cursorPosition)
 
-        gameContext.cards
+        cards
                 .find { it.touchComp.isTouchable && it.transComp.shape.contains(cursorPosition) }
                 ?.let {
                     touchPosition = cursorPosition

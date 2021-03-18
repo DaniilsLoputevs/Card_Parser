@@ -5,6 +5,8 @@ import ktx.log.info
 import towerdefense.MainGame
 import towerdefense.ashley.engine.createStacksDefault
 import towerdefense.ashley.engine.initGameDefault
+import towerdefense.ashley.getOurGameCards
+import towerdefense.ashley.getOurGameStacks
 import towerdefense.ashley.systems.CardBindingSystem
 import towerdefense.ashley.systems.DebugSystem
 import towerdefense.ashley.systems.RenderSystem
@@ -29,32 +31,7 @@ class GameScreen(
      */
     init {
         logger.info { "Game Screen : Init Stage - START" }
-
-        gameContext.configByPlayerChose(
-                assets[GeneralAsset.BACKGROUND_DEFAULT.desc],
-                assets[CardBackAtlas.CARD_BACK_DEFAULT.desc].findRegion("light")
-        )
-
-        engine.run {
-            this.initGameDefault(gameContext, game.assets)
-
-            getSystem<DebugSystem>().apply {
-                this.gameContext = this@GameScreen.gameContext
-            }
-            getSystem<RenderSystem>().apply {
-                this.gameContext = this@GameScreen.gameContext
-            }
-            getSystem<ScreenInputSystem>().apply {
-                this.inputProcessors = arrayOf(CardMoveProcessor(gameContext, gameViewport))
-                setProcessing(true)
-            }
-            getSystem<CardBindingSystem>().apply {
-                this.gameContext = this@GameScreen.gameContext
-                setProcessing(true)
-            }
-            this.createStacksDefault(game.assets)
-        }
-
+        engine.initGameDefault(game.assets, gameContext, gameViewport)
         logger.info { "Game Screen : Init Stage - START" }
     }
 

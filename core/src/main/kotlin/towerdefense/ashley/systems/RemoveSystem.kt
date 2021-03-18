@@ -7,6 +7,7 @@ import towerdefense.ashley.components.RemoveComponent
 import towerdefense.ashley.findRequiredComponent
 import towerdefense.event.GameEventManager
 
+@Deprecated("Not in use")
 class RemoveSystem(
     private val gameEventManager: GameEventManager
 ) : IteratingSystem(allOf(RemoveComponent::class).get()) {

@@ -18,10 +18,7 @@ import ktx.async.KtxAsync
 import ktx.collections.gdxArrayOf
 import ktx.log.info
 import ktx.log.logger
-import towerdefense.ashley.systems.CardBindingSystem
-import towerdefense.ashley.systems.DebugSystem
-import towerdefense.ashley.systems.RenderSystem
-import towerdefense.ashley.systems.ScreenInputSystem
+import towerdefense.ashley.systems.*
 import towerdefense.asset.CardDeckAtlas
 import towerdefense.asset.GeneralAsset
 import towerdefense.event.GameEventManager
@@ -56,14 +53,14 @@ class MainGame : KtxGame<KtxScreen>() {
         val logStartTime = System.currentTimeMillis();
 
 
-        val asyncJobsForLoading = prepareLoadingForInitializationAssets()
-        KtxAsync.launch {
-            asyncJobsForLoading.joinAll()
+//        val asyncJobsForLoading = prepareLoadingForInitializationAssets()
+//        KtxAsync.launch {
+//            asyncJobsForLoading.joinAll()
 
             /* go to LoadingScreen to load remaining assets */
             addScreen(LoadingScreen(this@MainGame))
             setScreen<LoadingScreen>()
-        }
+//        }
 
         logger.info { "MainGame :: Load Initialization assets - FINISH time: ${(System.currentTimeMillis() - logStartTime) * 0.001f} sec" }
 //        println("GAME :: create() ## END")
@@ -91,14 +88,14 @@ class MainGame : KtxGame<KtxScreen>() {
     /**
      * Load required assets for: font, ui, language
      */
-    private fun prepareLoadingForInitializationAssets(): List<Deferred<Disposable>> {
-        KtxAsync.initiate()
-        /* load skin and go to LoadingScreen for remaining asset loading*/
-        return gdxArrayOf(
-                CardDeckAtlas.values().map { assets.loadAsync(it.desc) },
-                GeneralAsset.values().map { assets.loadAsync(it.desc) },
-        ).flatten()
-    }
+//    private fun prepareLoadingForInitializationAssets(): List<Deferred<Disposable>> {
+//        KtxAsync.initiate()
+//        /* load skin and go to LoadingScreen for remaining asset loading*/
+//        return gdxArrayOf(
+//                CardDeckAtlas.values().map { assets.loadAsync(it.desc) },
+//                GeneralAsset.values().map { assets.loadAsync(it.desc) },
+//        ).flatten()
+//    }
 
     private fun initEngine(): Engine {
         return PooledEngine().apply {
@@ -116,16 +113,13 @@ class MainGame : KtxGame<KtxScreen>() {
             addSystem(
                     RenderSystem(
                             stage,
-//                            ShaderProgramStub(),
-//                    assets[ShaderProgramAsset.OUTLINE.descriptor],
                             gameViewport,
-//                            gameEventManager,
 //                            Sprite(assets[TextureAtlasAsset.MY_FIRST_ATLAS.descriptor].createSprites()[0])
 //                    assets[TextureAtlasAsset.BACKGROUND.descriptor].createSprite("main-screen-background")
 //                            assets[ImgAsset.BACKGROUND_DEFAULT.desc]
                     )
             )
-//            addSystem(RemoveSystem(gameEventManager))
+            addSystem(RemoveSystem(gameEventManager))
 //        }
 
         }

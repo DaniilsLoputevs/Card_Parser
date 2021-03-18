@@ -7,6 +7,7 @@ package towerdefense
  * TODO - stacks: onAddCard()
  * TODO - full DEFAULT card asset atlas (1/4)
  * TODO - set depth for cards.
+ * TODO - Remake game stacks from LinkedList to Array
  * TODO -
  *
  *

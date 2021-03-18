@@ -1,22 +1,17 @@
 package towerdefense.ashley.systems
 
-import com.badlogic.ashley.core.Engine
-import com.badlogic.ashley.core.Entity
-import com.badlogic.ashley.systems.IteratingSystem
+import com.badlogic.ashley.core.EntitySystem
 import com.badlogic.gdx.math.Vector2
-import ktx.ashley.allOf
 import towerdefense.CARD_STACK_OFFSET
-import towerdefense.ashley.components.RemoveComponent
-import towerdefense.ashley.components.game.GameCardComponent
 import towerdefense.gameStrucures.CardMoveProcessor.DragAndDropStatus.DROPPED
 import towerdefense.gameStrucures.CardMoveProcessor.DragAndDropStatus.NONE
 import towerdefense.gameStrucures.GameContext
 import towerdefense.gameStrucures.adapters.GameCardAdapter
 import towerdefense.gameStrucures.adapters.GameStackAdapter
 
-class CardBindingSystem
-    : IteratingSystem(allOf(GameCardComponent::class).exclude(RemoveComponent::class.java).get()) {
+class CardBindingSystem : EntitySystem() {
     lateinit var gameContext: GameContext
+    lateinit var stacks: List<GameStackAdapter>
 
     /**
      * just for optimization, only for it.
@@ -28,21 +23,17 @@ class CardBindingSystem
     /* Methods */
 
     override fun update(deltaTime: Float) {
-        if (gameContext.touchingCard != null
-                && gameContext.touchingCardStatus == DROPPED) {
+        if (gameContext.touchingCard != null && gameContext.touchingCardStatus == DROPPED) {
             processSelectedCard(gameContext.touchingCard!!)
             gameContext.touchingCardStatus = NONE
             gameContext.touchingCard = null
         }
     }
 
-    override fun processEntity(entity: Entity?, deltaTime: Float) {
-        TODO("Not yet implemented")
-    }
-
+    @Deprecated("hard understanding logic, need to rewrite")
     private fun processSelectedCard(card: GameCardAdapter) {
         var cardApplyIntoNewStack = false
-        for (stack in gameContext.stacks) {
+        for (stack in stacks) {
             cardApplyIntoNewStack = when (stack.gameStackComp.isEmpty()) {
                 true -> applyCardToEmptyStack(card, stack)
                 false -> applyCardToNotEmptyStack(card, stack)
@@ -86,7 +77,8 @@ class CardBindingSystem
 
             val newPos = Vector2(
                     stackLastCard.transComp.interpolatedPosition.x,
-                    stackLastCard.transComp.interpolatedPosition.y - CARD_STACK_OFFSET,
+                    stackLastCard.transComp.interpolatedPosition.y -
+                            stack.gameStackComp.size() * CARD_STACK_OFFSET
             )
             card.transComp.setTotalPosition(newPos)
             card.gameCardComp.moveNextCards(newPos)
@@ -98,13 +90,13 @@ class CardBindingSystem
      * Unbinding card from it's stack.
      */
     private fun unbindCardFromStack(card: GameCardAdapter) {
-        gameContext.stacks
+        stacks
                 .find { it.gameStackComp.contains(card) }
                 ?.let { it.gameStackComp.removeGameCard(card) }
     }
 
     private fun returnGameCardToStack(card: GameCardAdapter) {
-        gameContext.stacks
+        stacks
                 .find { it.gameStackComp.contains(card) }
                 ?.let {
                     val offsetY = it.gameStackComp.size() + CARD_STACK_OFFSET
@@ -117,14 +109,6 @@ class CardBindingSystem
                         gameCardComp.moveNextCards(newPos)
                     }
                 }
-    }
-
-    override fun addedToEngine(engine: Engine?) {
-        super.addedToEngine(engine)
-    }
-
-    override fun removedFromEngine(engine: Engine?) {
-        super.removedFromEngine(engine)
     }
 
 }
