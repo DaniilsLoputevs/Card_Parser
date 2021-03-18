@@ -18,7 +18,21 @@ data class GameCardAdapter(val entity: Entity) {
     val gameCardComp: GameCardComponent = entity[GameCardComponent.mapper]!!
     val touchComp: TouchComponent = entity[TouchComponent.mapper]!!
 
+
+    override fun equals(other: Any?): Boolean {
+        return super.equals(other)
+    }
+
     override fun toString(): String {
         return entity.toPrint()
+    }
+
+    override fun hashCode(): Int {
+        var result = entity.hashCode()
+        result = 31 * result + transComp.hashCode()
+        result = 31 * result + graphicComp.hashCode()
+        result = 31 * result + gameCardComp.hashCode()
+        result = 31 * result + touchComp.hashCode()
+        return result
     }
 }

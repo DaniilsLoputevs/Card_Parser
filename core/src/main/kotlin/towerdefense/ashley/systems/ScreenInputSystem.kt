@@ -1,6 +1,5 @@
 package towerdefense.ashley.systems
 
-import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.EntitySystem
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
@@ -66,14 +65,6 @@ class ScreenInputSystem : EntitySystem() {
      */
     private fun isPositionEquals(one: Vector2, two: Vector2): Boolean {
         return ((one.x == two.x) && (one.y == two.y))
-    }
-
-    override fun addedToEngine(engine: Engine) {
-        super.addedToEngine(engine)
-    }
-
-    override fun removedFromEngine(engine: Engine?) {
-        super.removedFromEngine(engine)
     }
 
     enum class TouchStatus {

@@ -4,15 +4,21 @@ import com.badlogic.ashley.core.EntitySystem
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import towerdefense.gameStrucures.GameContext
+import towerdefense.gameStrucures.adapters.GameCardAdapter
+import towerdefense.gameStrucures.adapters.GameStackAdapter
 
 class DebugSystem : EntitySystem() {
     lateinit var gameContext: GameContext
+    lateinit var stacks: List<GameStackAdapter>
+    lateinit var cards: List<GameCardAdapter>
 
     override fun update(deltaTime: Float) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {
             println("DEBUG")
-            println("gameContext entity = ${gameContext.touchingCard}")
-            println("gameContext status = ${gameContext.touchingCardStatus}")
+            println("context: hold card z = ${gameContext.touchingCard?.transComp?.position?.z}")
+//            println("gameContext entity = ${gameContext.touchingCard}")
+//            println("gameContext status = ${gameContext.touchingCardStatus}")
+            cards.forEach { println("Card: ${it.gameCardComp.cardRank.name} position = ${it.transComp.interpolatedPosition}") }
             println("DEBUG")
             println()
         }

@@ -28,6 +28,8 @@ fun Engine.initGameDefault(assets: AssetStorage, gameContext: GameContext, gameV
 
         getSystem<DebugSystem>().apply {
             this.gameContext = gameContext
+            this.stacks = this@run.getOurGameStacks()
+            this.cards = this@run.getOurGameCards()
         }
         getSystem<RenderSystem>().apply {
             this.configBackground(assets[GeneralAsset.BACKGROUND_DEFAULT.desc])

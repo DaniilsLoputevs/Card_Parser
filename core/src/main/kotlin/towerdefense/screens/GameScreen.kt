@@ -1,19 +1,8 @@
 package towerdefense.screens
 
-import ktx.ashley.getSystem
 import ktx.log.info
 import towerdefense.MainGame
-import towerdefense.ashley.engine.createStacksDefault
 import towerdefense.ashley.engine.initGameDefault
-import towerdefense.ashley.getOurGameCards
-import towerdefense.ashley.getOurGameStacks
-import towerdefense.ashley.systems.CardBindingSystem
-import towerdefense.ashley.systems.DebugSystem
-import towerdefense.ashley.systems.RenderSystem
-import towerdefense.ashley.systems.ScreenInputSystem
-import towerdefense.asset.CardBackAtlas
-import towerdefense.asset.GeneralAsset
-import towerdefense.gameStrucures.CardMoveProcessor
 import towerdefense.gameStrucures.GameContext
 
 class GameScreen(
@@ -40,12 +29,6 @@ class GameScreen(
     }
 
     override fun render(delta: Float) {
-//        println("GameScreen :: render invoke time")
-//        println("DEV")
-//        println("is Touch: ${Gdx.input.isTouched}")
-//        println("is inputProcessor: ${Gdx.input.inputProcessor.touchDragged()}")
-//        println("DEV")
-
         engine.update(delta)
     }
 

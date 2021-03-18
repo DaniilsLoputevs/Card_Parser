@@ -35,7 +35,7 @@ class TransformComponent : Component, Pool.Poolable, Comparable<TransformCompone
     }
 
     override fun compareTo(other: TransformComponent): Int {
-        val zDiff = other.position.z.compareTo(position.z)
+        val  zDiff = position.z.compareTo(other.position.z)
         return if (zDiff == 0) other.position.y.compareTo(position.y) else zDiff
     }
 
@@ -70,7 +70,7 @@ class TransformComponent : Component, Pool.Poolable, Comparable<TransformCompone
                           rotationDeg: Float = 0f) {
         this.size.set(width, height)
         this.rotationDeg = rotationDeg
-        this.setInitialPosition(positionX, positionY, 1f)
+        this.setInitialPosition(positionX, positionY, 0f)
         this.shape.set(positionX, positionY, width, height)
     }
     /**
@@ -78,9 +78,15 @@ class TransformComponent : Component, Pool.Poolable, Comparable<TransformCompone
      */
     fun setTotalPosition(newPosition: Vector2) {
         prevPosition.set(position)
-        position.set(newPosition, 0f)
-        interpolatedPosition.set(newPosition, 0f)
+        position.set(newPosition, position.z)
+        interpolatedPosition.set(newPosition, interpolatedPosition.z)
         shape.setPosition(newPosition.x, newPosition.y)
+    }
+
+    fun setDepth(z : Float) {
+        prevPosition.set(position)
+        position.z = z
+        interpolatedPosition.z = z
     }
 
     fun setSize(width : Float, height : Float ) {
