@@ -43,12 +43,8 @@ data class GameStackAdapter(val entity: Entity) {
         val thisSize = this.transComp.size
         val offsetCorrection = when (this.gameStackComp.isEmpty()) {
             true -> 0f
-            false -> CARD_STACK_OFFSET + this.gameStackComp.size()
+            false -> CARD_STACK_OFFSET * this.gameStackComp.size()
         }
-//        return this.x <= x
-//        && this.x + this.width >= x
-//        && this.y <= y
-//        && this.y + this.height >= y;
         return thisPos.x <= otherPos.x
                 && thisPos.x + thisSize.x >= otherPos.x // thisSize.width
                 && thisPos.y - offsetCorrection <= otherPos.y

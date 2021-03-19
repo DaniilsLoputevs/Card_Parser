@@ -8,6 +8,7 @@ package towerdefense
  * TODO - full DEFAULT card asset atlas (1/4)
  * TODO - Remake game stacks from LinkedList to Array
  * TODO - Rewrite Binding system
+ * TODO - Make algorithm for create card deck
  * TODO -
  *
  *

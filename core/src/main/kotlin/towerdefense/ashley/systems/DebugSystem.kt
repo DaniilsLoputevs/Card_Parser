@@ -14,7 +14,9 @@ class DebugSystem : EntitySystem() {
 
     override fun update(deltaTime: Float) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {
+            println()
             println("DEBUG")
+            println("context: hold card   = ${gameContext.touchingCard?.gameCardComp?.cardRank}")
             println("context: hold card z = ${gameContext.touchingCard?.transComp?.position?.z}")
 //            println("gameContext entity = ${gameContext.touchingCard}")
 //            println("gameContext status = ${gameContext.touchingCardStatus}")
@@ -23,9 +25,10 @@ class DebugSystem : EntitySystem() {
             println()
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
+            println()
             println("DEBUG")
             var i = 0
-            stacks.forEach { println("Stack #${i++}   size = ${it.gameStackComp.size()}") }
+            stacks.forEach { println("Stack ${it.transComp.interpolatedPosition} #${i++}   size = ${it.gameStackComp.size()}") }
 //            println("context: hold card z = ${gameContext.touchingCard?.transComp?.position?.z}")
             println("DEBUG")
             println()

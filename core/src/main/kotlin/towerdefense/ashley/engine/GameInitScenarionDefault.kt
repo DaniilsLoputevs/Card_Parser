@@ -60,9 +60,9 @@ fun Engine.createCardDeckDefault(assets: AssetStorage): List<GameCardAdapter> {
             this.createCard(assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc], "2_spades_two",
                     SPADES, TWO, true, 200f, 150f),
             this.createCard(assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc], "3_spades_three",
-                    SPADES, THREE, false, 400f, 150f),
+                    SPADES, THREE, true, 400f, 150f),
             this.createCard(assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc], "4_spades_four",
-                    SPADES, FOUR, false, 600f, 150f),
+                    SPADES, FOUR, true, 600f, 150f),
             this.createCard(assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc], "5_spades_five",
                     SPADES, FIVE, true, 800f, 150f),
     )

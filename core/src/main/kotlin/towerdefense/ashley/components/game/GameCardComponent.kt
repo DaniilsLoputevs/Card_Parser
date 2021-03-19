@@ -59,7 +59,6 @@ class GameCardComponent : Component, Pool.Poolable {
 //    }
 
 
-
     override fun reset() {
         cardSuit = CardSuit.NONE
         cardRank = CardRank.NONE
@@ -80,22 +79,22 @@ class GameCardComponent : Component, Pool.Poolable {
     }
 
 
-    enum class CardRank(val power: Int) {
-        JOKER(15),
-        ACE(14),
-        KING(13),
-        QUEEN(12),
-        JACK(11),
-        TEN(10),
-        NINE(9),
-        EIGHT(8),
-        SEVEN(7),
-        SIX(6),
-        FIVE(5),
-        FOUR(4),
-        THREE(3),
-        TWO(2),
-        NONE(-1)
+    enum class CardRank {
+        NONE,
+        TWO,
+        THREE,
+        FOUR,
+        FIVE,
+        SIX,
+        SEVEN,
+        EIGHT,
+        NINE,
+        TEN,
+        JACK,
+        QUEEN,
+        KING,
+        ACE,
+        JOKER
     }
 
     enum class CardSuit(val colour: String) {

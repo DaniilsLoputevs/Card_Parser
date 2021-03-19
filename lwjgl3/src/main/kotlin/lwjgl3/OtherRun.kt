@@ -1,42 +1,14 @@
 package lwjgl3
 
-import com.badlogic.ashley.core.Entity
 import towerdefense.ashley.components.game.GameCardComponent
-import towerdefense.ashley.components.game.GameStackComponent
 
 
 fun main() {
 
-    var s : String? = find("asd")
-//    s = null
-
-    s?.let {
-        println("before: $it")
-    }
-
-    println("after: $s")
+    println("rsl = ${GameCardComponent.CardRank.KING > GameCardComponent.CardRank.FIVE}")
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//    val t = MyClass()
-//    println(t.isEmpty())
-//    println(t.getLastCard())
-//    println(t.getLastCard())
-//    println(t.getLastCard())
 }
 
 fun find(s : String) : String? {
