@@ -37,8 +37,7 @@ class CardMoveProcessor(
     private fun findEntity(cursorPosition: Vector2) {
         // convert cursor position -> WU position
         gameViewport.unproject(cursorPosition)
-        cards
-                .filter { it.touchComp.isTouchable && it.transComp.shape.contains(cursorPosition) }
+        cards.filter { it.touchComp.isTouchable && it.transComp.shape.contains(cursorPosition) }
                 .maxByOrNull { it.transComp.interpolatedPosition.z }
                 ?.let {
                     touchPosition = cursorPosition

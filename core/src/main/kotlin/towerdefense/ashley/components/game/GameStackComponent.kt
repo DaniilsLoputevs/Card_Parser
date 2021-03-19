@@ -32,7 +32,6 @@ class GameStackComponent : Component, Pool.Poolable {
     }
 
     fun addGameCard(card: GameCardAdapter) {
-        card.transComp.setDepth(10 * size().toFloat())
         onAddCard.invoke()
         cardStack.add(card)
     }

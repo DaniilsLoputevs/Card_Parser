@@ -82,6 +82,12 @@ class TransformComponent : Component, Pool.Poolable, Comparable<TransformCompone
         interpolatedPosition.set(newPosition, interpolatedPosition.z)
         shape.setPosition(newPosition.x, newPosition.y)
     }
+    fun setTotalPosition(newPosition: Vector3) {
+        prevPosition.set(position)
+        position.set(newPosition)
+        interpolatedPosition.set(newPosition)
+        shape.setPosition(newPosition.x, newPosition.y)
+    }
 
     fun setDepth(z : Float) {
         prevPosition.set(position)

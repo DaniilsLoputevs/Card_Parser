@@ -9,6 +9,7 @@ class GameContext {
 
     var touchingCard: GameCardAdapter? = null
     var touchStack : GameStackAdapter? = null
+    val touchArray : Array<GameCardAdapter?> = arrayOfNulls(13)
     var touchingCardStatus: CardMoveProcessor.DragAndDropStatus = NONE
 
 
