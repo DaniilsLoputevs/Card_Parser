@@ -23,8 +23,8 @@ import towerdefense.gameStrucures.adapters.GameStackAdapter
 fun Engine.initGameDefault(assets: AssetStorage, gameContext: GameContext, gameViewport : Viewport) {
 
     this.run {
-        createCardDeckDefault(assets)
-        createStacksDefault(assets)
+        val cardsForInit = createCardDeckDefault(assets)
+        val stacksForInit = createStacksDefault(assets)
 
         getSystem<DebugSystem>().apply {
             this.gameContext = gameContext
@@ -37,7 +37,8 @@ fun Engine.initGameDefault(assets: AssetStorage, gameContext: GameContext, gameV
         }
         getSystem<ScreenInputSystem>().apply {
             this.inputProcessors = arrayOf(
-                    CardMoveProcessor(gameContext, gameViewport, this@run.getOurGameCards())
+                    CardMoveProcessor(gameContext, gameViewport,
+                            this@run.getOurGameCards(), this@run.getOurGameStacks())
             )
             setProcessing(true)
         }
@@ -46,7 +47,19 @@ fun Engine.initGameDefault(assets: AssetStorage, gameContext: GameContext, gameV
             this.stacks = this@run.getOurGameStacks()
             setProcessing(true)
         }
+        prepareGameScriptsDefault(gameContext, cardsForInit, stacksForInit)
     }
+}
+
+private fun Engine.prepareGameScriptsDefault(
+        gameContext: GameContext,
+        cards : List<GameCardAdapter>,
+        stacks : List<GameStackAdapter>,
+) {
+
+//    addCardsToStack(stacks[0], listOf(cards[0], cards[1], cards[2], cards[3]))
+//    addCardToStack(stacks[0], cards[0])
+//    unbindCardFromStack(stacks, cards[0])
 }
 
 /**
@@ -56,11 +69,11 @@ fun Engine.initGameDefault(assets: AssetStorage, gameContext: GameContext, gameV
 fun Engine.createCardDeckDefault(assets: AssetStorage): List<GameCardAdapter> {
     return listOf<GameCardAdapter>(
             this.createCard(assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc], "14_spades_ace",
-                    SPADES, ACE, true, 0f, 50f),
+                    SPADES, ACE, false, 0f, 50f),
             this.createCard(assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc], "2_spades_two",
                     SPADES, TWO, true, 200f, 150f),
             this.createCard(assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc], "3_spades_three",
-                    SPADES, THREE, true, 400f, 150f),
+                    SPADES, THREE, false, 400f, 150f),
             this.createCard(assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc], "4_spades_four",
                     SPADES, FOUR, true, 600f, 150f),
             this.createCard(assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc], "5_spades_five",

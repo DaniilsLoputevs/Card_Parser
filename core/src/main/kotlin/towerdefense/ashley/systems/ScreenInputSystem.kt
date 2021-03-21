@@ -21,24 +21,22 @@ class ScreenInputSystem : EntitySystem() {
 
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
             refreshCurrentPosition()
-//            println("SI :: button press")
 
             if (touchStatus == NONE) { // touchDown
-//                println("SI :: touchDown")
+                println("\r\nTOUCH DOWN  screenX = ${currPosition.x}  ##  screenY = ${currPosition.y}")
                 inputProcessors.forEach { it.onTouchDown(currPosition) }
-//                prevPosition = currPosition
                 touchStatus = DOWN
 
             } else if ((touchStatus == DOWN || touchStatus == HOLD)
                     && !isPositionEquals(currPosition, prevPosition)) { // touchDragged
-//                println("SI :: touchDragged")
+//                println("TOUCH DRAG  screenX = ${currPosition.x}  ##  screenY = ${currPosition.y}")
                 inputProcessors.forEach { it.onTouchDragged(currPosition) }
                 prevPosition.set(currPosition)
                 touchStatus = HOLD
             }
 
         } else if (touchStatus == DOWN || touchStatus == HOLD) { // onTouchUp
-//            println("SI :: onTouchUp")
+            println("TOUCH UP  screenX = ${currPosition.x}  ##  screenY = ${currPosition.y} \r\n")
             refreshCurrentPosition()
 
             inputProcessors.forEach { it.onTouchUp(currPosition) }

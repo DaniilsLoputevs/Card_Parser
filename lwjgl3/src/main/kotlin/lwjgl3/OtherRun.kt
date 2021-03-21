@@ -7,7 +7,9 @@ fun main() {
 
     println("rsl = ${GameCardComponent.CardRank.KING > GameCardComponent.CardRank.FIVE}")
 
-
+    val list = mutableListOf<String>("111", "22", "3")
+    list.reverse()
+    println(list)
 
 }
 

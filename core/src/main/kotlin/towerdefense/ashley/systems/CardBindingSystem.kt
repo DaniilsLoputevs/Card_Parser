@@ -3,8 +3,8 @@ package towerdefense.ashley.systems
 import com.badlogic.ashley.core.EntitySystem
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
-import towerdefense.gameStrucures.CardMoveProcessor.DragAndDropStatus.DROPPED
-import towerdefense.gameStrucures.CardMoveProcessor.DragAndDropStatus.NONE
+import towerdefense.gameStrucures.CardMoveProcessor.TouchStatus.DROPPED
+import towerdefense.gameStrucures.CardMoveProcessor.TouchStatus.NONE
 import towerdefense.gameStrucures.GameContext
 import towerdefense.gameStrucures.adapters.GameCardAdapter
 import towerdefense.gameStrucures.adapters.GameStackAdapter
@@ -13,73 +13,63 @@ class CardBindingSystem : EntitySystem() {
     lateinit var gameContext: GameContext
     lateinit var stacks: List<GameStackAdapter>
 
-    /**
-     * just for optimization, only for it.
-     * buffer that using like the container for get and hold hitbox center of newCard in:
-     * applyCardToNotEmptyStack(...)
-     */
-    private val newCardCenter = Vector2(-1f, -1f)
-    private val cardReturnPos = Vector3(-1f, -1f, -1f)
+    /** buffer for card position. */
+    private val cardPositionBuff = Vector3(-1f, -1f, -1f)
+
+    /** buffer for card center coordinates. */
+    private val cardCenterBuff = Vector2(-1f, -1f)
+
+    /** buffer for card return position.*/
+    private val cardReturnPosBuff = Vector3(-1f, -1f, -1f)
 
     /* Methods */
 
     override fun update(deltaTime: Float) {
-        if (gameContext.touchingCard != null && gameContext.touchingCardStatus == DROPPED) {
-            processSelectedCard(gameContext.touchingCard!!)
-            gameContext.touchingCardStatus = NONE
-            gameContext.touchingCard = null
+        if (gameContext.touchList.isNotEmpty() && gameContext.touchListStatus == DROPPED) {
+            processTouchList()
+            gameContext.touchListStatus = NONE
+            gameContext.touchList.clear()
         }
     }
 
-    private fun processSelectedCard(card: GameCardAdapter) {
-        println("Binding Sys :: START")
-        card.transComp.shape.getCenter(newCardCenter)
-        val newCardStack = stacks.find { it.containsPosition(newCardCenter) }
-
-        println("find Stack is = ${newCardStack?.transComp?.interpolatedPosition}")
-        println("newCardCenter = $newCardCenter")
-
-
-        // 1) if we find stack by card pos, it must be NOT NULL, else return card to prev stack
-        // 2) avoid the self-adding
-        // 3) check: can we add this card to this stack
-        if (newCardStack != null && !newCardStack.gameStackComp.contains(card)
-                && newCardStack.gameStackComp.canAdd(card)) {
-
-            applyToStack(card, newCardStack)
-        } else returnCardToPrevStack(card)
-
-        println("Binding Sys :: END")
-    }
-
-    private fun applyToStack(card: GameCardAdapter, newStack: GameStackAdapter) {
-        println("APPLY TO STACK")
-
-        /* Getting position for new card before add it into stack */
-        val newCardPos = newStack.getNextCardPosition()
-        unbindCardFromStack(card)
-
-        newStack.gameStackComp.addGameCard(card)
-        card.transComp.setTotalPosition(newCardPos)
-
-        println("APPLY TO STACK END ")
-    }
-
     /**
-     * Unbinding card from it's stack.
+     * if condition:
+     * 1) if we find stack by card pos, it must be NOT NULL.
+     * 2) avoid the self-adding.
+     * 3) check: can stack add this card.
+     * else -> return card to prev stack.
      */
-    private fun unbindCardFromStack(card: GameCardAdapter) {
-        stacks.find { it.gameStackComp.contains(card) }
-                ?.let { it.gameStackComp.removeGameCard(card) }
+    private fun processTouchList() {
+        val firstTouchCard = gameContext.touchList[0]
+        firstTouchCard.transComp.shape.getCenter(cardCenterBuff)
+        val newCardStack = stacks.find { it.containsPos(cardCenterBuff) }
+
+        if (newCardStack != null && !newCardStack.gameStackComp.contains(firstTouchCard)
+                && newCardStack.gameStackComp.canAdd(firstTouchCard)) {
+            applyTouchListToStack(newCardStack)
+        } else returnTouchListToPrevPosition()
     }
 
-    private fun returnCardToPrevStack(card: GameCardAdapter) {
-        println("DEV :: returnCardToPrevStack() START")
+    private fun applyTouchListToStack(newCardStack: GameStackAdapter) {
+        val prevStack = stacks.find { it.gameStackComp.contains(gameContext.touchList[0]) }
+        gameContext.touchList.forEach { card ->
+            /* Getting position for new card before add it into stack */
+            newCardStack.getNextCardPosition(cardPositionBuff)
+            prevStack?.gameStackComp?.remove(card)
 
-        stacks.find { it.gameStackComp.contains(card) }
-                ?.let { card.transComp.setTotalPosition(it.getPositionForCard(card, cardReturnPos)) }
+            newCardStack.gameStackComp.add(card)
+            card.transComp.setPosition(cardPositionBuff)
+        }
+    }
 
-        println("DEV :: returnCardToPrevStack() END")
+    private fun returnTouchListToPrevPosition() {
+        stacks.find { it.gameStackComp.contains(gameContext.touchList[0]) }
+                ?.let { stack ->
+                    gameContext.touchList.forEach { touchCard ->
+                        stack.getPosForCard(touchCard, cardReturnPosBuff)
+                        touchCard.transComp.setPosition(cardReturnPosBuff)
+                    }
+                }
     }
 
 }

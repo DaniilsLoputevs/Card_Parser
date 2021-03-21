@@ -9,8 +9,8 @@ class StackClickProcessor(
         private val gameViewport: Viewport
 ) : ScreenInputProcessor {
 
-    override fun onTouchUp(currentPosition: Vector2) {
-        println("TOUCH UP  screenX = ${currentPosition.x}  ##  screenY = ${currentPosition.y} \r\n")
+    override fun onTouchUp(cursorPosition: Vector2) {
+        println("TOUCH UP  screenX = ${cursorPosition.x}  ##  screenY = ${cursorPosition.y} \r\n")
 //        dropSelectedEntity()
     }
 

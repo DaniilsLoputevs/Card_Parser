@@ -1,19 +1,35 @@
 package towerdefense.ashley.components.game
 
 import com.badlogic.ashley.core.Component
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Pool
 import ktx.ashley.mapperFor
 import towerdefense.gameStrucures.adapters.GameCardAdapter
 
+/**
+ * Collection of game card.
+ */
 class GameStackComponent : Component, Pool.Poolable {
     var cardStack: MutableList<GameCardAdapter> = mutableListOf()
 
     @Deprecated("later, not now")
     var onClick: () -> Unit = {}
+    @Deprecated("later, not now")
     var onAddCard: () -> Unit = {}
     var addCardPredicate: (GameCardAdapter, GameCardAdapter) -> Boolean = { _: GameCardAdapter, _: GameCardAdapter -> true }
 
-    fun isEmpty() = cardStack.isEmpty()
+
+    /** Find card in stack by touch position. If card doesn't found -> return null */
+    fun findByPos(position: Vector2): GameCardAdapter? {
+        return cardStack.filter { it.touchComp.isTouchable && it.transComp.shape.contains(position) }
+                .maxByOrNull { it.transComp.position.z }
+    }
+
+    fun removeFromIndexToList(fromIndex: Int, touchList: MutableList<GameCardAdapter>) {
+        for (index in fromIndex until cardStack.size) {
+            touchList.add(cardStack[index])
+        }
+    }
 
     /**
      * If Empty:
@@ -27,25 +43,20 @@ class GameStackComponent : Component, Pool.Poolable {
     fun canAdd(card: GameCardAdapter): Boolean {
         return when (this.isEmpty()) {
             true -> (card.gameCardComp.cardRank >= GameCardComponent.CardRank.KING)
-            false -> (getLastCard() !== card && addCardPredicate.invoke(getLastCard(), card))
+            false -> (getLast() !== card && addCardPredicate.invoke(getLast(), card))
         }
     }
 
-    fun addGameCard(card: GameCardAdapter) {
+    fun add(card: GameCardAdapter) {
         onAddCard.invoke()
         cardStack.add(card)
     }
 
-    fun getLastCard() = cardStack[cardStack.size.coerceAtMost(0)]
-
-    /**
-     * TODO - make cascade remove from {@param card} index in stack
-     */
-    fun removeGameCard(card: GameCardAdapter): Boolean = cardStack.remove(card)
-    fun indexOfCard(card: GameCardAdapter): Int = cardStack.indexOf(card)
-
+    fun getLast() = cardStack[cardStack.size.coerceAtMost(0)]
+    fun remove(card: GameCardAdapter): Boolean = cardStack.remove(card)
+    fun indexOf(card: GameCardAdapter): Int = cardStack.indexOf(card)
+    fun isEmpty(): Boolean = cardStack.isEmpty()
     fun contains(card: GameCardAdapter) = cardStack.contains(card)
-
     fun size() = cardStack.size
 
 
@@ -63,4 +74,5 @@ class GameStackComponent : Component, Pool.Poolable {
     }
 
     override fun toString(): String = cardStack.toString()
+
 }

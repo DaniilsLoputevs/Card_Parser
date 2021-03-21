@@ -25,10 +25,6 @@ import towerdefense.ashley.components.GraphicComponent
 import towerdefense.ashley.components.TransformComponent
 import towerdefense.ashley.components.game.GameCardComponent
 import towerdefense.ashley.findRequiredComponent
-import towerdefense.event.GameEvent
-import towerdefense.event.GameEventListener
-import towerdefense.gameStrucures.GameContext
-import towerdefense.gameStrucures.adapters.GameCardAdapter
 
 /**
  * Component processor && Game Event Listener.
@@ -42,13 +38,12 @@ class RenderSystem(
 ) : SortedIteratingSystem(
         allOf(GraphicComponent::class, TransformComponent::class).get(),
         compareBy { entity -> entity[TransformComponent.mapper] }
-){
+) {
     private val logger = logger<RenderSystem>()
     private val batch: Batch = stage.batch
 
     var background: Sprite = Sprite()
-    var cardBack: Sprite = Sprite()
-
+    var cardBackSprite: Sprite = Sprite()
 
 
     fun configBackground(backgroundTexture: Texture) {
@@ -58,8 +53,9 @@ class RenderSystem(
             setSize(V_WORLD_WIDTH_UNITS, V_WORLD_HEIGHT_UNITS)
         }
     }
+
     fun configCardBack(cardBackTexture: TextureRegion) {
-        cardBack.apply {
+        cardBackSprite.apply {
             setRegion(cardBackTexture)
             setSize(CARD_WIDTH, CARD_HEIGHT)
         }
@@ -116,36 +112,24 @@ class RenderSystem(
 
         /* If card Closed we need to ignore card's texture and render card back texture,
          after that finish method */
-        if (entity.contains(GameCardComponent.mapper)) {
-            val card = GameCardAdapter(entity)
-            if (!card.gameCardComp.isCardOpen) {
-                renderCardBack(card)
-                return
-            }
-
+        val currentSprite = when {
+            entity.contains(GameCardComponent.mapper)
+                    && isCardClose(entity) -> cardBackSprite
+            else -> graphicComp.sprite
         }
 
-        val (posX, posY) = transformComp.interpolatedPosition
+        val (posX, posY) = transformComp.position
         val (sizeX, sizeY) = transformComp.size
 
-        graphicComp.sprite.run {
-            rotation = transformComp.rotationDeg
+        currentSprite.run {
             // setBounds(...) == setPosition(...) && setSize(...)
             setBounds(posX, posY, sizeX, sizeY)
             draw(batch)
         }
     }
 
-    private fun renderCardBack(card: GameCardAdapter) {
-        val (posX, posY) = card.transComp.interpolatedPosition
-        val (sizeX, sizeY) = card.transComp.size
 
-        cardBack.run {
-            rotation = card.transComp.rotationDeg
-            // setBounds(...) == setPosition(...) && setSize(...)
-            setBounds(posX, posY, sizeX, sizeY)
-            draw(batch)
-        }
-    }
+    /** just pretty API. */
+    private fun isCardClose(entity: Entity): Boolean = !entity[GameCardComponent.mapper]!!.isCardOpen
 
 }

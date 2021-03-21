@@ -19,19 +19,39 @@ data class GameStackAdapter(val entity: Entity) {
     val graphicComp: GraphicComponent = entity[GraphicComponent.mapper]!!
     val gameStackComp: GameStackComponent = entity[GameStackComponent.mapper]!!
 
+    /**
+     * total hit box - stack hit box + all card hit box = full area of stack.
+     * check: contains [position] in this are.
+     */
+    fun containsPosInTotalHitBox(position: Vector2) :Boolean {
+        val thisPos = this.transComp.position
+        val thisSize = this.transComp.size
+        val offsetCorrection = CARD_STACK_OFFSET * this.gameStackComp.size()
 
-    fun containsPosition(position: Vector2): Boolean {
+        return thisPos.x <= position.x
+                && thisPos.x + thisSize.x >= position.x // thisSize.width
+                && thisPos.y - offsetCorrection <= position.y
+                && thisPos.y + thisSize.y >= position.y; // thisSize.height
+    }
+
+    /**
+     * check: contains [position] in actual hit box area.
+     * actual hit box =
+     * if stack empty -> stack hit box.
+     * else -> last card hit box.
+     */
+    fun containsPos(position: Vector2): Boolean {
         return when (this.gameStackComp.isEmpty()) {
             true -> this.transComp.shape.contains(position)
-            false -> containsPosIfNotEmpty(position)
+            false -> containsPosInLastCardHitBox(position)
         }
     }
 
     /**
-     * Find coordinates for last card and check: is it contains [otherPos].
+     * Find area of last card and check: is [otherPos] contains.
      */
-    private fun containsPosIfNotEmpty(otherPos: Vector2): Boolean {
-        val thisPos = this.transComp.interpolatedPosition
+    private fun containsPosInLastCardHitBox(otherPos: Vector2): Boolean {
+        val thisPos = this.transComp.position
         val thisSize = this.transComp.size
         val offsetCorrection = CARD_STACK_OFFSET * this.gameStackComp.size()
 
@@ -41,21 +61,18 @@ data class GameStackAdapter(val entity: Entity) {
                 && thisPos.y - offsetCorrection + thisSize.y >= otherPos.y; // thisSize.height
     }
 
-    fun getNextCardPosition(): Vector3 {
-        println("NEXT POS")
-        println("is empty = ${this.gameStackComp.isEmpty()}")
-        println("NEXT POS")
-        return if (this.gameStackComp.isEmpty()) {
-            Vector3(
-                    this.transComp.interpolatedPosition.x,
-                    this.transComp.interpolatedPosition.y,
+    fun getNextCardPosition(cardPositionBuff: Vector3) {
+        if (this.gameStackComp.isEmpty()) {
+            cardPositionBuff.set(
+                    this.transComp.position.x,
+                    this.transComp.position.y,
                     10f
             )
         } else {
-            val temp = this.gameStackComp.getLastCard()
-            Vector3(
-                    this.transComp.interpolatedPosition.x,
-                    temp.transComp.interpolatedPosition.y -
+            val temp = this.gameStackComp.getLast()
+            cardPositionBuff.set(
+                    this.transComp.position.x,
+                    temp.transComp.position.y -
                             this.gameStackComp.size() * CARD_STACK_OFFSET,
                     10f + (this.gameStackComp.size() * 10f)
             )
@@ -63,16 +80,15 @@ data class GameStackAdapter(val entity: Entity) {
     }
 
     /**
-     * Card MUST CONTAINS in this stacks. You nee check it before.
+     * [card] MUST CONTAINS in this stacks, else you will receive incorrect date.
      */
-    fun getPositionForCard(card: GameCardAdapter, cardPos: Vector3): Vector3 {
-        val cardIndex = this.gameStackComp.indexOfCard(card)
-        cardPos.set(
-                this.transComp.interpolatedPosition.x,
-                this.transComp.interpolatedPosition.y - (cardIndex * CARD_STACK_OFFSET),
+    fun getPosForCard(card: GameCardAdapter, cardPositionBuff: Vector3){
+        val cardIndex = this.gameStackComp.indexOf(card)
+        cardPositionBuff.set(
+                this.transComp.position.x,
+                this.transComp.position.y - (cardIndex * CARD_STACK_OFFSET),
                 10f + (cardIndex * 10f)
         )
-        return cardPos
     }
 
     override fun toString(): String = entity.toPrint()

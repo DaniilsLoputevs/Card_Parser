@@ -1,17 +1,14 @@
 package towerdefense.gameStrucures
 
-import towerdefense.gameStrucures.CardMoveProcessor.DragAndDropStatus.NONE
+import towerdefense.gameStrucures.CardMoveProcessor.TouchStatus.NONE
 import towerdefense.gameStrucures.adapters.GameCardAdapter
-import towerdefense.gameStrucures.adapters.GameStackAdapter
 
 class GameContext {
 
-
-    var touchingCard: GameCardAdapter? = null
-    var touchStack : GameStackAdapter? = null
-    val touchArray : Array<GameCardAdapter?> = arrayOfNulls(13)
-    var touchingCardStatus: CardMoveProcessor.DragAndDropStatus = NONE
+//    var touchingCard: GameCardAdapter? = null
+//    var touchCardStatus: CardMoveProcessor.TouchStatus = NONE
 
 
-
+    val touchList : MutableList<GameCardAdapter> = mutableListOf()
+    var touchListStatus: CardMoveProcessor.TouchStatus = NONE
 }

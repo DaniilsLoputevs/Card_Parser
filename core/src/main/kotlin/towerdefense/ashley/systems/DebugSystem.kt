@@ -16,11 +16,12 @@ class DebugSystem : EntitySystem() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {
             println()
             println("DEBUG")
-            println("context: hold card   = ${gameContext.touchingCard?.gameCardComp?.cardRank}")
-            println("context: hold card z = ${gameContext.touchingCard?.transComp?.position?.z}")
-//            println("gameContext entity = ${gameContext.touchingCard}")
-//            println("gameContext status = ${gameContext.touchingCardStatus}")
-            cards.forEach { println("Card: ${it.gameCardComp.cardRank.name} position = ${it.transComp.interpolatedPosition}") }
+            cards.forEach {
+                println("all cards:  ${it.gameCardComp.cardRank.name} position = ${it.transComp.position}")
+            }
+            gameContext.touchList.forEach {
+                println("hold cards: ${it.gameCardComp.cardRank}")
+            }
             println("DEBUG")
             println()
         }
@@ -28,25 +29,18 @@ class DebugSystem : EntitySystem() {
             println()
             println("DEBUG")
             var i = 0
-            stacks.forEach { println("Stack ${it.transComp.interpolatedPosition} #${i++}   size = ${it.gameStackComp.size()}") }
+            stacks.forEach { println("Stack ${it.transComp.position} #${i++}   size = ${it.gameStackComp.size()}") }
 //            println("context: hold card z = ${gameContext.touchingCard?.transComp?.position?.z}")
             println("DEBUG")
             println()
         }
-//        if (Gdx.input.isKeyJustPressed(Input.Keys.L)) {
-//            println("DEBUG")
-////            println("gameContext stacks size  = ${gameContext.stacks.size}")
-//            println("gameContext stacks one = ${gameContext.stacks[0]
-//                    .findRequiredComponent(GameStackComponent.mapper)}")
-//            println("gameContext stacks two = ${gameContext.stacks[1]
-//                    .findRequiredComponent(GameStackComponent.mapper)}")
-//            println("gameContext card     = ${gameContext.cards.size}")
-//            println("gameContext card one = ${gameContext.cards[0]
-//                    .findRequiredComponent(TransformComponent.mapper).position}")
-//            println("gameContext card two = ${gameContext.cards[1]
-//                    .findRequiredComponent(TransformComponent.mapper).position}")
-//            println("DEBUG")
-//            println()
-//        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
+            println()
+            println("DEBUG")
+            println("touch list: status = ${gameContext.touchListStatus.name}")
+            println("touch list: size   = ${gameContext.touchList.size}")
+            println("DEBUG")
+            println()
+        }
     }
 }

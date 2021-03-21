@@ -18,15 +18,17 @@ class GraphicComponent : Component, Pool.Poolable {
     fun setSpriteRegion(region: TextureRegion) {
         sprite.run {
             setRegion(region)
-            setSize(region.regionWidth.toFloat() , region.regionHeight.toFloat())
+            setSize(region.regionWidth.toFloat(), region.regionHeight.toFloat())
         }
     }
+
     fun setSpriteRegion(region: Texture) {
         sprite.run {
             setRegion(region)
-            setSize(region.width.toFloat() , region.height.toFloat())
+            setSize(region.width.toFloat(), region.height.toFloat())
         }
     }
+
     companion object {
         val mapper = mapperFor<GraphicComponent>()
     }
