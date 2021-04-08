@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Engine
 import com.badlogic.gdx.utils.viewport.Viewport
 import ktx.ashley.getSystem
 import ktx.assets.async.AssetStorage
+import towerdefense.CARD_WIDTH
 import towerdefense.ashley.components.game.GameCardComponent.CardRank.*
 import towerdefense.ashley.components.game.GameCardComponent.CardSuit.SPADES
 import towerdefense.ashley.getOurGameCards
@@ -20,7 +21,7 @@ import towerdefense.gameStrucures.GameContext
 import towerdefense.gameStrucures.adapters.GameCardAdapter
 import towerdefense.gameStrucures.adapters.GameStackAdapter
 
-fun Engine.initGameDefault(assets: AssetStorage, gameContext: GameContext, gameViewport : Viewport) {
+fun Engine.initGameDefault(assets: AssetStorage, gameContext: GameContext, gameViewport: Viewport) {
 
     this.run {
         val cardsForInit = createCardDeckDefault(assets)
@@ -37,8 +38,10 @@ fun Engine.initGameDefault(assets: AssetStorage, gameContext: GameContext, gameV
         }
         getSystem<ScreenInputSystem>().apply {
             this.inputProcessors = arrayOf(
-                    CardMoveProcessor(gameContext, gameViewport,
-                            this@run.getOurGameCards(), this@run.getOurGameStacks())
+                CardMoveProcessor(
+                    gameContext, gameViewport,
+                    this@run.getOurGameCards(), this@run.getOurGameStacks()
+                )
             )
             setProcessing(true)
         }
@@ -52,9 +55,9 @@ fun Engine.initGameDefault(assets: AssetStorage, gameContext: GameContext, gameV
 }
 
 private fun Engine.prepareGameScriptsDefault(
-        gameContext: GameContext,
-        cards : List<GameCardAdapter>,
-        stacks : List<GameStackAdapter>,
+    gameContext: GameContext,
+    cards: List<GameCardAdapter>,
+    stacks: List<GameStackAdapter>,
 ) {
 
 //    addCardsToStack(stacks[0], listOf(cards[0], cards[1], cards[2], cards[3]))
@@ -68,16 +71,26 @@ private fun Engine.prepareGameScriptsDefault(
  */
 fun Engine.createCardDeckDefault(assets: AssetStorage): List<GameCardAdapter> {
     return listOf<GameCardAdapter>(
-            this.createCard(assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc], "14_spades_ace",
-                    SPADES, ACE, false, 0f, 50f),
-            this.createCard(assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc], "2_spades_two",
-                    SPADES, TWO, true, 200f, 150f),
-            this.createCard(assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc], "3_spades_three",
-                    SPADES, THREE, false, 400f, 150f),
-            this.createCard(assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc], "4_spades_four",
-                    SPADES, FOUR, true, 600f, 150f),
-            this.createCard(assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc], "5_spades_five",
-                    SPADES, FIVE, true, 800f, 150f),
+        this.createCard(
+            assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc], "14_spades_ace",
+            SPADES, ACE, false, 0f, 50f
+        ),
+        this.createCard(
+            assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc], "2_spades_two",
+            SPADES, TWO, true, 200f, 150f
+        ),
+        this.createCard(
+            assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc], "3_spades_three",
+            SPADES, THREE, false, 400f, 150f
+        ),
+        this.createCard(
+            assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc], "4_spades_four",
+            SPADES, FOUR, true, 600f, 150f
+        ),
+        this.createCard(
+            assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc], "5_spades_five",
+            SPADES, FIVE, true, 800f, 150f
+        ),
     )
 }
 
@@ -86,16 +99,37 @@ fun Engine.createCardDeckDefault(assets: AssetStorage): List<GameCardAdapter> {
  * * this script for: Default GameType
  */
 fun Engine.createStacksDefault(assets: AssetStorage): List<GameStackAdapter> {
-    return listOf<GameStackAdapter>(
-            createStack(assets[GeneralAsset.CARD_STACK.desc],
-                    45f, 520f, onClickFun = ::mainStackOnClick),
-            createStack(assets[GeneralAsset.CARD_STACK.desc],
-                    45f, 290f),
-            createStack(assets[GeneralAsset.CARD_STACK.desc],
-                    250f, 290f),
-    )
+    val list = mutableListOf<GameStackAdapter>()
+    var corX = 0f
+    for (i in 0..6) {
+        corX += 60.25f
+        list.add(
+            createStack(
+                assets[GeneralAsset.CARD_STACK.desc],
+                corX,
+                290f,
+                onClickFun = ::mainStackOnClick
+            )
+        )
+        corX += CARD_WIDTH
+    }
+    list.add(createStack(assets[GeneralAsset.CARD_STACK.desc],
+        60.25f, 520f, onClickFun = ::mainStackOnClick))
+    return list;
 }
 
 private fun mainStackOnClick() {
     println("TEST ON CLICK()")
 }
+
+
+/**
+return listOf<GameStackAdapter>(
+createStack(assets[GeneralAsset.CARD_STACK.desc],
+45f, 520f, onClickFun = ::mainStackOnClick),
+createStack(assets[GeneralAsset.CARD_STACK.desc],
+45f, 290f),
+createStack(assets[GeneralAsset.CARD_STACK.desc],
+250f, 290f),
+)
+ */

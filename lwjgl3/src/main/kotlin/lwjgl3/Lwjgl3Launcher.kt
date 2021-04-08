@@ -19,18 +19,17 @@ import towerdefense.MainGame
  * 240p: 426 x 240
  */
 fun main() {
-
-
     Lwjgl3Application(
             MainGame(), // create game
             Lwjgl3ApplicationConfiguration().apply {
                 setTitle("Card Parser by Daniils & Maksim. ))))")
                 setWindowSizeLimits(426, 240, -1, -1)
-//                setWindowedMode(1280, 720) // 16 : 9
                 setWindowedMode(854, 480) // 16 : 9
-//            setWindowedMode(1280 ,600)
-//            setWindowedMode(640, 480)
-//            setWindowedMode(360, 640) // 16 : 9
                 setWindowIcon("libgdx128.png", "libgdx64.png", "libgdx32.png", "libgdx16.png")
             })
 }
+
+//            setWindowedMode(1280, 720) // 16 : 9
+//            setWindowedMode(1280 ,600)
+//            setWindowedMode(640, 480)
+//            setWindowedMode(360, 640) // 16 : 9

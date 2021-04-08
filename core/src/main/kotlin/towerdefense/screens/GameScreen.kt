@@ -20,7 +20,7 @@ class GameScreen(
      */
     init {
         logger.info { "Game Screen : Init Stage - START" }
-        engine.initGameDefault(game.assets, gameContext, gameViewport)
+        engine.initGameDefault(assets, gameContext, gameViewport)
         logger.info { "Game Screen : Init Stage - START" }
     }
 

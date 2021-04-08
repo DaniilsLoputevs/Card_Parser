@@ -18,53 +18,63 @@ import towerdefense.asset.GeneralAsset
  * -- prepare all others Screens for app
  */
 class LoadingScreen(
-        game: MainGame
+    game: MainGame
 ) : AbstractScreen(game) {
     private val logger = logger<LoadingScreen>()
 
-    /** custom async lock, - wait until assert will be full loaded */
-    private var isAssetsLoadingFinish = false
-
     override fun show() {
-        logger.info { "Loading Screen : Shown" }
-        logger.info { "Loading Screen : Load Main assets - START" }
+        logger.info { "Loading Screen : Shown \n" +
+                "Loading Screen : Load Main assets - START"}
         val logStartTime = System.currentTimeMillis()
         loadMainAssets()
-
-        logger.info { "Loading Screen : Load Main assets - FINISH ### load time: ${(System.currentTimeMillis() - logStartTime) * 0.001f} sec" }
+        logger.info {
+            "Loading Screen : Load Main assets - FINISH ### load time: " +
+                    "${(System.currentTimeMillis() - logStartTime) * 0.001f} sec"
+        }
     }
 
     private fun loadMainAssets() {
         val assetRefs = gdxArrayOf(
-                CardDeckAtlas.values().map { assets.loadAsync(it.desc) },
-                CardBackAtlas.values().map { assets.loadAsync(it.desc) },
-                GeneralAsset.values().map { assets.loadAsync(it.desc) },
+            CardDeckAtlas.values().map { assets.loadAsync(it.desc) },
+            CardBackAtlas.values().map { assets.loadAsync(it.desc) },
+            GeneralAsset.values().map { assets.loadAsync(it.desc) },
         ).flatten()
         KtxAsync.launch {
             assetRefs.joinAll()
-            isAssetsLoadingFinish = true
+            showGameWhenAssetsLoaded()
         }
     }
 
-    override fun hide() {
-        stage.clear()
+    private fun showGameWhenAssetsLoaded() {
+        game.removeScreen<LoadingScreen>()
+        game.addScreen(GameScreen(game))
+        game.setScreen<GameScreen>()
+        dispose()
     }
 
-
-    override fun resize(width: Int, height: Int) {
-        stage.viewport.update(width, height, true)
-        game.gameViewport.update(width, height)
+    override fun dispose() {
+        super.dispose();
+        logger.info { "Loading Screen : disposed" }
     }
+}
+//    override fun hide() {
+//        stage.clear()
+//    }
 
-    override fun render(delta: Float) {
-        if (assets.progress.isFinished && isAssetsLoadingFinish) {
-            game.removeScreen<LoadingScreen>()
-            dispose()
-            game.addScreen(GameScreen(game))
-            game.setScreen<GameScreen>()
-        }
+
+//    override fun resize(width: Int, height: Int) {
+//        stage.viewport.update(width, height, true)
+//        game.gameViewport.update(width, height)
+//    }
+
+//    override fun render(delta: Float) {
+//        if (assets.progress.isFinished && isAssetsLoadingFinish) {
+//            game.removeScreen<LoadingScreen>()
+//            dispose()
+//            game.addScreen(GameScreen(game))
+//            game.setScreen<GameScreen>()
 //        renderProgressBar()
-    }
+//    }
 
 //    private fun renderProgressBar() {
 //        progressBar.scaleX = assets.progress.percent
@@ -73,10 +83,6 @@ class LoadingScreen(
 //            act()
 //            draw()
 //        }
-//    }
 
-    override fun dispose() {
-        logger.info { "Loading Screen : disposed" }
-    }
 
-}
+

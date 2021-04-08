@@ -17,7 +17,7 @@ class CardMoveProcessor(
     override fun onTouchDown(cursorPosition: Vector2) {
         // convert cursor position -> WU position
         gameViewport.unproject(cursorPosition)
-        findDynamicStackByPos(cursorPosition)
+        findAndSetStackByPos(cursorPosition)
 
         // if don't find card in stacks, it could be card without stack
         if (gameContext.touchListStatus != TouchStatus.TOUCH) {
@@ -42,7 +42,7 @@ class CardMoveProcessor(
      *
      * if find -> add it to gameContext.touchList
      */
-    private fun findDynamicStackByPos(cursorPosition: Vector2) {
+    private fun findAndSetStackByPos(cursorPosition: Vector2) {
         stacks.find { it.containsPosInTotalHitBox(cursorPosition) }?.let { stack ->
             stack.gameStackComp.findByPos(cursorPosition)?.let { card ->
 
@@ -70,6 +70,9 @@ class CardMoveProcessor(
                 }
     }
 
+    /**
+     * Refresh coordinates of all cards that is in dragged stack if we shift cursor and drag stack
+     */
     private fun draggedTouchList(currentPosition: Vector2) {
         currentPosition.run {
             x -= captureOffset.x
@@ -86,14 +89,15 @@ class CardMoveProcessor(
         gameContext.touchListStatus = TouchStatus.DROPPED
     }
 
-
+    /**
+     * Calculate a card position with relating to the cursor if we start dragged the card
+     */
     private fun refreshCaptureOffset(cursorPosition: Vector2, card: GameCardAdapter) {
         captureOffset.set(
                 cursorPosition.x - card.transComp.position.x,
                 cursorPosition.y - card.transComp.position.y
         )
     }
-
 
     enum class TouchStatus {
         NONE,

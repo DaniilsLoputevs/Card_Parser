@@ -5,22 +5,15 @@ import com.badlogic.ashley.core.PooledEngine
 import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.scenes.scene2d.Stage
-import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.Viewport
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.joinAll
-import kotlinx.coroutines.launch
 import ktx.app.KtxGame
 import ktx.app.KtxScreen
 import ktx.assets.async.AssetStorage
 import ktx.async.KtxAsync
-import ktx.collections.gdxArrayOf
 import ktx.log.info
 import ktx.log.logger
 import towerdefense.ashley.systems.*
-import towerdefense.asset.CardDeckAtlas
-import towerdefense.asset.GeneralAsset
 import towerdefense.event.GameEventManager
 import towerdefense.screens.LoadingScreen
 
@@ -30,6 +23,7 @@ import towerdefense.screens.LoadingScreen
 class MainGame : KtxGame<KtxScreen>() {
 
     private val logger = logger<MainGame>()
+
     val gameViewport: Viewport by lazy {
         FitViewport(V_WORLD_WIDTH_UNITS, V_WORLD_HEIGHT_UNITS)
     }
@@ -48,21 +42,21 @@ class MainGame : KtxGame<KtxScreen>() {
     override fun create() {
         Gdx.app.logLevel = Application.LOG_DEBUG
 
-        logger.info { "Application :: START" }
-        logger.info { "MainGame :: Load Initialization assets - START" }
+        logger.info { "Application :: START \n" +
+                "MainGame :: Load Initialization assets - START" }
         val logStartTime = System.currentTimeMillis();
-
 
 //        val asyncJobsForLoading = prepareLoadingForInitializationAssets()
 //        KtxAsync.launch {
 //            asyncJobsForLoading.joinAll()
-
+//          }
             /* go to LoadingScreen to load remaining assets */
             addScreen(LoadingScreen(this@MainGame))
             setScreen<LoadingScreen>()
 //        }
 
-        logger.info { "MainGame :: Load Initialization assets - FINISH time: ${(System.currentTimeMillis() - logStartTime) * 0.001f} sec" }
+        logger.info { "MainGame :: Load Initialization assets - " +
+                "FINISH time: ${(System.currentTimeMillis() - logStartTime) * 0.001f} sec" }
 //        println("GAME :: create() ## END")
     }
 
