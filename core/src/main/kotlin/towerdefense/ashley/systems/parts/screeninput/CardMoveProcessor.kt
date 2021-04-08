@@ -1,8 +1,9 @@
-package towerdefense.gameStrucures
+package towerdefense.ashley.systems.parts.screeninput
 
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.viewport.Viewport
 import towerdefense.CARD_STACK_OFFSET
+import towerdefense.gameStrucures.GameContext
 import towerdefense.gameStrucures.adapters.GameCardAdapter
 import towerdefense.gameStrucures.adapters.GameStackAdapter
 
@@ -20,8 +21,9 @@ class CardMoveProcessor(
         findAndSetStackByPos(cursorPosition)
 
         // if don't find card in stacks, it could be card without stack
+        // TODO - clean it, after cards will be only in stacks.
         if (gameContext.touchListStatus != TouchStatus.TOUCH) {
-            println("findCard = true")
+            println("found card without stack!")
             findCard(cursorPosition)
         }
     }
@@ -47,7 +49,7 @@ class CardMoveProcessor(
             stack.gameStackComp.findByPos(cursorPosition)?.let { card ->
 
                 val cardIndex = stack.gameStackComp.indexOf(card)
-                stack.gameStackComp.removeFromIndexToList(cardIndex, gameContext.touchList)
+                stack.gameStackComp.transferElementsFromIndexToList(cardIndex, gameContext.touchList)
                 gameContext.touchList.forEach { it.transComp.setDepth(it.transComp.getDepth() * 1000) }
                 refreshCaptureOffset(cursorPosition, card)
                 gameContext.touchListStatus = TouchStatus.TOUCH
@@ -71,7 +73,7 @@ class CardMoveProcessor(
     }
 
     /**
-     * Refresh coordinates of all cards that is in dragged stack if we shift cursor and drag stack
+     * Refresh coordinates of all cards that is in dragged stack if we shift cursor and drag stack.
      */
     private fun draggedTouchList(currentPosition: Vector2) {
         currentPosition.run {
@@ -90,7 +92,7 @@ class CardMoveProcessor(
     }
 
     /**
-     * Calculate a card position with relating to the cursor if we start dragged the card
+     * Calculate a card position with relating to the cursor if we start dragged the card.
      */
     private fun refreshCaptureOffset(cursorPosition: Vector2, card: GameCardAdapter) {
         captureOffset.set(

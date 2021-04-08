@@ -14,7 +14,6 @@ import towerdefense.ashley.toPrint
  */
 data class GameCardAdapter(val entity: Entity) {
     val transComp: TransformComponent = entity[TransformComponent.mapper]!!
-    val graphicComp: GraphicComponent = entity[GraphicComponent.mapper]!!
     val gameCardComp: GameCardComponent = entity[GameCardComponent.mapper]!!
     val touchComp: TouchComponent = entity[TouchComponent.mapper]!!
 
@@ -30,7 +29,6 @@ data class GameCardAdapter(val entity: Entity) {
     override fun hashCode(): Int {
         var result = entity.hashCode()
         result = 31 * result + transComp.hashCode()
-        result = 31 * result + graphicComp.hashCode()
         result = 31 * result + gameCardComp.hashCode()
         result = 31 * result + touchComp.hashCode()
         return result

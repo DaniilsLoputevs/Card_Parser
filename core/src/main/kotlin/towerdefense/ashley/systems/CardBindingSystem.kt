@@ -3,10 +3,9 @@ package towerdefense.ashley.systems
 import com.badlogic.ashley.core.EntitySystem
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
-import towerdefense.gameStrucures.CardMoveProcessor.TouchStatus.DROPPED
-import towerdefense.gameStrucures.CardMoveProcessor.TouchStatus.NONE
+import towerdefense.ashley.systems.parts.screeninput.CardMoveProcessor.TouchStatus.DROPPED
+import towerdefense.ashley.systems.parts.screeninput.CardMoveProcessor.TouchStatus.NONE
 import towerdefense.gameStrucures.GameContext
-import towerdefense.gameStrucures.adapters.GameCardAdapter
 import towerdefense.gameStrucures.adapters.GameStackAdapter
 
 class CardBindingSystem : EntitySystem() {

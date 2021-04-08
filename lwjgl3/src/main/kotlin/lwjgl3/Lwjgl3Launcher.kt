@@ -5,11 +5,8 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration
 import towerdefense.MainGame
 
 /**
- * TODO - найти иконку:  setWindowIcon("icon.png")
+ * aspect ration: 16:9 (width X height)
  *
- * Kotlin: main method  like in java
- *
- *  aspect ration: 16:9 (width X height)
  * 2160p: 3840 x 2160
  * 1440p: 2560 x 1440
  * 1080p: 1920 x 1080

@@ -1,7 +1,8 @@
-package towerdefense.gameStrucures
+package towerdefense.ashley.systems.parts.screeninput
 
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.viewport.Viewport
+import towerdefense.gameStrucures.GameContext
 
 
 @Deprecated("Later, not now")

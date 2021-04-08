@@ -5,13 +5,26 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.math.Vector2
 import towerdefense.ashley.systems.ScreenInputSystem.TouchStatus.*
-import towerdefense.gameStrucures.ScreenInputProcessor
+import towerdefense.ashley.systems.parts.screeninput.ScreenInputProcessor
 
+/**
+ * THIS CODE IS READ ONLY!
+ *
+ * This system process player input per tick.
+ * structure for PI(Player Input) processing, determines the current state of PI (pressed, held, released)
+ * and calls the code that should process PI current state(state on current tick).
+ *
+ * @see inputProcessors : private field
+ * @see ScreenInputProcessor
+ *
+ * @author Daniils Loputevs.
+ */
 class ScreenInputSystem : EntitySystem() {
 
+    /** Collection of scripts Bundles witch will be triggered when player do any action with screen. */
     lateinit var inputProcessors: Array<ScreenInputProcessor>
 
-    /** current & previous touch/cursor position */
+    /** current & previous touch/cursor position buffer*/
     private var currPosition: Vector2 = Vector2(-1f, -1f)
     private var prevPosition: Vector2 = Vector2(-1f, -1f)
     private var touchStatus: TouchStatus = NONE
@@ -40,7 +53,6 @@ class ScreenInputSystem : EntitySystem() {
             refreshCurrentPosition()
 
             inputProcessors.forEach { it.onTouchUp(currPosition) }
-            // TODO - сделать клик на Stack -> перекинуть карту
             prevPosition.set(-1f, -1f)
             touchStatus = NONE
         }

@@ -113,7 +113,7 @@ class MainGame : KtxGame<KtxScreen>() {
 //                            assets[ImgAsset.BACKGROUND_DEFAULT.desc]
                     )
             )
-            addSystem(RemoveSystem(gameEventManager))
+//            addSystem(RemoveSystem(gameEventManager))
 //        }
 
         }

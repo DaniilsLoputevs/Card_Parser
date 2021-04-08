@@ -16,12 +16,11 @@ import towerdefense.ashley.toPrint
  */
 data class GameStackAdapter(val entity: Entity) {
     val transComp: TransformComponent = entity[TransformComponent.mapper]!!
-    val graphicComp: GraphicComponent = entity[GraphicComponent.mapper]!!
     val gameStackComp: GameStackComponent = entity[GameStackComponent.mapper]!!
 
     /**
-     * total hit box - stack hit box + all card hit box = full area of stack.
-     * check: contains [position] in this are.
+     * total hit box = stack hit box + all card hit box.(full area of stack)
+     * check: contains [position] in total hit box.
      */
     fun containsPosInTotalHitBox(position: Vector2) :Boolean {
         val thisPos = this.transComp.position
