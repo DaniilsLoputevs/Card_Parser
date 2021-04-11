@@ -1,4 +1,4 @@
-package towerdefense.ashley.components.KlondikeGame
+package towerdefense.ashley.components.klondikeGame
 
 import com.badlogic.ashley.core.Component
 import com.badlogic.gdx.math.Vector2

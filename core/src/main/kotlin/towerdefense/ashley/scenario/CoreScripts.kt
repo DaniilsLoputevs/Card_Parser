@@ -9,12 +9,13 @@ import ktx.ashley.with
 import ktx.assets.async.AssetStorage
 import towerdefense.CARD_HEIGHT
 import towerdefense.CARD_WIDTH
+import towerdefense.ashley.components.FoundationStackComponent
 import towerdefense.ashley.components.GraphicComponent
 import towerdefense.ashley.components.TouchComponent
 import towerdefense.ashley.components.TransformComponent
-import towerdefense.ashley.components.KlondikeGame.GameCardComponent
-import towerdefense.ashley.components.KlondikeGame.GameStackComponent
-import towerdefense.ashley.components.KlondikeGame.KlondikeMainStackComponent
+import towerdefense.ashley.components.klondikeGame.GameCardComponent
+import towerdefense.ashley.components.klondikeGame.GameStackComponent
+import towerdefense.ashley.components.klondikeGame.MainStackComponent
 import towerdefense.asset.CardDeckAtlas
 import towerdefense.gameStrucures.adapters.GameCardAdapter
 import towerdefense.gameStrucures.adapters.GameStackAdapter
@@ -99,6 +100,28 @@ fun Engine.createStack(
 }
 
 /**
+ * temple for create FoundationGameStack
+ */
+fun Engine.createFoundationStack(
+    texture: Texture,
+    posX: Float, posY: Float, posZ: Float = 0f,
+    onClickFun: () -> Unit = {}
+): GameStackAdapter {
+
+    val rsl = entity {
+
+        with<TransformComponent> {
+            initTransformComp(texture, posX, posY, posZ)
+            setSize(CARD_WIDTH, CARD_HEIGHT)
+        }
+        with<GraphicComponent>() { setSpriteRegion(texture) }
+        with<FoundationStackComponent>()
+        with<GameStackComponent>() { onClick = onClickFun }
+    }
+    return GameStackAdapter(rsl)
+}
+
+/**
  * temple for create GameStack
  */
 fun Engine.createMainStack(
@@ -116,7 +139,7 @@ fun Engine.createMainStack(
             setSize(CARD_WIDTH, CARD_HEIGHT)
         }
         with<GraphicComponent>() { setSpriteRegion(texture) }
-        with<KlondikeMainStackComponent>() { this.order = _order }
+        with<MainStackComponent>() { this.order = _order }
         with<GameStackComponent>() { onClick = onClickFun }
     }
     return GameStackAdapter(rsl)

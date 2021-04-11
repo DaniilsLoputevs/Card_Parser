@@ -7,33 +7,36 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.viewport.Viewport
 import ktx.ashley.allOf
 import ktx.ashley.get
-import ktx.log.info
-import towerdefense.ashley.components.KlondikeGame.*
+import towerdefense.CARD_WIDTH
+import towerdefense.ashley.components.klondikeGame.*
 import towerdefense.ashley.components.TransformComponent
 import towerdefense.gameStrucures.GameContext
 import towerdefense.gameStrucures.adapters.*
 import towerdefense.ashley.systems.parts.screeninput.CardMoveProcessor.TouchStatus.*
 
-class KlondikeMainStackSystem : SortedIteratingSystem(
-    allOf(TransformComponent::class, KlondikeMainStackComponent::class).get(),
-    compareBy { entity -> entity[KlondikeMainStackComponent.mapper] }) {
+class MainStackSystem : SortedIteratingSystem(
+    allOf(TransformComponent::class, MainStackComponent::class).get(),
+    compareBy { entity -> entity[MainStackComponent.mapper] }) {
 
-    private val logger = ktx.log.logger<KlondikeMainStackSystem>()
+    private val logger = ktx.log.logger<MainStackSystem>()
 
     private var transferCard: GameCardAdapter? = null
     private var currPosition: Vector2 = Vector2(Vector2.Zero)
     private lateinit var currentsStack: GameStackAdapter
+    private val buffer = Vector2(
+        60.25f * 2 + CARD_WIDTH,
+        520f)
     lateinit var gameViewport: Viewport
     lateinit var context: GameContext
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
         if (context.touchListStatus == TOUCH) {
             calculateCursorPosition()
-            val mainStackComp = entity[KlondikeMainStackComponent.mapper]!!
+            val mainStackComp = entity[MainStackComponent.mapper]!!
 
             when(mainStackComp.order) {
-                1 -> logicIfClosedStuck(entity, mainStackComp)
-                2 -> logicIfOpenStuck(entity, mainStackComp)
+                0 -> logicIfClosedStuck(entity, mainStackComp)
+                1 -> logicIfOpenStuck(entity, mainStackComp)
             }
         }
     }
@@ -43,23 +46,21 @@ class KlondikeMainStackSystem : SortedIteratingSystem(
         gameViewport.unproject(currPosition)
     }
 
-    private fun logicIfClosedStuck(entity: Entity, mainStackComponent: KlondikeMainStackComponent) {
+    private fun logicIfClosedStuck(entity: Entity, mainStackComponent: MainStackComponent) {
         currentsStack = GameStackAdapter(entity)
         if (currentsStack.containsPos(currPosition)
             && currentsStack.getCards().isNotEmpty()
         ) {
-            logger.info { "before stack status = ${currentsStack.toString()}" }
             transferCard = currentsStack.getCards().removeLast()
-            logger.info { "before stack status after removeLast = ${currentsStack.toString()}" }
         }
     }
 
-    private fun logicIfOpenStuck(entity: Entity, mainStackComponent: KlondikeMainStackComponent) {
+    private fun logicIfOpenStuck(entity: Entity, mainStackComponent: MainStackComponent) {
         currentsStack = GameStackAdapter(entity)
         transferCard?.let {
-            logger.info { "after stack status = ${currentsStack.toString()}" }
             currentsStack.getCards().add(it)
-            logger.info { "after stack status after add = ${currentsStack.toString()}" }
+            it.transComp.setPosition(buffer)
+            context.touchList.removeAt(context.touchList.indexOf(transferCard))
             transferCard = null
         }
 

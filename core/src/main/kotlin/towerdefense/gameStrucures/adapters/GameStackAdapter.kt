@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector3
 import ktx.ashley.get
 import towerdefense.CARD_STACK_OFFSET
 import towerdefense.ashley.components.TransformComponent
-import towerdefense.ashley.components.KlondikeGame.GameStackComponent
+import towerdefense.ashley.components.klondikeGame.GameStackComponent
 import towerdefense.ashley.toPrint
 
 /**

@@ -4,7 +4,7 @@ import com.badlogic.ashley.core.Entity
 import ktx.ashley.get
 import towerdefense.ashley.components.TouchComponent
 import towerdefense.ashley.components.TransformComponent
-import towerdefense.ashley.components.KlondikeGame.GameCardComponent
+import towerdefense.ashley.components.klondikeGame.GameCardComponent
 import towerdefense.ashley.toPrint
 
 /**
