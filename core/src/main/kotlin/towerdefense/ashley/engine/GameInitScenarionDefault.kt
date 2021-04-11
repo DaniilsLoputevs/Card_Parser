@@ -5,14 +5,11 @@ import com.badlogic.gdx.utils.viewport.Viewport
 import ktx.ashley.getSystem
 import ktx.assets.async.AssetStorage
 import towerdefense.CARD_WIDTH
-import towerdefense.ashley.components.game.GameCardComponent.CardRank.*
-import towerdefense.ashley.components.game.GameCardComponent.CardSuit.SPADES
+import towerdefense.ashley.components.KlondikeGame.GameCardComponent.CardRank.*
+import towerdefense.ashley.components.KlondikeGame.GameCardComponent.CardSuit.SPADES
 import towerdefense.ashley.getOurGameCards
 import towerdefense.ashley.getOurGameStacks
-import towerdefense.ashley.systems.CardBindingSystem
-import towerdefense.ashley.systems.DebugSystem
-import towerdefense.ashley.systems.RenderSystem
-import towerdefense.ashley.systems.ScreenInputSystem
+import towerdefense.ashley.systems.*
 import towerdefense.asset.CardBackAtlas
 import towerdefense.asset.CardDeckAtlas
 import towerdefense.asset.GeneralAsset
@@ -21,7 +18,7 @@ import towerdefense.gameStrucures.GameContext
 import towerdefense.gameStrucures.adapters.GameCardAdapter
 import towerdefense.gameStrucures.adapters.GameStackAdapter
 
-fun Engine.initGameDefault(assets: AssetStorage, gameContext: GameContext, gameViewport: Viewport) {
+fun Engine.initKlondikeGame(assets: AssetStorage, gameContext: GameContext, gameViewport: Viewport) {
     this.run {
         val cardsForInit = createCardDeckDefault(assets)
         val stacksForInit = createStacksDefault(assets)
@@ -31,16 +28,21 @@ fun Engine.initGameDefault(assets: AssetStorage, gameContext: GameContext, gameV
             this.stacks = this@run.getOurGameStacks()
             this.cards = this@run.getOurGameCards()
         }
+        getSystem<KlondikeMainStackSystem>().apply {
+            this.context = gameContext
+            this.gameViewport = gameViewport
+            setProcessing(true)
+        }
         getSystem<RenderSystem>().apply {
             this.configBackground(assets[GeneralAsset.BACKGROUND_DEFAULT.desc])
             this.configCardBack(assets[CardBackAtlas.CARD_BACK_DEFAULT.desc].findRegion("light"))
         }
         getSystem<ScreenInputSystem>().apply {
             this.inputProcessors = arrayOf(
-                    CardMoveProcessor(
-                            gameContext, gameViewport,
-                            this@run.getOurGameCards(), this@run.getOurGameStacks()
-                    )
+                CardMoveProcessor(
+                    gameContext, gameViewport,
+                    this@run.getOurGameCards(), this@run.getOurGameStacks()
+                )
             )
             setProcessing(true)
         }
@@ -54,9 +56,9 @@ fun Engine.initGameDefault(assets: AssetStorage, gameContext: GameContext, gameV
 }
 
 private fun Engine.prepareGameScriptsDefault(
-        gameContext: GameContext,
-        cards: List<GameCardAdapter>,
-        stacks: List<GameStackAdapter>,
+    gameContext: GameContext,
+    cards: List<GameCardAdapter>,
+    stacks: List<GameStackAdapter>,
 ) {
 
 //    addCardsToStack(stacks[0], listOf(cards[0], cards[1], cards[2], cards[3]))
@@ -70,26 +72,26 @@ private fun Engine.prepareGameScriptsDefault(
  */
 fun Engine.createCardDeckDefault(assets: AssetStorage): List<GameCardAdapter> {
     return listOf<GameCardAdapter>(
-            this.createCard(
-                    assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc], "14_spades_ace",
-                    SPADES, ACE, false, 0f, 50f
-            ),
-            this.createCard(
-                    assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc], "2_spades_two",
-                    SPADES, TWO, true, 200f, 150f
-            ),
-            this.createCard(
-                    assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc], "3_spades_three",
-                    SPADES, THREE, false, 400f, 150f
-            ),
-            this.createCard(
-                    assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc], "4_spades_four",
-                    SPADES, FOUR, true, 600f, 150f
-            ),
-            this.createCard(
-                    assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc], "5_spades_five",
-                    SPADES, FIVE, true, 800f, 150f
-            ),
+        this.createCard(
+            assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc], "14_spades_ace",
+            SPADES, ACE, false, 0f, 50f
+        ),
+        this.createCard(
+            assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc], "2_spades_two",
+            SPADES, TWO, true, 200f, 150f
+        ),
+        this.createCard(
+            assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc], "3_spades_three",
+            SPADES, THREE, false, 400f, 150f
+        ),
+        this.createCard(
+            assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc], "4_spades_four",
+            SPADES, FOUR, true, 600f, 150f
+        ),
+        this.createCard(
+            assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc], "5_spades_five",
+            SPADES, FIVE, true, 800f, 150f
+        ),
     )
 }
 
@@ -103,17 +105,33 @@ fun Engine.createStacksDefault(assets: AssetStorage): List<GameStackAdapter> {
     for (i in 0..6) {
         corX += 60.25f
         list.add(
-                createStack(
-                        assets[GeneralAsset.CARD_STACK.desc],
-                        corX,
-                        290f,
-                        onClickFun = ::mainStackOnClick
-                )
+            createStack(
+                assets[GeneralAsset.CARD_STACK.desc],
+                corX,
+                290f,
+                onClickFun = ::mainStackOnClick
+            )
         )
         corX += CARD_WIDTH
     }
-    list.add(createStack(assets[GeneralAsset.CARD_STACK.desc],
-            60.25f, 520f, onClickFun = ::mainStackOnClick))
+    list.add(
+        createMainStack(
+            assets[GeneralAsset.CARD_STACK.desc],
+            60.25f,
+            520f,
+            _order = 0,
+            onClickFun = ::mainStackOnClick
+        )
+    )
+    list.add(
+        createMainStack(
+            assets[GeneralAsset.CARD_STACK.desc],
+            60.25f * 2 + CARD_WIDTH,
+            520f,
+            _order = 1,
+            onClickFun = ::mainStackOnClick
+        )
+    )
     return list;
 }
 

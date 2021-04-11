@@ -1,4 +1,4 @@
-package towerdefense.ashley.components.game
+package towerdefense.ashley.components.KlondikeGame
 
 import com.badlogic.ashley.core.Component
 import com.badlogic.gdx.utils.Pool

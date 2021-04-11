@@ -11,11 +11,11 @@ import towerdefense.CARD_WIDTH
 import towerdefense.ashley.components.GraphicComponent
 import towerdefense.ashley.components.TouchComponent
 import towerdefense.ashley.components.TransformComponent
-import towerdefense.ashley.components.game.GameCardComponent
-import towerdefense.ashley.components.game.GameStackComponent
+import towerdefense.ashley.components.KlondikeGame.GameCardComponent
+import towerdefense.ashley.components.KlondikeGame.GameStackComponent
+import towerdefense.ashley.components.KlondikeGame.KlondikeMainStackComponent
 import towerdefense.gameStrucures.adapters.GameCardAdapter
 import towerdefense.gameStrucures.adapters.GameStackAdapter
-import java.util.*
 
 fun Engine.createCard(
         textureAtlas: TextureAtlas,
@@ -62,6 +62,30 @@ fun Engine.createStack(
             setSize(CARD_WIDTH, CARD_HEIGHT)
         }
         with<GraphicComponent>() { setSpriteRegion(texture) }
+        with<GameStackComponent>() { onClick = onClickFun }
+    }
+    return GameStackAdapter(rsl)
+}
+
+/**
+ * temple for create GameStack
+ */
+fun Engine.createMainStack(
+    texture: Texture,
+    posX: Float,
+    posY: Float,
+    posZ: Float = 0f,
+    _order: Int,
+    onClickFun: () -> Unit = {}
+): GameStackAdapter {
+
+    val rsl = entity {
+        with<TransformComponent> {
+            initTransformComp(texture, posX, posY, posZ)
+            setSize(CARD_WIDTH, CARD_HEIGHT)
+        }
+        with<GraphicComponent>() { setSpriteRegion(texture) }
+        with<KlondikeMainStackComponent>() { this.order = _order }
         with<GameStackComponent>() { onClick = onClickFun }
     }
     return GameStackAdapter(rsl)

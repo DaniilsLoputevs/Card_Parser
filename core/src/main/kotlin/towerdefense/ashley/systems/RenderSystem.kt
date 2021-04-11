@@ -23,7 +23,7 @@ import towerdefense.V_WORLD_HEIGHT_UNITS
 import towerdefense.V_WORLD_WIDTH_UNITS
 import towerdefense.ashley.components.GraphicComponent
 import towerdefense.ashley.components.TransformComponent
-import towerdefense.ashley.components.game.GameCardComponent
+import towerdefense.ashley.components.KlondikeGame.GameCardComponent
 import towerdefense.ashley.findRequiredComponent
 
 /**

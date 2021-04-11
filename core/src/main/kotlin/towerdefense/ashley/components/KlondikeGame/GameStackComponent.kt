@@ -1,4 +1,4 @@
-package towerdefense.ashley.components.game
+package towerdefense.ashley.components.KlondikeGame
 
 import com.badlogic.ashley.core.Component
 import com.badlogic.gdx.math.Vector2
@@ -59,6 +59,7 @@ class GameStackComponent : Component, Pool.Poolable {
     fun remove(card: GameCardAdapter): Boolean = cardStack.remove(card)
     fun indexOf(card: GameCardAdapter): Int = cardStack.indexOf(card)
     fun isEmpty(): Boolean = cardStack.isEmpty()
+    fun isNotEmpty(): Boolean = cardStack.isNotEmpty()
     fun contains(card: GameCardAdapter) = cardStack.contains(card)
     fun size() = cardStack.size
 

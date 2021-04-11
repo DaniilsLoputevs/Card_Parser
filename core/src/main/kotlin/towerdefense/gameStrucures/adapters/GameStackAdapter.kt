@@ -5,9 +5,8 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
 import ktx.ashley.get
 import towerdefense.CARD_STACK_OFFSET
-import towerdefense.ashley.components.GraphicComponent
 import towerdefense.ashley.components.TransformComponent
-import towerdefense.ashley.components.game.GameStackComponent
+import towerdefense.ashley.components.KlondikeGame.GameStackComponent
 import towerdefense.ashley.toPrint
 
 /**
@@ -17,6 +16,11 @@ import towerdefense.ashley.toPrint
 data class GameStackAdapter(val entity: Entity) {
     val transComp: TransformComponent = entity[TransformComponent.mapper]!!
     val gameStackComp: GameStackComponent = entity[GameStackComponent.mapper]!!
+
+    /**
+     * short way to get cardstack fom stackadapter
+     */
+    fun getCards(): MutableList<GameCardAdapter> = gameStackComp.cardStack
 
     /**
      * total hit box = stack hit box + all card hit box.(full area of stack)

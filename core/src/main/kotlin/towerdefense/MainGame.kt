@@ -100,6 +100,11 @@ class MainGame : KtxGame<KtxScreen>() {
                     }
             )
             addSystem(
+                    KlondikeMainStackSystem().apply {
+                        setProcessing(false)
+                    }
+            )
+            addSystem(
                     CardBindingSystem().apply {
                         setProcessing(false)
                     }
