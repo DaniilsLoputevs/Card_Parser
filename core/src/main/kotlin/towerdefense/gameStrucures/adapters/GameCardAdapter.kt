@@ -6,6 +6,7 @@ import towerdefense.ashley.components.TouchComponent
 import towerdefense.ashley.components.TransformComponent
 import towerdefense.ashley.components.klondikeGame.GameCardComponent
 import towerdefense.ashley.toPrint
+import towerdefense.gameStrucures.GameContext
 
 /**
  * For friendly using Entity that is a GameCard

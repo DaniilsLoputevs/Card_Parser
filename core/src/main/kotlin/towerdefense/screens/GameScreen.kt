@@ -9,7 +9,7 @@ class GameScreen(
         game: MainGame
 ) : AbstractScreen(game) {
     private val logger = ktx.log.logger<GameScreen>()
-    private val gameContext = GameContext()
+    private val gameContext = GameContext
 
 
     /**
