@@ -11,10 +11,27 @@ import towerdefense.ashley.components.KlondikeGame.GameStackComponent
 import towerdefense.gameStrucures.adapters.GameCardAdapter
 import towerdefense.gameStrucures.adapters.GameStackAdapter
 
-val GAME_STACK_FAMILY: Family = allOf(TransformComponent::class,
+
+/* ECS Engine */
+
+
+private val GAME_STACK_FAMILY: Family = allOf(TransformComponent::class,
         GraphicComponent::class, GameStackComponent::class).get()
-val GAME_CARDS_FAMILY: Family = allOf(TransformComponent::class,
+private val GAME_CARDS_FAMILY: Family = allOf(TransformComponent::class,
         GraphicComponent::class, GameCardComponent::class, TouchComponent::class).get()
+
+
+fun Engine.getOurGameStacks(): List<GameStackAdapter> {
+    return this.getEntitiesFor(GAME_STACK_FAMILY).toList().map { GameStackAdapter(it) }
+}
+
+fun Engine.getOurGameCards(): List<GameCardAdapter> {
+    return this.getEntitiesFor(GAME_CARDS_FAMILY).toList().map { GameCardAdapter(it) }
+}
+
+
+/* ECS Entity */
+
 
 /**
  * For using in [EntitySystem].
@@ -29,14 +46,6 @@ inline fun <reified T : Component> Entity.findRequiredComponent(mapper: Componen
     val rslComponent = this[mapper]
     require(rslComponent != null) { "Entity |entity| must have a ${T::class.simpleName}. entity=$this" }
     return rslComponent
-}
-
-fun Engine.getOurGameStacks(): List<GameStackAdapter> {
-    return this.getEntitiesFor(GAME_STACK_FAMILY).toList().map { GameStackAdapter(it) }
-}
-
-fun Engine.getOurGameCards(): List<GameCardAdapter> {
-    return this.getEntitiesFor(GAME_CARDS_FAMILY).toList().map { GameCardAdapter(it) }
 }
 
 fun Entity.toPrint(): String {

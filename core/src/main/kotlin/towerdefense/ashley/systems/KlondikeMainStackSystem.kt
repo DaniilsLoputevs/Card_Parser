@@ -29,11 +29,11 @@ class KlondikeMainStackSystem : SortedIteratingSystem(
     override fun processEntity(entity: Entity, deltaTime: Float) {
         if (context.touchListStatus == TOUCH) {
             calculateCursorPosition()
-            val mainComp: KlondikeMainStackComponent = entity[KlondikeMainStackComponent.mapper]!!
-            if (mainComp.order == 0) {
-                logicIfClosedStuck(entity, mainComp)
-            } else if (mainComp.order == 1) {
-                logicIfOpenStuck(entity, mainComp)
+            val mainStackComp = entity[KlondikeMainStackComponent.mapper]!!
+
+            when(mainStackComp.order) {
+                1 -> logicIfClosedStuck(entity, mainStackComp)
+                2 -> logicIfOpenStuck(entity, mainStackComp)
             }
         }
     }
@@ -60,7 +60,7 @@ class KlondikeMainStackSystem : SortedIteratingSystem(
             logger.info { "after stack status = ${currentsStack.toString()}" }
             currentsStack.getCards().add(it)
             logger.info { "after stack status after add = ${currentsStack.toString()}" }
-            transferCard = null;
+            transferCard = null
         }
 
     }

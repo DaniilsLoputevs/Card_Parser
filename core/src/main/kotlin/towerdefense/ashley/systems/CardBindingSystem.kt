@@ -51,13 +51,13 @@ class CardBindingSystem : EntitySystem() {
 
     private fun applyTouchListToStack(newCardStack: GameStackAdapter) {
         val prevStack = stacks.find { it.gameStackComp.contains(gameContext.touchList[0]) }
-        gameContext.touchList.forEach { card ->
+        gameContext.touchList.forEach {
+            prevStack?.gameStackComp?.remove(it)
+
             /* Getting position for new card before add it into stack */
             newCardStack.getNextCardPosition(cardPositionBuff)
-            prevStack?.gameStackComp?.remove(card)
-
-            newCardStack.gameStackComp.add(card)
-            card.transComp.setPosition(cardPositionBuff)
+            newCardStack.gameStackComp.add(it)
+            it.transComp.setPosition(cardPositionBuff)
         }
     }
 

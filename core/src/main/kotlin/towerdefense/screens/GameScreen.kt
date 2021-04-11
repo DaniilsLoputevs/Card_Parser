@@ -2,7 +2,7 @@ package towerdefense.screens
 
 import ktx.log.info
 import towerdefense.MainGame
-import towerdefense.ashley.engine.initKlondikeGame
+import towerdefense.ashley.scenario.initKlondaikGame
 import towerdefense.gameStrucures.GameContext
 
 class GameScreen(
@@ -20,7 +20,7 @@ class GameScreen(
      */
     init {
         logger.info { "Game Screen : Init Stage - START" }
-        engine.initKlondikeGame(assets, gameContext, gameViewport)
+        engine.initKlondaikGame(assets, gameContext, gameViewport)
         logger.info { "Game Screen : Init Stage - START" }
     }
 

@@ -8,7 +8,7 @@ package towerdefense
  *
  * Maksim:
  * TODO - stacks: onClick() - stack could have behavior that onClick() => open last card and move it to other stack
- * TODO - stacks: onAddCard() - stack could have behavior that onClick() => close card and set isClickable = false
+ * TODO - stacks: onAddCard() - stack could have behavior that onAdd() => close card and set isClickable = false
  * TODO -
  *
  * General:

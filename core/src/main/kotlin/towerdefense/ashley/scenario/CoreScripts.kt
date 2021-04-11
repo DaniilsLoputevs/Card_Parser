@@ -1,4 +1,4 @@
-package towerdefense.ashley.engine
+package towerdefense.ashley.scenario
 
 import com.badlogic.ashley.core.Engine
 import com.badlogic.gdx.graphics.Texture
@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.math.Vector3
 import ktx.ashley.entity
 import ktx.ashley.with
+import ktx.assets.async.AssetStorage
 import towerdefense.CARD_HEIGHT
 import towerdefense.CARD_WIDTH
 import towerdefense.ashley.components.GraphicComponent
@@ -14,8 +15,38 @@ import towerdefense.ashley.components.TransformComponent
 import towerdefense.ashley.components.KlondikeGame.GameCardComponent
 import towerdefense.ashley.components.KlondikeGame.GameStackComponent
 import towerdefense.ashley.components.KlondikeGame.KlondikeMainStackComponent
+import towerdefense.asset.CardDeckAtlas
 import towerdefense.gameStrucures.adapters.GameCardAdapter
 import towerdefense.gameStrucures.adapters.GameStackAdapter
+
+/**
+ * Create card deck for game: 62 game cards
+ * * this script for: Default GameType
+ */
+fun Engine.createCardDeck(assets: AssetStorage): List<GameCardAdapter> {
+    return listOf<GameCardAdapter>(
+            this.createCard(
+                    assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc], "14_spades_ace",
+                    GameCardComponent.CardSuit.SPADES, GameCardComponent.CardRank.ACE, false, 0f, 50f
+            ),
+            this.createCard(
+                    assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc], "2_spades_two",
+                    GameCardComponent.CardSuit.SPADES, GameCardComponent.CardRank.TWO, true, 200f, 150f
+            ),
+            this.createCard(
+                    assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc], "3_spades_three",
+                    GameCardComponent.CardSuit.SPADES, GameCardComponent.CardRank.THREE, false, 400f, 150f
+            ),
+            this.createCard(
+                    assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc], "4_spades_four",
+                    GameCardComponent.CardSuit.SPADES, GameCardComponent.CardRank.FOUR, true, 600f, 150f
+            ),
+            this.createCard(
+                    assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc], "5_spades_five",
+                    GameCardComponent.CardSuit.SPADES, GameCardComponent.CardRank.FIVE, true, 800f, 150f
+            ),
+    )
+}
 
 fun Engine.createCard(
         textureAtlas: TextureAtlas,
@@ -71,12 +102,12 @@ fun Engine.createStack(
  * temple for create GameStack
  */
 fun Engine.createMainStack(
-    texture: Texture,
-    posX: Float,
-    posY: Float,
-    posZ: Float = 0f,
-    _order: Int,
-    onClickFun: () -> Unit = {}
+        texture: Texture,
+        posX: Float,
+        posY: Float,
+        posZ: Float = 0f,
+        _order: Int,
+        onClickFun: () -> Unit = {}
 ): GameStackAdapter {
 
     val rsl = entity {
@@ -91,10 +122,16 @@ fun Engine.createMainStack(
     return GameStackAdapter(rsl)
 }
 
+
+/* OLD API  ---  maybe for delete */
+
+
+@Deprecated("unusebale")
 fun addCardsToStack(stack: GameStackAdapter, cards: List<GameCardAdapter>) {
     cards.forEach { addCardToStack(stack, it) }
 }
 
+@Deprecated("unusebale")
 fun addCardToStack(stack: GameStackAdapter, card: GameCardAdapter) {
     val cardPos = Vector3()
     /* Getting position for new card before add it into stack */
@@ -105,6 +142,7 @@ fun addCardToStack(stack: GameStackAdapter, card: GameCardAdapter) {
 
 }
 
+@Deprecated("unusebale")
 fun unbindCardFromStack(stacks: List<GameStackAdapter>, card: GameCardAdapter) {
     stacks.find { it.gameStackComp.contains(card) }
             ?.let { it.gameStackComp.remove(card) }
