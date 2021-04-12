@@ -1,4 +1,4 @@
-package towerdefense.ashley.components.klondikeGame
+package towerdefense.ashley.components.klondike
 
 import com.badlogic.ashley.core.Component
 import com.badlogic.gdx.utils.Pool
@@ -8,14 +8,12 @@ import ktx.ashley.mapperFor
  * This component say: This Entity is Game Card.
  */
 class GameCardComponent : Component, Pool.Poolable {
-    var cardSuit: CardSuit = CardSuit.NONE
-    var cardRank: CardRank = CardRank.NONE
+    lateinit var cardSuit: CardSuit
+    lateinit var cardRank: CardRank
     var isCardOpen: Boolean = false
 
 
     override fun reset() {
-        cardSuit = CardSuit.NONE
-        cardRank = CardRank.NONE
         isCardOpen = false
     }
 
@@ -25,7 +23,6 @@ class GameCardComponent : Component, Pool.Poolable {
 
 
     enum class CardRank {
-        NONE,
         TWO,
         THREE,
         FOUR,
@@ -38,16 +35,14 @@ class GameCardComponent : Component, Pool.Poolable {
         JACK,
         QUEEN,
         KING,
-        ACE,
-        JOKER
+        ACE
     }
 
     enum class CardSuit(val colour: String) {
-        DIAMONDS("RED"), // Бубны
-        HEARTS("RED"),   // Червы/черви
-        SPADES("BLACK"), // Пики
+        SPADES("BLACK"),  // Пики
+        HEARTS("RED"),    // Червы/черви
         CLUBS("BLACK"),   // Трефы
-        NONE("NONE")
+        DIAMONDS("RED")   // Бубны
     }
 
 }

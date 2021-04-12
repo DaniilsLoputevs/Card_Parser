@@ -2,8 +2,8 @@ package towerdefense
 
 /**
  * Daniils:
- * TODO - full DEFAULT card asset atlas (1/4)
- * TODO - Make algorithm for create card deck
+ * TODO - (DONE) full DEFAULT card asset atlas (1/4)
+ * TODO - (DONE) Make algorithm for create card deck
  * TODO - Make algorithm that decide - can you put this card on new stack or can't
  * TODO - Make algorithm of spreading cards on game stacks
  *

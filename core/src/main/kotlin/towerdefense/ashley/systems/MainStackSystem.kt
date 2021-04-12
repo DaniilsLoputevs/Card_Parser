@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.viewport.Viewport
 import ktx.ashley.allOf
 import ktx.ashley.get
 import towerdefense.CARD_WIDTH
-import towerdefense.ashley.components.klondikeGame.*
+import towerdefense.ashley.components.klondike.*
 import towerdefense.ashley.components.TransformComponent
 import towerdefense.gameStrucures.GameContext
 import towerdefense.gameStrucures.adapters.*

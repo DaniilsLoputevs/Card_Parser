@@ -6,27 +6,25 @@ import com.badlogic.gdx.math.Vector3
 import ktx.ashley.get
 import towerdefense.CARD_STACK_OFFSET
 import towerdefense.ashley.components.TransformComponent
-import towerdefense.ashley.components.klondikeGame.GameStackComponent
+import towerdefense.ashley.components.klondike.GameStackComponent
 import towerdefense.ashley.toPrint
 
 /**
- * For friendly using Entity that is a GameStack
+ * For friendly using Entity that is a GameStack.
  * * Components never will be null.
  */
 data class GameStackAdapter(val entity: Entity) {
     val transComp: TransformComponent = entity[TransformComponent.mapper]!!
     val gameStackComp: GameStackComponent = entity[GameStackComponent.mapper]!!
 
-    /**
-     * short way to get cardstack fom stackadapter
-     */
+    /** Short way to get cardStack from stackAdapter. */
     fun getCards(): MutableList<GameCardAdapter> = gameStackComp.cardStack
 
     /**
      * total hit box = stack hit box + all card hit box.(full area of stack)
      * check: contains [position] in total hit box.
      */
-    fun containsPosInTotalHitBox(position: Vector2) :Boolean {
+    fun containsPosInTotalHitBox(position: Vector2): Boolean {
         val thisPos = this.transComp.position
         val thisSize = this.transComp.size
         val offsetCorrection = CARD_STACK_OFFSET * this.gameStackComp.size()
@@ -50,9 +48,7 @@ data class GameStackAdapter(val entity: Entity) {
         }
     }
 
-    /**
-     * Find area of last card and check: is [otherPos] contains.
-     */
+    /** Find area of last card and check: is [otherPos] contains. */
     private fun containsPosInLastCardHitBox(otherPos: Vector2): Boolean {
         val thisPos = this.transComp.position
         val thisSize = this.transComp.size
@@ -85,7 +81,7 @@ data class GameStackAdapter(val entity: Entity) {
     /**
      * [card] MUST CONTAINS in this stacks, else you will receive incorrect date.
      */
-    fun getPosForCard(card: GameCardAdapter, cardPositionBuff: Vector3){
+    fun getPosForCard(card: GameCardAdapter, cardPositionBuff: Vector3) {
         val cardIndex = this.gameStackComp.indexOf(card)
         cardPositionBuff.set(
                 this.transComp.position.x,

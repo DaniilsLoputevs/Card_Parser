@@ -6,8 +6,8 @@ import ktx.ashley.get
 import towerdefense.ashley.components.GraphicComponent
 import towerdefense.ashley.components.TouchComponent
 import towerdefense.ashley.components.TransformComponent
-import towerdefense.ashley.components.klondikeGame.GameCardComponent
-import towerdefense.ashley.components.klondikeGame.GameStackComponent
+import towerdefense.ashley.components.klondike.GameCardComponent
+import towerdefense.ashley.components.klondike.GameStackComponent
 import towerdefense.gameStrucures.adapters.GameCardAdapter
 import towerdefense.gameStrucures.adapters.GameStackAdapter
 

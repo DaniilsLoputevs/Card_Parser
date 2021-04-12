@@ -6,54 +6,46 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.math.Vector3
 import ktx.ashley.entity
 import ktx.ashley.with
-import ktx.assets.async.AssetStorage
 import towerdefense.CARD_HEIGHT
 import towerdefense.CARD_WIDTH
 import towerdefense.ashley.components.FoundationStackComponent
 import towerdefense.ashley.components.GraphicComponent
 import towerdefense.ashley.components.TouchComponent
 import towerdefense.ashley.components.TransformComponent
-import towerdefense.ashley.components.klondikeGame.GameCardComponent
-import towerdefense.ashley.components.klondikeGame.GameStackComponent
-import towerdefense.ashley.components.klondikeGame.MainStackComponent
-import towerdefense.asset.CardDeckAtlas
+import towerdefense.ashley.components.klondike.GameCardComponent
+import towerdefense.ashley.components.klondike.GameCardComponent.CardRank
+import towerdefense.ashley.components.klondike.GameCardComponent.CardSuit
+import towerdefense.ashley.components.klondike.GameStackComponent
+import towerdefense.ashley.components.klondike.MainStackComponent
 import towerdefense.gameStrucures.adapters.GameCardAdapter
 import towerdefense.gameStrucures.adapters.GameStackAdapter
+import java.util.*
 
-/**
- * Create card deck for game: 62 game cards
- * * this script for: Default GameType
- */
-fun Engine.createCardDeck(assets: AssetStorage): List<GameCardAdapter> {
-    return listOf<GameCardAdapter>(
-            this.createCard(
-                    assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc], "14_spades_ace",
-                    GameCardComponent.CardSuit.SPADES, GameCardComponent.CardRank.ACE, false, 0f, 50f
-            ),
-            this.createCard(
-                    assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc], "2_spades_two",
-                    GameCardComponent.CardSuit.SPADES, GameCardComponent.CardRank.TWO, true, 200f, 150f
-            ),
-            this.createCard(
-                    assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc], "3_spades_three",
-                    GameCardComponent.CardSuit.SPADES, GameCardComponent.CardRank.THREE, false, 400f, 150f
-            ),
-            this.createCard(
-                    assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc], "4_spades_four",
-                    GameCardComponent.CardSuit.SPADES, GameCardComponent.CardRank.FOUR, true, 600f, 150f
-            ),
-            this.createCard(
-                    assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc], "5_spades_five",
-                    GameCardComponent.CardSuit.SPADES, GameCardComponent.CardRank.FIVE, true, 800f, 150f
-            ),
-    )
+
+/** Create card deck for game: 52 game cards */
+fun Engine.createCardDeck(textureAtlas: TextureAtlas): List<GameCardAdapter> {
+    return mutableListOf<GameCardAdapter>().apply {
+        var textureIndex = 0
+        CardSuit.values().forEach { suit ->
+            val suitName = suit.name.toLowerCase(Locale.ROOT)
+
+            CardRank.values().forEach { rank ->
+                val rankName = rank.name.toLowerCase(Locale.ROOT)
+
+                this.add(createCard(
+                        textureAtlas, "${textureIndex++}_${suitName}_${rankName}",
+                        suit, rank, true, 0f, 0f
+                ))
+            }
+        }
+    }
 }
 
 fun Engine.createCard(
         textureAtlas: TextureAtlas,
         textureRegion: String,
-        cardSuit: GameCardComponent.CardSuit,
-        cardRank: GameCardComponent.CardRank,
+        cardSuit: CardSuit,
+        cardRank: CardRank,
         isCardOpen: Boolean = false,
         posX: Float = 0f, posY: Float = 0f, posZ: Float = 1f
 ): GameCardAdapter {

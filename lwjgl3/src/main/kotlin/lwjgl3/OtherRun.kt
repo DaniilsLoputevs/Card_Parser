@@ -1,6 +1,6 @@
 package lwjgl3
 
-import towerdefense.ashley.components.klondikeGame.GameCardComponent
+import towerdefense.ashley.components.klondike.GameCardComponent
 
 
 fun main() {

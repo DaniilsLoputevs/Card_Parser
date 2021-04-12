@@ -5,12 +5,13 @@ import com.badlogic.gdx.utils.viewport.Viewport
 import ktx.ashley.getSystem
 import ktx.assets.async.AssetStorage
 import towerdefense.CARD_WIDTH
-import towerdefense.ashley.components.klondikeGame.GameCardComponent.CardRank.*
+import towerdefense.ashley.components.klondike.GameCardComponent.CardRank.*
 import towerdefense.ashley.getOurGameCards
 import towerdefense.ashley.getOurGameStacks
 import towerdefense.ashley.systems.*
 import towerdefense.ashley.systems.parts.screeninput.CardMoveProcessor
 import towerdefense.asset.CardBackAtlas
+import towerdefense.asset.CardDeckAtlas
 import towerdefense.asset.GeneralAsset
 import towerdefense.gameStrucures.GameContext
 import towerdefense.gameStrucures.adapters.GameCardAdapter
@@ -18,7 +19,7 @@ import towerdefense.gameStrucures.adapters.GameStackAdapter
 
 fun Engine.initKlondaikGame(assets: AssetStorage, gameContext: GameContext, gameViewport: Viewport) {
     this.run {
-        val cardsForInit = createCardDeck(assets)
+        val cardsForInit = createCardDeck(assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc])
         val stacksForInit = createStacksKlondaik(assets)
 
         getSystem<DebugSystem>().apply {
