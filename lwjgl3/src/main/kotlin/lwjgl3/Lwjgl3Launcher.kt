@@ -1,8 +1,8 @@
 package lwjgl3
 
+import cardparser.MainGame
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration
-import towerdefense.MainGame
 
 /**
  * aspect ration: 16:9 (width X height)
