@@ -17,9 +17,16 @@ import com.badlogic.gdx.math.Vector2
  * need all methods, will bew good if it MUSN'T override it".
  */
 interface ScreenInputProcessor {
-    fun onTouchUp(cursorPosition: Vector2) {}
+    fun onTouchDown(cursorPosition: Vector2) {}
 
     fun onTouchDragged(cursorPosition: Vector2) {}
 
-    fun onTouchDown(cursorPosition: Vector2) {}
+    fun onTouchUp(cursorPosition: Vector2) {}
+
+    /** TODO - onClick() form js - keyUp */
+    fun onTouch(cursorPosition: Vector2) {}
+
+    fun onDoubleClick(cursorPosition: Vector2) {}
+
+
 }

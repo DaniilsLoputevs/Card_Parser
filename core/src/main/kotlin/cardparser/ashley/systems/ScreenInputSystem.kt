@@ -2,6 +2,7 @@ package cardparser.ashley.systems
 
 import cardparser.ashley.systems.ScreenInputSystem.TouchStatus.*
 import cardparser.ashley.systems.parts.screeninput.ScreenInputProcessor
+import cardparser.gameStrucures.GameContext
 import com.badlogic.ashley.core.EntitySystem
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
@@ -31,7 +32,7 @@ class ScreenInputSystem : EntitySystem() {
 
 
     override fun update(deltaTime: Float) {
-
+        
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
             refreshCurrentPosition()
 
@@ -40,6 +41,7 @@ class ScreenInputSystem : EntitySystem() {
                 inputProcessors.forEach { it.onTouchDown(currPosition) }
                 touchStatus = DOWN
 
+                // TODO - change dragged logic - add HOLD status
             } else if ((touchStatus == DOWN || touchStatus == HOLD)
                     && !isPositionEquals(currPosition, prevPosition)) { // touchDragged
 //                println("TOUCH DRAG  screenX = ${currPosition.x}  ##  screenY = ${currPosition.y}")
@@ -56,7 +58,7 @@ class ScreenInputSystem : EntitySystem() {
             prevPosition.set(-1f, -1f)
             touchStatus = NONE
         }
-
+        println("Current status = ${GameContext.touchListStatus}")
     }
 
 
