@@ -104,19 +104,13 @@ class MainGame : KtxGame<KtxScreen>() {
                     setProcessing(false)
                 }
             )
+//            addSystem(
+//                    CardBindingSystem().apply {
+//                        setProcessing(false)
+//                    }
+//            )
             addSystem(
-                    CardBindingSystem().apply {
-                        setProcessing(false)
-                    }
-            )
-            addSystem(
-                    RenderSystem(
-                            stage,
-                            gameViewport,
-//                            Sprite(assets[TextureAtlasAsset.MY_FIRST_ATLAS.descriptor].createSprites()[0])
-//                    assets[TextureAtlasAsset.BACKGROUND.descriptor].createSprite("main-screen-background")
-//                            assets[ImgAsset.BACKGROUND_DEFAULT.desc]
-                    )
+                    RenderSystem(stage, gameViewport)
             )
 //            addSystem(RemoveSystem(gameEventManager))
 //        }

@@ -1,98 +1,92 @@
 package cardparser.ashley.systems.parts.screeninput
 
 import cardparser.CARD_STACK_OFFSET
-import cardparser.gameStrucures.GameContext
-import cardparser.gameStrucures.adapters.GameCardAdapter
-import cardparser.gameStrucures.adapters.GameStackAdapter
+import cardparser.ashley.components.adapters.GameCardAdapter
+import cardparser.event.GameEvent
+import cardparser.event.GameEventManager
+import cardparser.gameStrucures.GameRepository
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.viewport.Viewport
 
 class CardMoveProcessor(
         private val gameViewport: Viewport,
-        private val cards: List<GameCardAdapter>,
-        private val stacks: List<GameStackAdapter>
+        private val gameRep: GameRepository,
+        private val eventManager: GameEventManager
 ) : ScreenInputProcessor {
-    private var captureOffset: Vector2 = Vector2(-1f, -1f)
+    private val captureOffset: Vector2 = Vector2(-1f, -1f)
+    private val touchList: MutableList<GameCardAdapter> = mutableListOf()
 
     override fun onTouchDown(cursorPosition: Vector2) {
         // convert cursor position -> WU position
         gameViewport.unproject(cursorPosition)
-        findAndSetStackByPos(cursorPosition)
 
-        // if don't find card in stacks, it could be card without stack
-        // TODO - clean it, after cards will be only in stacks.
-        if (GameContext.touchListStatus != TouchStatus.TOUCH) {
-            println("found card without stack!")
-            findCard(cursorPosition)
+        if (!findBindingCardsByPos(cursorPosition)) {
+            findUnbindingCardsByPos(cursorPosition)
         }
     }
 
     override fun onTouchDragged(cursorPosition: Vector2) {
-        if (GameContext.touchList.isNotEmpty()) {
-            // convert cursor position -> WU position
-            gameViewport.unproject(cursorPosition)
-            draggedTouchList(cursorPosition)
-        }
+        if (touchList.isEmpty()) return
+        // convert cursor position -> WU position
+        gameViewport.unproject(cursorPosition)
+        draggedTouchList(cursorPosition)
     }
 
-    override fun onTouchUp(cursorPosition: Vector2) = dropTouchList()
+    override fun onTouchUp(cursorPosition: Vector2) {
+        if (touchList.isEmpty()) return
+        dropTouchList()
+        touchList.clear()
+    }
 
     /**
      * Find card by [cursorPosition] in game stacks. It's prefer way to search card,
-     * because it's more optimization way.
+     * because it's more chance to find card faster then search by iterating all cards.
      *
-     * if find -> add it to gameContext.touchList
+     * if find -> add it to [touchList]
      */
-    private fun findAndSetStackByPos(cursorPosition: Vector2) {
-        stacks.find { it.containsPosInTotalHitBox(cursorPosition) }?.let { stack ->
-            stack.gameStackComp.findByPos(cursorPosition)?.let { card ->
+    private fun findBindingCardsByPos(cursorPosition: Vector2): Boolean {
+        return gameRep.findPair(cursorPosition)?.let { pair ->
+            val (stack, card) = pair
 
-                val cardIndex = stack.gameStackComp.indexOf(card)
-                stack.gameStackComp.transferElementsFromIndexToList(cardIndex, GameContext.touchList)
-                GameContext.touchList.forEach { it.transComp.setDepth(it.transComp.getDepth() * 1000) }
-                refreshCaptureOffset(cursorPosition, card)
-                GameContext.touchListStatus = TouchStatus.TOUCH
-            }
-        }
+            stack.gameStackComp.transferCardsToList(card, touchList)
+            touchList.forEach { it.transComp.setDepth(it.transComp.getDepth() * 1000) }
+            refreshCaptureOffset(cursorPosition, card)
+            true
+        } ?: false
     }
+
 
     /**
      * Find card by [cursorPosition] in all game cards.
      *
      * if find -> add it to gameContext.touchList
      */
-    private fun findCard(cursorPosition: Vector2) {
-        cards.filter { it.touchComp.isTouchable && it.transComp.shape.contains(cursorPosition) }
-                .maxByOrNull { it.transComp.position.z }
-                ?.let { card ->
-                    refreshCaptureOffset(cursorPosition, card)
-                    GameContext.touchList.add(card)
-                    GameContext.touchListStatus = TouchStatus.TOUCH
-                }
+    private fun findUnbindingCardsByPos(cursorPosition: Vector2) {
+        gameRep.findCard(cursorPosition)?.let { card ->
+            refreshCaptureOffset(cursorPosition, card)
+            touchList.add(card)
+        }
     }
 
-    /**
-     * Refresh coordinates of all cards that is in dragged stack if we shift cursor and drag stack.
-     */
+    /** Refresh coordinates of all cards that is in dragged stack if we shift cursor and drag stack. */
     private fun draggedTouchList(currentPosition: Vector2) {
         currentPosition.run {
             x -= captureOffset.x
             y -= captureOffset.y
         }
-        GameContext.touchList.forEach {
+        touchList.forEach {
             it.transComp.setPosition(currentPosition)
             currentPosition.y -= CARD_STACK_OFFSET
         }
-        GameContext.touchListStatus = TouchStatus.DRAGGED
     }
 
     private fun dropTouchList() {
-        GameContext.touchListStatus = TouchStatus.DROPPED
+        eventManager.dispatchEvent(GameEvent.BindingCards.apply {
+            this.cards.addAll(touchList)
+        })
     }
 
-    /**
-     * Calculate a card position with relating to the cursor if we start dragged the card.
-     */
+    /** Calculate a card position with relating to the cursor if we start dragged the card. */
     private fun refreshCaptureOffset(cursorPosition: Vector2, card: GameCardAdapter) {
         captureOffset.set(
                 cursorPosition.x - card.transComp.position.x,
@@ -106,4 +100,5 @@ class CardMoveProcessor(
         DRAGGED,
         DROPPED
     }
+
 }

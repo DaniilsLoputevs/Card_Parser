@@ -6,13 +6,13 @@ import cardparser.ashley.components.FoundationStackComponent
 import cardparser.ashley.components.GraphicComponent
 import cardparser.ashley.components.TouchComponent
 import cardparser.ashley.components.TransformComponent
+import cardparser.ashley.components.adapters.GameCardAdapter
+import cardparser.ashley.components.adapters.GameStackAdapter
 import cardparser.ashley.components.klondike.GameCardComponent
 import cardparser.ashley.components.klondike.GameCardComponent.CardRank
 import cardparser.ashley.components.klondike.GameCardComponent.CardSuit
 import cardparser.ashley.components.klondike.GameStackComponent
 import cardparser.ashley.components.klondike.MainStackComponent
-import cardparser.gameStrucures.adapters.GameCardAdapter
-import cardparser.gameStrucures.adapters.GameStackAdapter
 import com.badlogic.ashley.core.Engine
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.TextureAtlas

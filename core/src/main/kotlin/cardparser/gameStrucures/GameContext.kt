@@ -1,10 +1,9 @@
 package cardparser.gameStrucures
 
-import cardparser.ashley.systems.parts.screeninput.CardMoveProcessor
-import cardparser.ashley.systems.parts.screeninput.CardMoveProcessor.TouchStatus.NONE
-import cardparser.gameStrucures.adapters.GameCardAdapter
+import cardparser.ashley.components.adapters.GameCardAdapter
+import cardparser.ashley.systems.parts.screeninput.CardMoveProcessor.TouchStatus
 
 object GameContext {
     val touchList : MutableList<GameCardAdapter> = mutableListOf()
-    var touchListStatus: CardMoveProcessor.TouchStatus = NONE
+    var touchListStatus: TouchStatus = TouchStatus.NONE
 }

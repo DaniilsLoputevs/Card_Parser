@@ -1,5 +1,6 @@
 package cardparser.event
 
+import cardparser.ashley.components.adapters.GameCardAdapter
 import com.badlogic.gdx.utils.ObjectMap
 import ktx.collections.GdxSet
 import ktx.log.debug
@@ -11,27 +12,10 @@ private val LOG = logger<GameEventManager>()
 private const val INITIAL_LISTENER_CAPACITY = 8
 
 sealed class GameEvent {
-    object PlayerSpawn : GameEvent()
-    object PlayerDeath : GameEvent() {
-        var distance = 0f
 
-        override fun toString() = "PlayerDeath(distance=$distance)"
+    object BindingCards : GameEvent() {
+        val cards = mutableListOf<GameCardAdapter>()
     }
-
-    object PlayerBlock : GameEvent() {
-        var shield = 0f
-        var maxShield = 0f
-
-        override fun toString() = "PlayerBlock(shield=$shield,maxShield=$maxShield)"
-    }
-
-    object PlayerMove : GameEvent() {
-        var distance = 0f
-        var speed = 0f
-
-        override fun toString() = "PlayerMove(distance=$distance,speed=$speed)"
-    }
-
 
 }
 
@@ -50,7 +34,7 @@ class GameEventManager {
         }
 
         if (eventListeners.add(listener)) {
-            LOG.debug { "Adding listener of type $type: $listener" }
+//            LOG.debug { "Adding listener of type $type: $listener" }
         } else {
             LOG.error { "Trying to add already existing listener of type $type: $listener" }
         }
@@ -66,7 +50,7 @@ class GameEventManager {
                 LOG.error { "Trying to remove non-existing listener of type $type: $listener" }
             }
             else -> {
-                LOG.debug { "Removing listener of type $type: $listener" }
+//                LOG.debug { "Removing listener of type $type: $listener" }
                 eventListeners.remove(listener)
             }
         }
@@ -78,11 +62,11 @@ class GameEventManager {
      */
     fun removeListener(listener: GameEventListener) {
         LOG.debug { "Removing $listener from all types" }
-        listeners.values().forEach { it.remove(listener) }
+        listeners.forEach { it.value.remove(listener) }
     }
 
     fun dispatchEvent(event: GameEvent) {
-        LOG.debug { "Dispatch event $event" }
+//        LOG.debug { "Dispatch event $event" }
         listeners[event::class]?.forEach { it.onEvent(event) }
     }
 }

@@ -1,6 +1,6 @@
 package cardparser.ashley.components.klondike
 
-import cardparser.gameStrucures.adapters.GameCardAdapter
+import cardparser.ashley.components.adapters.GameCardAdapter
 import com.badlogic.ashley.core.Component
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Pool
@@ -14,22 +14,40 @@ class GameStackComponent : Component, Pool.Poolable {
 
     @Deprecated("later, not now, for Maksim!!! DO THIS TASK by Haskell :D")
     var onClick: () -> Unit = {}
+
     @Deprecated("later, not now, for Maksim!!! DO THIS TASK by Haskell :D")
     var onAddCard: () -> Unit = {}
     var addCardPredicate: (GameCardAdapter, GameCardAdapter) -> Boolean = { _: GameCardAdapter, _: GameCardAdapter -> true }
 
 
     /** Find card in stack by position. If card doesn't found -> return null */
-    fun findByPos(position: Vector2): GameCardAdapter? {
+    fun findCardByPos(position: Vector2): GameCardAdapter? {
         return cardStack.filter { it.touchComp.isTouchable && it.transComp.shape.contains(position) }
                 .maxByOrNull { it.transComp.position.z }
     }
 
-    /** Transfer all elements start [fromIndex] to [touchList] collection. */
-    fun transferElementsFromIndexToList(fromIndex: Int, touchList: MutableList<GameCardAdapter>) {
-        for (index in fromIndex until cardStack.size) {
-            touchList.add(cardStack[index])
+    /**
+     * Remove [card] and all next GameCards to [list].
+     * @note [card] must contains in [cardStack], else nothing will happen.
+     */
+    fun transferCardsToList(card: GameCardAdapter, list: MutableList<GameCardAdapter>) {
+//        // java style
+//        val cardIndex = cardStack.indexOf(card)
+//        if (cardIndex != -1) {
+//            for (index in cardIndex until cardStack.size) {
+//                list.add(cardStack[index])
+//            }
+//        }
+
+        // Kotlin style
+        cardStack.indexOf(card).takeIf { it != -1 }?.let { startIndex ->
+            for (index in startIndex until cardStack.size) {
+                list.add(cardStack[index])
+            }
         }
+
+//        // Sergey style
+//        list.addAll(cardStack.subList(cardStack.indexOf(card), cardStack.size))
     }
 
     /**

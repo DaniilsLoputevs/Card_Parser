@@ -1,17 +1,18 @@
 package cardparser.ashley.scenario
 
 import cardparser.CARD_WIDTH
+import cardparser.ashley.components.adapters.GameStackAdapter
 import cardparser.ashley.components.klondike.GameCardComponent.CardRank.*
-import cardparser.ashley.getOurGameCards
-import cardparser.ashley.getOurGameStacks
 import cardparser.ashley.systems.*
 import cardparser.ashley.systems.parts.screeninput.CardMoveProcessor
 import cardparser.asset.CardBackAtlas
 import cardparser.asset.CardDeckAtlas
 import cardparser.asset.GeneralAsset
+import cardparser.event.GameEvent
+import cardparser.event.GameEventManager
+import cardparser.event.listeners.CardBindingListener
 import cardparser.gameStrucures.GameContext
-import cardparser.gameStrucures.adapters.GameCardAdapter
-import cardparser.gameStrucures.adapters.GameStackAdapter
+import cardparser.gameStrucures.GameRepository
 import com.badlogic.ashley.core.Engine
 import com.badlogic.gdx.utils.viewport.Viewport
 import ktx.ashley.getSystem
@@ -19,16 +20,21 @@ import ktx.assets.async.AssetStorage
 
 fun Engine.initKlondaikGame(assets: AssetStorage, gameViewport: Viewport) {
     this.run {
-        val cardsForInit = createCardDeck(assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc])
-        val stacksForInit = createStacksKlondaik(assets)
+        val gameRep = GameRepository(
+                createCardDeck(assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc]),
+                createStacksKlondaik(assets)
+        )
+        val eventManager = GameEventManager().apply {
+            this.addListener(GameEvent.BindingCards::class, CardBindingListener(gameRep))
+        }
 
         getSystem<DebugSystem>().apply {
-            this.stacks = this@run.getOurGameStacks()
-            this.cards = this@run.getOurGameCards()
+            this.gameRep = gameRep
         }
         getSystem<MainStackSystem>().apply {
-            this.context = GameContext
             this.gameViewport = gameViewport
+            this.context = GameContext
+            this.gameRep = gameRep
             setProcessing(true)
         }
         getSystem<RenderSystem>().apply {
@@ -37,24 +43,16 @@ fun Engine.initKlondaikGame(assets: AssetStorage, gameViewport: Viewport) {
         }
         getSystem<ScreenInputSystem>().apply {
             this.inputProcessors = arrayOf(
-                    CardMoveProcessor(
-                            gameViewport,
-                            this@run.getOurGameCards(), this@run.getOurGameStacks()
-                    )
+                    CardMoveProcessor(gameViewport, gameRep, eventManager)
             )
             setProcessing(true)
         }
-        getSystem<CardBindingSystem>().apply {
-            this.stacks = this@run.getOurGameStacks()
-            setProcessing(true)
-        }
-        prepareGameScriptsKlondaik(cardsForInit, stacksForInit)
+//        prepareGameScriptsKlondaik(gameRep)
     }
 }
 
 private fun Engine.prepareGameScriptsKlondaik(
-        cards: List<GameCardAdapter>,
-        stacks: List<GameStackAdapter>,
+        gemRep: GameRepository
 ) {
 
 //    addCardsToStack(stacks[0], listOf(cards[0], cards[1], cards[2], cards[3]))

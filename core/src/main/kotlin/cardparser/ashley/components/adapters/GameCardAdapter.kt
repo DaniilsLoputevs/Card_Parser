@@ -1,4 +1,4 @@
-package cardparser.gameStrucures.adapters
+package cardparser.ashley.components.adapters
 
 import cardparser.ashley.components.TouchComponent
 import cardparser.ashley.components.TransformComponent
@@ -11,7 +11,7 @@ import ktx.ashley.get
  * For friendly using Entity that is a GameCard
  * * Components never will be null.
  */
-data class GameCardAdapter(val entity: Entity) {
+data class GameCardAdapter(var entity: Entity = Entity()) {
     val transComp: TransformComponent = entity[TransformComponent.mapper]!!
     val gameCardComp: GameCardComponent = entity[GameCardComponent.mapper]!!
     val touchComp: TouchComponent = entity[TouchComponent.mapper]!!

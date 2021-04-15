@@ -2,11 +2,12 @@ package cardparser.ashley.systems
 
 import cardparser.CARD_WIDTH
 import cardparser.ashley.components.TransformComponent
+import cardparser.ashley.components.adapters.GameCardAdapter
+import cardparser.ashley.components.adapters.GameStackAdapter
 import cardparser.ashley.components.klondike.MainStackComponent
 import cardparser.ashley.systems.parts.screeninput.CardMoveProcessor.TouchStatus.TOUCH
 import cardparser.gameStrucures.GameContext
-import cardparser.gameStrucures.adapters.GameCardAdapter
-import cardparser.gameStrucures.adapters.GameStackAdapter
+import cardparser.gameStrucures.GameRepository
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.systems.SortedIteratingSystem
 import com.badlogic.gdx.Gdx
@@ -21,14 +22,16 @@ class MainStackSystem : SortedIteratingSystem(
 
     private val logger = ktx.log.logger<MainStackSystem>()
 
+    private val buffer = Vector2(60.25f * 2 + CARD_WIDTH, 520f)
+
     private var transferCard: GameCardAdapter? = null
     private var currPosition: Vector2 = Vector2(Vector2.Zero)
-    private lateinit var currentsStack: GameStackAdapter
-    private val buffer = Vector2(
-            60.25f * 2 + CARD_WIDTH,
-            520f)
+
     lateinit var gameViewport: Viewport
     lateinit var context: GameContext
+    lateinit var gameRep: GameRepository
+    private var currentsStack: GameStackAdapter = GameStackAdapter()
+
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
         if (context.touchListStatus == TOUCH) {
@@ -48,7 +51,7 @@ class MainStackSystem : SortedIteratingSystem(
     }
 
     private fun logicIfClosedStuck(entity: Entity, mainStackComponent: MainStackComponent) {
-        currentsStack = GameStackAdapter(entity)
+        currentsStack.entity = entity
         if (currentsStack.containsPos(currPosition)
                 && currentsStack.getCards().isNotEmpty()
         ) {
@@ -57,7 +60,7 @@ class MainStackSystem : SortedIteratingSystem(
     }
 
     private fun logicIfOpenStuck(entity: Entity, mainStackComponent: MainStackComponent) {
-        currentsStack = GameStackAdapter(entity)
+        currentsStack.entity = entity
         transferCard?.let {
             currentsStack.getCards().add(it)
             it.transComp.setPosition(buffer)

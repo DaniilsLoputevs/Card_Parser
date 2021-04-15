@@ -1,4 +1,4 @@
-package cardparser.gameStrucures.adapters
+package cardparser.ashley.components.adapters
 
 import cardparser.CARD_STACK_OFFSET
 import cardparser.ashley.components.TransformComponent
@@ -13,7 +13,7 @@ import ktx.ashley.get
  * For friendly using Entity that is a GameStack.
  * * Components never will be null.
  */
-data class GameStackAdapter(val entity: Entity) {
+data class GameStackAdapter(var entity: Entity = Entity()) {
     val transComp: TransformComponent = entity[TransformComponent.mapper]!!
     val gameStackComp: GameStackComponent = entity[GameStackComponent.mapper]!!
 

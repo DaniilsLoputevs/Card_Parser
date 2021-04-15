@@ -1,15 +1,17 @@
 package cardparser.ashley.systems
 
+import cardparser.ashley.components.adapters.GameStackAdapter
 import cardparser.ashley.systems.parts.screeninput.CardMoveProcessor.TouchStatus.DROPPED
 import cardparser.ashley.systems.parts.screeninput.CardMoveProcessor.TouchStatus.NONE
 import cardparser.gameStrucures.GameContext
-import cardparser.gameStrucures.adapters.GameStackAdapter
+import cardparser.gameStrucures.GameRepository
 import com.badlogic.ashley.core.EntitySystem
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
 
+@Deprecated("for remove")
 class CardBindingSystem : EntitySystem() {
-    lateinit var stacks: List<GameStackAdapter>
+    lateinit var gameRep: GameRepository
 
     /** buffer for card position. */
     private val cardPositionBuff = Vector3(-1f, -1f, -1f)
@@ -40,7 +42,7 @@ class CardBindingSystem : EntitySystem() {
     private fun processTouchList() {
         val firstTouchCard = GameContext.touchList[0]
         firstTouchCard.transComp.shape.getCenter(cardCenterBuff)
-        val newCardStack = stacks.find { it.containsPos(cardCenterBuff) }
+        val newCardStack = gameRep.findStack(cardCenterBuff)
 
         if (newCardStack != null && !newCardStack.gameStackComp.contains(firstTouchCard)
                 && newCardStack.gameStackComp.canAdd(firstTouchCard)) {
@@ -49,7 +51,7 @@ class CardBindingSystem : EntitySystem() {
     }
 
     private fun applyTouchListToStack(newCardStack: GameStackAdapter) {
-        val prevStack = stacks.find { it.gameStackComp.contains(GameContext.touchList[0]) }
+        val prevStack = gameRep.findStack(GameContext.touchList.first())
         GameContext.touchList.forEach {
             prevStack?.gameStackComp?.remove(it)
 
@@ -61,13 +63,12 @@ class CardBindingSystem : EntitySystem() {
     }
 
     private fun returnTouchListToPrevPosition() {
-        stacks.find { it.gameStackComp.contains(GameContext.touchList[0]) }
-                ?.let { stack ->
-                    GameContext.touchList.forEach { touchCard ->
-                        stack.getPosForCard(touchCard, cardReturnPosBuff)
-                        touchCard.transComp.setPosition(cardReturnPosBuff)
-                    }
-                }
+        gameRep.findStack(GameContext.touchList.first())?.let { stack ->
+            GameContext.touchList.forEach { touchCard ->
+                stack.getPosForCard(touchCard, cardReturnPosBuff)
+                touchCard.transComp.setPosition(cardReturnPosBuff)
+            }
+        }
     }
 
 }
