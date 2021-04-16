@@ -5,8 +5,6 @@ import cardparser.ashley.components.TransformComponent
 import cardparser.ashley.components.adapters.GameCardAdapter
 import cardparser.ashley.components.adapters.GameStackAdapter
 import cardparser.ashley.components.klondike.MainStackComponent
-import cardparser.ashley.systems.parts.screeninput.CardMoveProcessor.TouchStatus.TOUCH
-import cardparser.gameStrucures.GameContext
 import cardparser.gameStrucures.GameRepository
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.systems.SortedIteratingSystem
@@ -16,6 +14,7 @@ import com.badlogic.gdx.utils.viewport.Viewport
 import ktx.ashley.allOf
 import ktx.ashley.get
 
+@Deprecated("MainStackClickProcessor")
 class MainStackSystem : SortedIteratingSystem(
         allOf(TransformComponent::class, MainStackComponent::class).get(),
         compareBy { entity -> entity[MainStackComponent.mapper] }) {
@@ -29,12 +28,12 @@ class MainStackSystem : SortedIteratingSystem(
     private lateinit var currentsStack: GameStackAdapter
 
     lateinit var gameViewport: Viewport
-    lateinit var context: GameContext
+//    lateinit var context: GameContext
     lateinit var gameRep: GameRepository
 
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
-        if (context.touchListStatus == TOUCH) {
+//        if (context.touchListStatus == TOUCH) {
             calculateCursorPosition()
             val mainStackComp = entity[MainStackComponent.mapper]!!
 
@@ -43,7 +42,7 @@ class MainStackSystem : SortedIteratingSystem(
                 0 -> logicIfClosedStuck(entity, mainStackComp)
                 1 -> logicIfOpenStuck(entity, mainStackComp)
             }
-        }
+//        }
     }
 
     private fun calculateCursorPosition() {

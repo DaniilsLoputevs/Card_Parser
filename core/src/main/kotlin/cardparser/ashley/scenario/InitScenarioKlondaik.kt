@@ -5,14 +5,13 @@ import cardparser.ashley.components.adapters.GameStackAdapter
 import cardparser.ashley.components.klondike.GameCardComponent.CardRank.*
 import cardparser.ashley.systems.*
 import cardparser.ashley.systems.parts.screeninput.CardMoveProcessor
-import cardparser.ashley.systems.parts.screeninput.StackClickProcessor
+import cardparser.ashley.systems.parts.screeninput.MainStackClickProcessor
 import cardparser.asset.CardBackAtlas
 import cardparser.asset.CardDeckAtlas
 import cardparser.asset.GeneralAsset
 import cardparser.event.GameEvent
 import cardparser.event.GameEventManager
 import cardparser.event.listeners.CardBindingListener
-import cardparser.gameStrucures.GameContext
 import cardparser.gameStrucures.GameRepository
 import com.badlogic.ashley.core.Engine
 import com.badlogic.gdx.utils.viewport.Viewport
@@ -34,7 +33,7 @@ fun Engine.initKlondaikGame(assets: AssetStorage, gameViewport: Viewport) {
         }
         getSystem<MainStackSystem>().apply {
             this.gameViewport = gameViewport
-            this.context = GameContext
+//            this.context = GameContext
             this.gameRep = gameRep
             setProcessing(true)
         }
@@ -46,7 +45,7 @@ fun Engine.initKlondaikGame(assets: AssetStorage, gameViewport: Viewport) {
             this.gameViewport = gameViewport
             this.inputProcessors = arrayOf(
                     CardMoveProcessor(gameRep, eventManager),
-                    StackClickProcessor()
+                    MainStackClickProcessor()
             )
             setProcessing(true)
         }

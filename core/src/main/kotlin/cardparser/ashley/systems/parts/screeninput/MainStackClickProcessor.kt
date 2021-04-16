@@ -2,11 +2,10 @@ package cardparser.ashley.systems.parts.screeninput
 
 import cardparser.CARD_WIDTH
 import cardparser.ashley.components.adapters.GameCardAdapter
-import cardparser.gameStrucures.GameContext
 import cardparser.gameStrucures.GameRepository
 import com.badlogic.gdx.math.Vector2
 
-class StackClickProcessor: ScreenInputProcessor {
+class MainStackClickProcessor: ScreenInputProcessor {
 
     private val secondStackPos = Vector2(60.25f * 2 + CARD_WIDTH, 520f)
 
@@ -15,7 +14,7 @@ class StackClickProcessor: ScreenInputProcessor {
 //    private var currentsStack: GameStackAdapter = GameStackAdapter()
 
 //    lateinit var gameViewport: Viewport
-    lateinit var context: GameContext
+//    lateinit var context: GameContext
     lateinit var gameRep: GameRepository
 
     override fun onTouch(cursorPosition: Vector2) {
