@@ -63,7 +63,8 @@ class GameStackComponent : Component, Pool.Poolable {
      */
     fun canAdd(card: GameCardAdapter): Boolean {
         return when (this.isEmpty()) {
-            true -> (card.gameCardComp.cardRank >= GameCardComponent.CardRank.KING)
+//            true -> (card.gameCardComp.cardRank >= GameCardComponent.CardRank.KING)
+            true -> true
             false -> (getLast() !== card && addCardPredicate.invoke(getLast(), card))
         }
     }
@@ -91,10 +92,13 @@ class GameStackComponent : Component, Pool.Poolable {
         onAddCard = {}
     }
 
+    override fun toString(): String = "GameStackComponent"
+
+
     companion object {
         val mapper = mapperFor<GameStackComponent>()
     }
 
-    override fun toString(): String = cardStack.toString()
+//    override fun toString(): String = cardStack.toString()
 
 }

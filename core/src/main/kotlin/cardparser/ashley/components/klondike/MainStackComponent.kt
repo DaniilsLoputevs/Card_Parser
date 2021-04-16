@@ -12,6 +12,8 @@ class MainStackComponent : Component, Pool.Poolable, Comparable<MainStackCompone
         order = 0
     }
 
+    override fun toString(): String = "MainStackComponent"
+
     companion object {
         val mapper = mapperFor<MainStackComponent>()
     }

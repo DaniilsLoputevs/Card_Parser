@@ -36,7 +36,7 @@ class CardBindingListener(
         firstCard.transComp.shape.getCenter(cardCenterBuff)
         val newStack = gameRep.findStack(cardCenterBuff)
 
-        if (newStack != null && !newStack.gameStackComp.contains(firstCard) 
+        if (newStack != null && !newStack.gameStackComp.contains(firstCard)
                 && newStack.gameStackComp.canAdd(firstCard)) {
             applyToStack(event.cards, newStack, firstCard)
         } else returnToPrevPosition(event.cards)
@@ -45,7 +45,7 @@ class CardBindingListener(
 
 
     private fun applyToStack(cards: MutableList<GameCardAdapter>, newCardStack: GameStackAdapter,
-                             firstCard : GameCardAdapter) {
+                             firstCard: GameCardAdapter) {
         val prevStack = gameRep.findStack(firstCard)
         cards.forEach {
             prevStack?.gameStackComp?.remove(it)

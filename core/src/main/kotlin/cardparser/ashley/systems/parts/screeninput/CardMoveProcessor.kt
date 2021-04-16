@@ -6,10 +6,8 @@ import cardparser.event.GameEvent
 import cardparser.event.GameEventManager
 import cardparser.gameStrucures.GameRepository
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.utils.viewport.Viewport
 
 class CardMoveProcessor(
-        private val gameViewport: Viewport,
         private val gameRep: GameRepository,
         private val eventManager: GameEventManager
 ) : ScreenInputProcessor {
@@ -17,22 +15,23 @@ class CardMoveProcessor(
     private val touchList: MutableList<GameCardAdapter> = mutableListOf()
 
     override fun onTouchDown(cursorPosition: Vector2) {
-        // convert cursor position -> WU position
-        gameViewport.unproject(cursorPosition)
-
+//        println("CARD MOVE :: onTouchDown")
+//        println("CARD MOVE :: cursorPosition = ${cursorPosition}")
         if (!findBindingCardsByPos(cursorPosition)) {
             findUnbindingCardsByPos(cursorPosition)
         }
+//        println("CARD MOVE :: touchList = ${touchList}")
     }
 
-    override fun onTouchDragged(cursorPosition: Vector2) {
+    override fun onTouchDrag(cursorPosition: Vector2) {
+//        println("CARD MOVE :: onTouchDragged")
         if (touchList.isEmpty()) return
-        // convert cursor position -> WU position
-        gameViewport.unproject(cursorPosition)
         draggedTouchList(cursorPosition)
     }
 
     override fun onTouchUp(cursorPosition: Vector2) {
+//        println("CARD MOVE :: onTouchUp")
+//        println("CARD MOVE :: touchList = ${touchList}")
         if (touchList.isEmpty()) return
         dropTouchList()
         touchList.clear()
@@ -47,6 +46,9 @@ class CardMoveProcessor(
     private fun findBindingCardsByPos(cursorPosition: Vector2): Boolean {
         return gameRep.findPair(cursorPosition)?.let { pair ->
             val (stack, card) = pair
+
+//            println("CARD MOVE :: findBindingCardsByPos")
+//            println("CARD MOVE :: pair = ${pair}")
 
             stack.gameStackComp.transferCardsToList(card, touchList)
             touchList.forEach { it.transComp.setDepth(it.transComp.getDepth() * 1000) }
@@ -63,6 +65,10 @@ class CardMoveProcessor(
      */
     private fun findUnbindingCardsByPos(cursorPosition: Vector2) {
         gameRep.findCard(cursorPosition)?.let { card ->
+
+//            println("CARD MOVE :: findUnbindingCardsByPos")
+//            println("CARD MOVE :: card = ${card}")
+
             refreshCaptureOffset(cursorPosition, card)
             touchList.add(card)
         }

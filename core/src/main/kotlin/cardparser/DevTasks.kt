@@ -2,8 +2,6 @@ package cardparser
 
 /**
  * Daniils:
- * TODO - (DONE) full DEFAULT card asset atlas (1/4)
- * TODO - (DONE) Make algorithm for create card deck
  * TODO - Make algorithm that decide - can you put this card on new stack or can't
  * TODO - Make algorithm of spreading cards on game stacks
  *
@@ -15,8 +13,6 @@ package cardparser
  * General:
  *TODO -
  *
- * Late(in future):
- * TODO - double click: move card to win stack
  */
 fun todo() {}
 

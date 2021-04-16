@@ -3,7 +3,6 @@ package cardparser.ashley.components.adapters
 import cardparser.ashley.components.TouchComponent
 import cardparser.ashley.components.TransformComponent
 import cardparser.ashley.components.klondike.GameCardComponent
-import cardparser.ashley.toPrint
 import com.badlogic.ashley.core.Entity
 import ktx.ashley.get
 
@@ -11,7 +10,7 @@ import ktx.ashley.get
  * For friendly using Entity that is a GameCard
  * * Components never will be null.
  */
-data class GameCardAdapter(var entity: Entity = Entity()) {
+data class GameCardAdapter(val entity: Entity) {
     val transComp: TransformComponent = entity[TransformComponent.mapper]!!
     val gameCardComp: GameCardComponent = entity[GameCardComponent.mapper]!!
     val touchComp: TouchComponent = entity[TouchComponent.mapper]!!
@@ -22,7 +21,12 @@ data class GameCardAdapter(var entity: Entity = Entity()) {
     }
 
     override fun toString(): String {
-        return entity.toPrint()
+        return "card={ " +
+                "${gameCardComp.cardSuit} ${gameCardComp.cardRank} " +
+                "open = ${gameCardComp.isCardOpen} " +
+                "touch = ${touchComp.isTouchable} " +
+                "pos = ${transComp.position} " +
+                "}"
     }
 
     override fun hashCode(): Int {

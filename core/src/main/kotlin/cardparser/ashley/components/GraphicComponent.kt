@@ -27,7 +27,10 @@ class GraphicComponent : Component, Pool.Poolable {
             setRegion(region)
             setSize(region.width.toFloat(), region.height.toFloat())
         }
+        this.javaClass::getSimpleName
     }
+
+    override fun toString(): String = "GraphicComponent"
 
     companion object {
         val mapper = mapperFor<GraphicComponent>()

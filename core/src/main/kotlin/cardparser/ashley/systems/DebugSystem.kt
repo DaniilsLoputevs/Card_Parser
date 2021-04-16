@@ -12,12 +12,7 @@ class DebugSystem : EntitySystem() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {
             println()
             println("DEBUG")
-            gameRep.cards.forEach {
-                println("all cards:  ${it.gameCardComp.cardRank.name} position = ${it.transComp.position}")
-            }
-//            GameContext.touchList.forEach {
-//                println("hold cards: ${it.gameCardComp.cardRank}")
-//            }
+            gameRep.cards.forEach(::println)
             println("DEBUG")
             println()
         }
@@ -25,7 +20,7 @@ class DebugSystem : EntitySystem() {
             println()
             println("DEBUG")
             var i = 0
-            gameRep.stacks.forEach { println("Stack ${it.transComp.position} #${i++}   size = ${it.gameStackComp.size()}") }
+            gameRep.stacks.forEach { println("#${i++} $it") }
 //            println("context: hold card z = ${gameContext.touchingCard?.transComp?.position?.z}")
             println("DEBUG")
             println()
@@ -33,8 +28,7 @@ class DebugSystem : EntitySystem() {
 //        if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
 //            println()
 //            println("DEBUG")
-//            println("touch list: status = ${GameContext.touchListStatus.name}")
-//            println("touch list: size   = ${GameContext.touchList.size}")
+//            GameEvent.BindingCards.cards.forEach { println("card :: $it")}
 //            println("DEBUG")
 //            println()
 //        }

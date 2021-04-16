@@ -22,15 +22,15 @@ class MainStackSystem : SortedIteratingSystem(
 
     private val logger = ktx.log.logger<MainStackSystem>()
 
-    private val buffer = Vector2(60.25f * 2 + CARD_WIDTH, 520f)
+    private val secondStackPos = Vector2(60.25f * 2 + CARD_WIDTH, 520f)
 
     private var transferCard: GameCardAdapter? = null
     private var currPosition: Vector2 = Vector2(Vector2.Zero)
+    private lateinit var currentsStack: GameStackAdapter
 
     lateinit var gameViewport: Viewport
     lateinit var context: GameContext
     lateinit var gameRep: GameRepository
-    private var currentsStack: GameStackAdapter = GameStackAdapter()
 
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
@@ -38,6 +38,7 @@ class MainStackSystem : SortedIteratingSystem(
             calculateCursorPosition()
             val mainStackComp = entity[MainStackComponent.mapper]!!
 
+//            currentsStack.entity = entity
             when (mainStackComp.order) {
                 0 -> logicIfClosedStuck(entity, mainStackComp)
                 1 -> logicIfOpenStuck(entity, mainStackComp)
@@ -51,20 +52,19 @@ class MainStackSystem : SortedIteratingSystem(
     }
 
     private fun logicIfClosedStuck(entity: Entity, mainStackComponent: MainStackComponent) {
-        currentsStack.entity = entity
-        if (currentsStack.containsPos(currPosition)
-                && currentsStack.getCards().isNotEmpty()
-        ) {
+        if (currentsStack.containsPos(currPosition) && currentsStack.getCards().isNotEmpty()) {
             transferCard = currentsStack.getCards().removeLast()
         }
     }
 
     private fun logicIfOpenStuck(entity: Entity, mainStackComponent: MainStackComponent) {
-        currentsStack.entity = entity
         transferCard?.let {
             currentsStack.getCards().add(it)
-            it.transComp.setPosition(buffer)
-            context.touchList.removeAt(context.touchList.indexOf(transferCard))
+            it.transComp.setPosition(secondStackPos)
+//            context.touchList.removeAt(context.touchList.indexOf(transferCard))
+//            eventManager.dispatchEvent(GameEvent.BindingCards.apply {
+//                this.cards.addAll(touchList)
+//            })
             transferCard = null
         }
 

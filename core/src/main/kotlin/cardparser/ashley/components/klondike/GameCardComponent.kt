@@ -17,10 +17,11 @@ class GameCardComponent : Component, Pool.Poolable {
         isCardOpen = false
     }
 
+    override fun toString(): String = "GameCardComponent"
+
     companion object {
         val mapper = mapperFor<GameCardComponent>()
     }
-
 
     enum class CardRank {
         TWO,

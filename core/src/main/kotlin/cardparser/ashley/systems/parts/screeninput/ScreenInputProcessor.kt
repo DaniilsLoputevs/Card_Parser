@@ -19,14 +19,14 @@ import com.badlogic.gdx.math.Vector2
 interface ScreenInputProcessor {
     fun onTouchDown(cursorPosition: Vector2) {}
 
-    fun onTouchDragged(cursorPosition: Vector2) {}
+    fun onTouchDrag(cursorPosition: Vector2) {}
 
     fun onTouchUp(cursorPosition: Vector2) {}
 
     /** TODO - onClick() form js - keyUp */
     fun onTouch(cursorPosition: Vector2) {}
 
-    fun onDoubleClick(cursorPosition: Vector2) {}
+    fun onDoubleTouch(cursorPosition: Vector2) {}
 
 
 }

@@ -5,6 +5,7 @@ import cardparser.ashley.components.adapters.GameStackAdapter
 import cardparser.ashley.components.klondike.GameCardComponent.CardRank.*
 import cardparser.ashley.systems.*
 import cardparser.ashley.systems.parts.screeninput.CardMoveProcessor
+import cardparser.ashley.systems.parts.screeninput.StackClickProcessor
 import cardparser.asset.CardBackAtlas
 import cardparser.asset.CardDeckAtlas
 import cardparser.asset.GeneralAsset
@@ -42,8 +43,10 @@ fun Engine.initKlondaikGame(assets: AssetStorage, gameViewport: Viewport) {
             this.configCardBack(assets[CardBackAtlas.CARD_BACK_DEFAULT.desc].findRegion("light"))
         }
         getSystem<ScreenInputSystem>().apply {
+            this.gameViewport = gameViewport
             this.inputProcessors = arrayOf(
-                    CardMoveProcessor(gameViewport, gameRep, eventManager)
+                    CardMoveProcessor(gameRep, eventManager),
+                    StackClickProcessor()
             )
             setProcessing(true)
         }

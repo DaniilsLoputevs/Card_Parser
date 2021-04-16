@@ -66,6 +66,8 @@ class GameEventManager {
     }
 
     fun dispatchEvent(event: GameEvent) {
+//        println("Events :: event = ${event}")
+//        println("Events :: listeners = ${listeners}")
 //        LOG.debug { "Dispatch event $event" }
         listeners[event::class]?.forEach { it.onEvent(event) }
     }

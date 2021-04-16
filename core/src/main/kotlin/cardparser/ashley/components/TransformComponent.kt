@@ -111,6 +111,8 @@ class TransformComponent : Component, Pool.Poolable, Comparable<TransformCompone
         return if (zDiff == 0) other.position.y.compareTo(position.y) else zDiff
     }
 
+    override fun toString(): String = "TransformComponent"
+
     companion object {
         val mapper = mapperFor<TransformComponent>()
     }

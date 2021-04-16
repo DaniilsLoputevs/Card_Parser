@@ -15,6 +15,8 @@ class TouchComponent : Component, Pool.Poolable{
         isTouchable = true
     }
 
+    override fun toString(): String = "TouchComponent"
+
     companion object {
         val mapper = mapperFor<TouchComponent>()
     }
