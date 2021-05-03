@@ -1,71 +1,82 @@
 package cardparser.ashley.systems
 
-import cardparser.CARD_WIDTH
+import cardparser.ashley.components.GameStackComponent
 import cardparser.ashley.components.TransformComponent
 import cardparser.ashley.components.adapters.GameCardAdapter
-import cardparser.ashley.components.adapters.GameStackAdapter
-import cardparser.ashley.components.klondike.MainStackComponent
-import cardparser.gameStrucures.GameRepository
+import cardparser.ashley.components.MainStackComponent
+import cardparser.event.GameEvent
+import cardparser.event.GameEventListener
+import cardparser.event.GameEventManager
+import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.systems.SortedIteratingSystem
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.utils.viewport.Viewport
 import ktx.ashley.allOf
 import ktx.ashley.get
 
-@Deprecated("MainStackClickProcessor")
-class MainStackSystem : SortedIteratingSystem(
-        allOf(TransformComponent::class, MainStackComponent::class).get(),
-        compareBy { entity -> entity[MainStackComponent.mapper] }) {
+class MainStackSystem(val gameEventManager: GameEventManager) : SortedIteratingSystem(
+    allOf(TransformComponent::class, GameStackComponent::class, MainStackComponent::class).get(),
+    compareBy { entity -> entity[MainStackComponent.mapper] }), GameEventListener {
 
     private val logger = ktx.log.logger<MainStackSystem>()
 
-    private val secondStackPos = Vector2(60.25f * 2 + CARD_WIDTH, 520f)
+    private var transferCard: MutableList<GameCardAdapter> = mutableListOf()
+    private var pos: Vector2? = null
+    private var returnAll = false;
 
-    private var transferCard: GameCardAdapter? = null
-    private var currPosition: Vector2 = Vector2(Vector2.Zero)
-    private lateinit var currentsStack: GameStackAdapter
+    override fun addedToEngine(engine: Engine?) {
+        gameEventManager.addListener(GameEvent.TouchEvent::class, this)
+        super.addedToEngine(engine)
+    }
 
-    lateinit var gameViewport: Viewport
-//    lateinit var context: GameContext
-    lateinit var gameRep: GameRepository
-
+    override fun removedFromEngine(engine: Engine?) {
+        gameEventManager.removeListener(GameEvent.TouchEvent::class, this)
+        super.removedFromEngine(engine)
+    }
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
-//        if (context.touchListStatus == TOUCH) {
-            calculateCursorPosition()
-            val mainStackComp = entity[MainStackComponent.mapper]!!
+        if (pos != null) {
+            val mainComp = entity[MainStackComponent.mapper]
+            require(mainComp != null) { "MainStackComponent is empty" }
+            val stackComp = entity[GameStackComponent.mapper]
+            require(stackComp != null) { "GameStackComponent is empty" }
+            val transComp = entity[TransformComponent.mapper]
+            require(transComp != null) { "TransformComponent is empty" }
 
-//            currentsStack.entity = entity
-            when (mainStackComp.order) {
-                0 -> logicIfClosedStuck(entity, mainStackComp)
-                1 -> logicIfOpenStuck(entity, mainStackComp)
+            when (mainComp.order) {
+                0 -> {
+                    if (transComp.shape.contains(pos) && stackComp.isEmpty() && transferCard.size == 0) {
+                        returnAll = true
+                    } else if(transferCard.size > 0) {
+                        transferCard.forEach { it.gameCardComp.isCardOpen = false }
+                        stackComp.cardStack.addAll(transferCard)
+                        transferCard.clear()
+                        pos = null
+                    } else if (transComp.shape.contains(pos) && transferCard.size == 0) {
+                        transferCard.add(stackComp.cardStack.removeAt(stackComp.size() - 1))
+                    }
+                }
+                1 -> {
+                    if (returnAll) {
+                        returnAll = false
+                        stackComp.cardStack.asReversed().forEach { transferCard.add(it) }
+                        stackComp.cardStack.clear()
+                    } else if (transferCard.size > 0) {
+                        transferCard.forEach { it.gameCardComp.isCardOpen = true }
+                        stackComp.cardStack.addAll(transferCard)
+                        transferCard.clear()
+                        pos = null
+                    }
+                }
+                else -> {
+                }
             }
-//        }
-    }
-
-    private fun calculateCursorPosition() {
-        currPosition.set(Gdx.input.x.toFloat(), Gdx.input.y.toFloat())
-        gameViewport.unproject(currPosition)
-    }
-
-    private fun logicIfClosedStuck(entity: Entity, mainStackComponent: MainStackComponent) {
-        if (currentsStack.containsPos(currPosition) && currentsStack.getCards().isNotEmpty()) {
-            transferCard = currentsStack.getCards().removeLast()
         }
     }
 
-    private fun logicIfOpenStuck(entity: Entity, mainStackComponent: MainStackComponent) {
-        transferCard?.let {
-            currentsStack.getCards().add(it)
-            it.transComp.setPosition(secondStackPos)
-//            context.touchList.removeAt(context.touchList.indexOf(transferCard))
-//            eventManager.dispatchEvent(GameEvent.BindingCards.apply {
-//                this.cards.addAll(touchList)
-//            })
-            transferCard = null
+    override fun onEvent(event: GameEvent) {
+        if (event is GameEvent.TouchEvent) {
+            pos = event.position
         }
-
     }
 }

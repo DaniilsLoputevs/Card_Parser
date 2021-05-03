@@ -2,7 +2,9 @@ package cardparser.ashley.systems
 
 import cardparser.DOUBLE_TOUCH_TIME_WINDOW
 import cardparser.TOUCH_RANGE
-import cardparser.ashley.systems.parts.screeninput.ScreenInputProcessor
+import cardparser.event.GameEvent
+import cardparser.event.GameEventManager
+import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.EntitySystem
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
@@ -10,166 +12,138 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.viewport.Viewport
 
 /**
- * THIS CODE IS READ ONLY!
  *
- * This system process player input per tick.
- * structure for PI(Player Input) processing, determines the current state of PI (pressed, held, released)
- * and calls the code that should process PI current state(state on current tick).
+ * This system process player input per tick add push 4 types of events
  *
- * @see inputProcessors : private field
- * @see ScreenInputProcessor
- *
- * @author Daniils Loputevs.
  */
-class ScreenInputSystem : EntitySystem() {
+class ScreenInputSystem(
+    var gameViewport: Viewport,
+    var gameEventManager: GameEventManager
+) : EntitySystem() {
 
-    /** Composition of Input event processors. It invokes then Input Event happens. */
-    lateinit var inputProcessors: Array<ScreenInputProcessor>
-    lateinit var gameViewport: Viewport
+    /** previous cursorAction */
+    private var status: TouchStatus = TouchStatus.NONE;
 
     /** cursor position buffer*/
     private var cursorPos: Vector2 = Vector2(0f, 0f)
 
     /** track pos of first TOUCH DOWN for check: is next TOUCH UP click OR drag? */
-    private var touchDownPos: Vector2 = Vector2(0f, 0f)
+    private var memorizedPos: Vector2 = Vector2(0f, 0f)
 
     /** track time of first TOUCH UP for check: is next TOUCH UP double click? */
     private var touchTime = -1L
 
-//    /** TODO - Рефакторинг на**й на Haskell. На when {} б**. */
-//    override fun update(deltaTime: Float) {
-//        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-//            refreshCurrentPosition()
-//
-//            // TOUCH DOWN
-//            if (touchDownPos.isZero) { // touchDown
-//                println("\r\nTOUCH DOWN  screenX = ${cursorPos.x}  ##  screenY = ${cursorPos.y}")
-//                touchDownPos.set(cursorPos)
-//                inputProcessors.forEach { it.onTouchDown(cursorPos) }
-//                println()
-//
-//                // DRAGGED
-//            } else if (!isPositionEquals(cursorPos, touchDownPos) && !touchDownPos.isZero) {
-////                println("TOUCH DRAG  screenX = ${cursorPos.x}  ##  screenY = ${cursorPos.y}")
-//                inputProcessors.forEach { it.onTouchDrag(cursorPos) }
-////                println()
-//            }
-//
-//            // TOUCH UP || CLICK || DOUBLE CLICK
-//        } else if (!cursorPos.isZero) {
-//            refreshCurrentPosition()
-//            println("TOUCH UP  screenX = ${cursorPos.x}  ##  screenY = ${cursorPos.y}")
-//            inputProcessors.forEach { it.onTouchUp(cursorPos) }
-//
-//            // CLICK || DOUBLE CLICK
-//            if (isPosInTouchRange(cursorPos)) {
-//
-//                // DOUBLE CLICK
-//                if ((System.currentTimeMillis() - touchTime) < DOUBLE_TOUCH_TIME_WINDOW) {
-//                    println("DOUBLE CLICK  screenX = ${cursorPos.x}  ##  screenY = ${cursorPos.y}")
-//                    inputProcessors.forEach { it.onDoubleTouch(cursorPos) }
-//                    touchTime = -1L
-//                    println()
-//                }
-//
-////                println("CLICK  screenX = ${cursorPos.x}  ##  screenY = ${cursorPos.y}")
-////                inputProcessors.forEach { it.onTouch(cursorPos) }
-////                touchTime = System.currentTimeMillis()
-////                println()
-//            }
-//            reset()
-//            println()
-//        }
-//    }
-
     override fun update(deltaTime: Float) {
+        refreshCursorPos()
         when {
-            isPressed() -> {
-                refreshCurrentPosition()
-                when {
-                    isTouchDown() -> onTouchDown()
-                    isTouchDrag() -> onTouchDrag()
-                }
+            /**
+             * Press button actions
+             */
+            isPressLeftButton() && status == TouchStatus.NONE -> {
+                status = TouchStatus.TOUCH
+                saveCurPosInMemorizedPos()
             }
-            isTouchUp() -> {
-                refreshCurrentPosition()
-                onTouchUp()
-                when {
-                    isClick() -> onTouch()
-                    isDoubleClick() -> onDoubleTouch()
-                }
-                reset()
+            isPressLeftButton() && (status == TouchStatus.START_DRAGGED || status == TouchStatus.DRAGGED) -> {
+                status = TouchStatus.DRAGGED
+                refreshCursorPos()
+                pushDragEvent()
             }
+            isPressLeftButton() && isMemPosNotZeroAndNotEqualsToCurPos() -> {
+                status = TouchStatus.START_DRAGGED
+                refreshCursorPos()
+                pushStartDragEvent()
+            }
+            /**
+             * Stop press button actions
+             */
+            isStopPressLeftButton() && status == TouchStatus.DRAGGED -> {
+                status = TouchStatus.NONE
+                pushDropEvent()
+            }
+            isStopPressLeftButton() && status == TouchStatus.TOUCH -> {
+                status = TouchStatus.NONE
+                pushTouchEvent()
+                posToZero()
+            }
+            else -> pushNoneEvent()
         }
     }
 
-    /* events */
-
-    private fun onTouchDown() {
-        println("\r\nTOUCH DOWN  screenX = ${cursorPos.x}  ##  screenY = ${cursorPos.y}")
-        touchDownPos.set(cursorPos)
-        inputProcessors.forEach { it.onTouchDown(cursorPos) }
-        println()
-    }
-
-    private fun onTouchDrag() {
-//        println("TOUCH DRAG  screenX = ${cursorPos.x}  ##  screenY = ${cursorPos.y}")
-        inputProcessors.forEach { it.onTouchDrag(cursorPos) }
-//        println()
-    }
-
-    private fun onTouchUp() {
-        println("TOUCH UP  screenX = ${cursorPos.x}  ##  screenY = ${cursorPos.y}")
-        inputProcessors.forEach { it.onTouchUp(cursorPos) }
-    }
-
-    private fun onTouch() {
-        println("CLICK  screenX = ${cursorPos.x}  ##  screenY = ${cursorPos.y}")
-        inputProcessors.forEach { it.onTouch(cursorPos) }
-        touchTime = System.currentTimeMillis()
-        println()
-    }
-
-    private fun onDoubleTouch() {
-        println("DOUBLE CLICK  screenX = ${cursorPos.x}  ##  screenY = ${cursorPos.y}")
-        inputProcessors.forEach { it.onDoubleTouch(cursorPos) }
-        touchTime = -1L
-        println()
-    }
-
     /* Predicates */
+    private fun isPressLeftButton() = Gdx.input.isButtonPressed(Input.Buttons.LEFT)
+    private fun isMemPosNotZeroAndNotEqualsToCurPos() =
+        !isPositionEquals(cursorPos, memorizedPos) && !memorizedPos.isZero
 
-    private fun isPressed() = Gdx.input.isButtonPressed(Input.Buttons.LEFT)
+    private fun isStopPressLeftButton() = !Gdx.input.isButtonPressed(Input.Buttons.LEFT)
 
-    private fun isTouchDown() = touchDownPos.isZero
-    private fun isTouchDrag() = !isPositionEquals(cursorPos, touchDownPos) && !touchDownPos.isZero
-    private fun isTouchUp() = !cursorPos.isZero
-    private fun isClick() = isPosInTouchRange(cursorPos)
-    private fun isDoubleClick() = isPosInTouchRange(cursorPos) && (System.currentTimeMillis() - touchTime) < DOUBLE_TOUCH_TIME_WINDOW
+
+    /* events */
+    private fun saveCurPosInMemorizedPos() {
+        memorizedPos.set(cursorPos)
+    }
+
+    private fun pushNoneEvent() {
+        gameEventManager.dispatchEvent(GameEvent.NoneEvent)
+    }
+
+    private fun pushDragEvent() {
+//        println("push drag event ${System.currentTimeMillis()}")
+        gameEventManager.dispatchEvent(GameEvent.DragEvent.apply {
+            cursor = cursorPos
+            memorized = memorizedPos
+        })
+    }
+
+    private fun pushStartDragEvent() {
+        gameEventManager.dispatchEvent(GameEvent.StartDragEvent.apply {
+            cursor = cursorPos
+            memorized = memorizedPos
+        })
+    }
+
+    private fun pushTouchEvent() {
+//        println("push touch event ${System.currentTimeMillis()}")
+        gameEventManager.dispatchEvent(GameEvent.TouchEvent.apply {
+            position = cursorPos
+        })
+    }
+
+    private fun pushDropEvent() {
+//        println("push drop event ${System.currentTimeMillis()}")
+        gameEventManager.dispatchEvent(GameEvent.DropEvent.apply {
+            position = cursorPos
+        })
+    }
+
+    private fun posToZero() {
+        cursorPos.setZero()
+        memorizedPos.setZero()
+    }
 
     /* Non main part */
-
     private fun reset() {
-        cursorPos.setZero()
-        touchDownPos.setZero()
+        posToZero()
     }
 
-    private fun refreshCurrentPosition() {
+    /**
+     *  Convert cursor position -> WU position
+     */
+    private fun refreshCursorPos() {
         cursorPos.set(Gdx.input.x.toFloat(), Gdx.input.y.toFloat())
-        // convert cursor position -> WU position
         gameViewport.unproject(cursorPos)
     }
 
     /** simple equals for Vector2, it just for a little bit optimization. */
     private fun isPositionEquals(one: Vector2, two: Vector2): Boolean {
-        return ((one.x == two.x) && (one.y == two.y))
+        return (one.x < two.x + TOUCH_RANGE && one.x > two.x - TOUCH_RANGE
+                && one.y < two.y + TOUCH_RANGE && one.y > two.y - TOUCH_RANGE)
     }
 
-    private fun isPosInTouchRange(one: Vector2): Boolean {
-        return (touchDownPos.x - TOUCH_RANGE) <= one.x
-                && (touchDownPos.x + TOUCH_RANGE) >= one.x
-                && (touchDownPos.y - TOUCH_RANGE) <= one.y
-                && (touchDownPos.y + TOUCH_RANGE) >= one.y
+    enum class TouchStatus {
+        NONE,
+        TOUCH,
+        START_DRAGGED,
+        DRAGGED
     }
-
 }
+

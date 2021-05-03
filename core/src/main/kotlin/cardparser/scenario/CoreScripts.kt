@@ -1,22 +1,15 @@
-package cardparser.ashley.scenario
+package cardparser.scenario
 
 import cardparser.CARD_HEIGHT
 import cardparser.CARD_WIDTH
-import cardparser.ashley.components.FoundationStackComponent
-import cardparser.ashley.components.GraphicComponent
-import cardparser.ashley.components.TouchComponent
-import cardparser.ashley.components.TransformComponent
+import cardparser.ashley.components.*
 import cardparser.ashley.components.adapters.GameCardAdapter
 import cardparser.ashley.components.adapters.GameStackAdapter
-import cardparser.ashley.components.klondike.GameCardComponent
-import cardparser.ashley.components.klondike.GameCardComponent.CardRank
-import cardparser.ashley.components.klondike.GameCardComponent.CardSuit
-import cardparser.ashley.components.klondike.GameStackComponent
-import cardparser.ashley.components.klondike.MainStackComponent
+import cardparser.ashley.components.GameCardComponent.CardRank
+import cardparser.ashley.components.GameCardComponent.CardSuit
 import com.badlogic.ashley.core.Engine
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
-import com.badlogic.gdx.math.Vector3
 import ktx.ashley.entity
 import ktx.ashley.with
 import java.util.*
@@ -32,40 +25,43 @@ fun Engine.createCardDeck(textureAtlas: TextureAtlas): List<GameCardAdapter> {
             CardRank.values().forEach { rank ->
                 val rankName = rank.name.toLowerCase(Locale.ROOT)
 
-                this.add(createCard(
+                this.add(
+                    createCard(
                         textureAtlas, "${textureIndex++}_${suitName}_${rankName}",
-                        suit, rank, true, 0f, 0f
-                ))
+                        suit, rank, false, 0f, 0f
+                    )
+                )
             }
         }
     }
 }
 
 fun Engine.createCard(
-        textureAtlas: TextureAtlas,
-        textureRegion: String,
-        cardSuit: CardSuit,
-        cardRank: CardRank,
-        isCardOpen: Boolean = false,
-        posX: Float = 0f, posY: Float = 0f, posZ: Float = 1f
+    textureAtlas: TextureAtlas,
+    textureRegion: String,
+    cardSuit: CardSuit,
+    cardRank: CardRank,
+    isCardOpen: Boolean = false,
+    posX: Float = 0f, posY: Float = 0f, posZ: Float = 1f
 ): GameCardAdapter {
     val rsl = this.entity {
         val texture: TextureAtlas.AtlasRegion = textureAtlas.findRegion(textureRegion)
-
         with<TransformComponent> {
             initTransformComp(texture, posX, posY, posZ)
             setSize(CARD_WIDTH, CARD_HEIGHT)
 //            setSizeByHeightSAR(160f)
         }
-        with<GraphicComponent>() { setSpriteRegion(texture) }
+        with<GraphicComponent>() {
+            setSpriteRegion(texture)
+        }
         with<GameCardComponent>() {
             this.cardSuit = cardSuit
             this.cardRank = cardRank
-//            setNextPredicate = Predicate{other -> this.cardRank < other.cardRank
-//                    && this.cardSuit.colour != other.cardSuit.colour}
             this.isCardOpen = isCardOpen
         }
-        with<TouchComponent>() {}
+        with<TouchComponent>() {
+            isTouchable = true
+        }
     }
     return GameCardAdapter(rsl)
 }
@@ -74,19 +70,16 @@ fun Engine.createCard(
  * temple for create GameStack
  */
 fun Engine.createStack(
-        texture: Texture,
-        posX: Float, posY: Float, posZ: Float = 0f,
-        onClickFun: () -> Unit = {}
+    texture: Texture,
+    posX: Float, posY: Float, posZ: Float = 0f
 ): GameStackAdapter {
-
     val rsl = entity {
-
         with<TransformComponent> {
             initTransformComp(texture, posX, posY, posZ)
             setSize(CARD_WIDTH, CARD_HEIGHT)
         }
         with<GraphicComponent>() { setSpriteRegion(texture) }
-        with<GameStackComponent>() { onClick = onClickFun }
+        with<GameStackComponent>()
     }
     return GameStackAdapter(rsl)
 }
@@ -96,19 +89,17 @@ fun Engine.createStack(
  */
 fun Engine.createFoundationStack(
     texture: Texture,
-    posX: Float, posY: Float, posZ: Float = 0f,
-    onClickFun: () -> Unit = {}
+    posX: Float, posY: Float, posZ: Float = 0f
 ): GameStackAdapter {
-
     val rsl = entity {
-
         with<TransformComponent> {
             initTransformComp(texture, posX, posY, posZ)
             setSize(CARD_WIDTH, CARD_HEIGHT)
         }
         with<GraphicComponent>() { setSpriteRegion(texture) }
         with<FoundationStackComponent>()
-        with<GameStackComponent>() { onClick = onClickFun }
+        with<GameStackComponent>() { this.shiftRange = 0L }
+        with<FoundationDragComponent>()
     }
     return GameStackAdapter(rsl)
 }
@@ -117,14 +108,10 @@ fun Engine.createFoundationStack(
  * temple for create GameStack
  */
 fun Engine.createMainStack(
-        texture: Texture,
-        posX: Float,
-        posY: Float,
-        posZ: Float = 0f,
-        _order: Int,
-        onClickFun: () -> Unit = {}
+    texture: Texture,
+    posX: Float, posY: Float, posZ: Float = 0f,
+    _order: Int
 ): GameStackAdapter {
-
     val rsl = entity {
         with<TransformComponent> {
             initTransformComp(texture, posX, posY, posZ)
@@ -132,33 +119,10 @@ fun Engine.createMainStack(
         }
         with<GraphicComponent>() { setSpriteRegion(texture) }
         with<MainStackComponent>() { this.order = _order }
-        with<GameStackComponent>() { onClick = onClickFun }
+        with<GameStackComponent>() { this.shiftRange = 0L }
+        if (_order == 1) {
+            with<FoundationDragComponent>()
+        }
     }
     return GameStackAdapter(rsl)
-}
-
-
-/* OLD API  ---  maybe for delete */
-
-
-@Deprecated("unusebale")
-fun addCardsToStack(stack: GameStackAdapter, cards: List<GameCardAdapter>) {
-    cards.forEach { addCardToStack(stack, it) }
-}
-
-@Deprecated("unusebale")
-fun addCardToStack(stack: GameStackAdapter, card: GameCardAdapter) {
-    val cardPos = Vector3()
-    /* Getting position for new card before add it into stack */
-    stack.getNextCardPosition(cardPos)
-
-    stack.gameStackComp.add(card)
-    card.transComp.setPosition(cardPos)
-
-}
-
-@Deprecated("unusebale")
-fun unbindCardFromStack(stacks: List<GameStackAdapter>, card: GameCardAdapter) {
-    stacks.find { it.gameStackComp.contains(card) }
-            ?.let { it.gameStackComp.remove(card) }
 }

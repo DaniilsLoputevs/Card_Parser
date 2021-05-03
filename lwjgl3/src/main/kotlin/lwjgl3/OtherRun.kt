@@ -1,6 +1,6 @@
 package lwjgl3
 
-import cardparser.ashley.components.klondike.GameCardComponent
+import cardparser.ashley.components.GameCardComponent
 
 
 fun main() {

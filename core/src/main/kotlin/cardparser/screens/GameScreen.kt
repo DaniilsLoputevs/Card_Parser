@@ -1,7 +1,7 @@
 package cardparser.screens
 
 import cardparser.MainGame
-import cardparser.ashley.scenario.initKlondaikGame
+import cardparser.scenario.initKlondaikGame
 import ktx.log.info
 
 class GameScreen(

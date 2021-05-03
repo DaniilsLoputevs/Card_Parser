@@ -5,8 +5,8 @@ import cardparser.ashley.components.TouchComponent
 import cardparser.ashley.components.TransformComponent
 import cardparser.ashley.components.adapters.GameCardAdapter
 import cardparser.ashley.components.adapters.GameStackAdapter
-import cardparser.ashley.components.klondike.GameCardComponent
-import cardparser.ashley.components.klondike.GameStackComponent
+import cardparser.ashley.components.GameCardComponent
+import cardparser.ashley.components.GameStackComponent
 import com.badlogic.ashley.core.*
 import ktx.ashley.allOf
 import ktx.ashley.get

@@ -2,7 +2,7 @@ package cardparser.ashley.components.adapters
 
 import cardparser.ashley.components.TouchComponent
 import cardparser.ashley.components.TransformComponent
-import cardparser.ashley.components.klondike.GameCardComponent
+import cardparser.ashley.components.GameCardComponent
 import com.badlogic.ashley.core.Entity
 import ktx.ashley.get
 

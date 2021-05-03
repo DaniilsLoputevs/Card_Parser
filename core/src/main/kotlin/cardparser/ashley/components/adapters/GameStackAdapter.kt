@@ -2,7 +2,7 @@ package cardparser.ashley.components.adapters
 
 import cardparser.CARD_STACK_OFFSET
 import cardparser.ashley.components.TransformComponent
-import cardparser.ashley.components.klondike.GameStackComponent
+import cardparser.ashley.components.GameStackComponent
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
@@ -45,6 +45,10 @@ data class GameStackAdapter(val entity: Entity) {
             true -> this.transComp.shape.contains(position)
             false -> containsPosInLastCardHitBox(position)
         }
+    }
+
+    fun containsPosStack(position: Vector2): Boolean {
+        return this.transComp.shape.contains(position)
     }
 
     /** Find area of last card and check: is [otherPos] contains. */

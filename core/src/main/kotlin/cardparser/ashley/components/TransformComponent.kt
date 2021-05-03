@@ -54,6 +54,16 @@ class TransformComponent : Component, Pool.Poolable, Comparable<TransformCompone
         shape.setPosition(newPosition.x, newPosition.y)
     }
 
+    fun setX(x: Float) {
+        position.x = x
+        shape.x = x
+    }
+
+    fun setY(y: Float) {
+        position.y = y
+        shape.y = y
+    }
+
     fun setDepth(z: Float) {
         position.z = z
     }

@@ -1,4 +1,4 @@
-package cardparser.ashley.components.klondike
+package cardparser.ashley.components
 
 import com.badlogic.ashley.core.Component
 import com.badlogic.gdx.utils.Pool

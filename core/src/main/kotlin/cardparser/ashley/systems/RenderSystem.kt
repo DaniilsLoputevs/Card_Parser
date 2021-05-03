@@ -6,7 +6,7 @@ import cardparser.V_WORLD_HEIGHT_UNITS
 import cardparser.V_WORLD_WIDTH_UNITS
 import cardparser.ashley.components.GraphicComponent
 import cardparser.ashley.components.TransformComponent
-import cardparser.ashley.components.klondike.GameCardComponent
+import cardparser.ashley.components.GameCardComponent
 import cardparser.ashley.findRequiredComponent
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity

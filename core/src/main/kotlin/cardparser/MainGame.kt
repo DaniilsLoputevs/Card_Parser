@@ -42,21 +42,25 @@ class MainGame : KtxGame<KtxScreen>() {
     override fun create() {
         Gdx.app.logLevel = Application.LOG_DEBUG
 
-        logger.info { "Application :: START \n" +
-                "MainGame :: Load Initialization assets - START" }
+        logger.info {
+            "Application :: START \n" +
+                    "MainGame :: Load Initialization assets - START"
+        }
         val logStartTime = System.currentTimeMillis();
 
 //        val asyncJobsForLoading = prepareLoadingForInitializationAssets()
 //        KtxAsync.launch {
 //            asyncJobsForLoading.joinAll()
 //          }
-            /* go to LoadingScreen to load remaining assets */
-            addScreen(LoadingScreen(this@MainGame))
-            setScreen<LoadingScreen>()
+        /* go to LoadingScreen to load remaining assets */
+        addScreen(LoadingScreen(this@MainGame))
+        setScreen<LoadingScreen>()
 //        }
 
-        logger.info { "MainGame :: Load Initialization assets - " +
-                "FINISH time: ${(System.currentTimeMillis() - logStartTime) * 0.001f} sec" }
+        logger.info {
+            "MainGame :: Load Initialization assets - " +
+                    "FINISH time: ${(System.currentTimeMillis() - logStartTime) * 0.001f} sec"
+        }
 //        println("GAME :: create() ## END")
     }
 
@@ -94,27 +98,17 @@ class MainGame : KtxGame<KtxScreen>() {
     private fun initEngine(): Engine {
         return PooledEngine().apply {
             addSystem(DebugSystem())
-            addSystem(
-                    ScreenInputSystem().apply {
-                        setProcessing(false)
-                    }
-            )
-            addSystem(
-                MainStackSystem().apply {
-                    setProcessing(false)
-                }
-            )
-//            addSystem(
-//                    CardBindingSystem().apply {
-//                        setProcessing(false)
-//                    }
-//            )
-            addSystem(
-                    RenderSystem(stage, gameViewport)
-            )
-//            addSystem(RemoveSystem(gameEventManager))
-//        }
-
+            addSystem(ScreenInputSystem(gameViewport, gameEventManager).apply { setProcessing(false) })
+            addSystem(TouchOpenCardSystem(gameEventManager).apply { setProcessing(false) })
+            addSystem(MainStackSystem(gameEventManager).apply { setProcessing(false) })
+            addSystem(StandardDragCardSystem(gameEventManager).apply { setProcessing(false) })
+            addSystem(FoundationDragSystem(gameEventManager).apply { setProcessing(false) })
+            addSystem(StandardStackBindingSystem(gameEventManager).apply { setProcessing(false) })
+            addSystem(FoundationStackBindingSystem(gameEventManager).apply { setProcessing(false) })
+            addSystem(ReturnCardsSystem(gameEventManager).apply { setProcessing(false) })
+            addSystem(CardPositionSystem().apply { setProcessing(false) })
+            addSystem(RenderSystem(stage, gameViewport))
+            addSystem(CalculateIsTouchableSystem(gameEventManager).apply { setProcessing(false) })
         }
     }
 
