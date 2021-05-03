@@ -1,8 +1,8 @@
 package cardparser.ashley.components.adapters
 
 import cardparser.CARD_STACK_OFFSET
-import cardparser.ashley.components.TransformComponent
 import cardparser.ashley.components.GameStackComponent
+import cardparser.ashley.components.TransformComponent
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
@@ -12,9 +12,9 @@ import ktx.ashley.get
  * For friendly using Entity that is a GameStack.
  * * Components never will be null.
  */
-data class GameStackAdapter(val entity: Entity) {
-    val transComp: TransformComponent = entity[TransformComponent.mapper]!!
-    val gameStackComp: GameStackComponent = entity[GameStackComponent.mapper]!!
+class GameStackAdapter() : AbstractAdapter() {
+    lateinit var transComp: TransformComponent
+    lateinit var gameStackComp: GameStackComponent
 
     /** Short way to get cardStack from stackAdapter. */
     fun getCards(): MutableList<GameCardAdapter> = gameStackComp.cardStack
@@ -91,6 +91,19 @@ data class GameStackAdapter(val entity: Entity) {
                 this.transComp.position.y - (cardIndex * CARD_STACK_OFFSET),
                 10f + (cardIndex * 10f)
         )
+    }
+
+
+    /* construction part */
+
+
+    constructor(entity: Entity) : this() {
+        this.entity = entity
+    }
+
+    override fun refreshState() {
+        this.transComp = entity[TransformComponent.mapper]!!
+        this.gameStackComp = entity[GameStackComponent.mapper]!!
     }
 
     override fun toString(): String = "stack={ pos = ${transComp.position} size = ${gameStackComp.size()} }"
