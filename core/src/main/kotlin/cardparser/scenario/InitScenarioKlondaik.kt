@@ -24,9 +24,6 @@ fun Engine.initKlondaikGame(assets: AssetStorage, gameViewport: Viewport) {
         getSystem<MainStackSystem>().apply {
             setProcessing(true)
         }
-        getSystem<TouchOpenCardSystem>().apply {
-            setProcessing(false)
-        }
         getSystem<StandardStackBindingSystem>().apply {
             setProcessing(true)
         }
@@ -37,9 +34,6 @@ fun Engine.initKlondaikGame(assets: AssetStorage, gameViewport: Viewport) {
             setProcessing(true)
         }
         getSystem<StandardDragCardSystem>().apply {
-            setProcessing(true)
-        }
-        getSystem<FoundationDragSystem>().apply {
             setProcessing(true)
         }
         getSystem<ReturnCardsSystem>().apply {

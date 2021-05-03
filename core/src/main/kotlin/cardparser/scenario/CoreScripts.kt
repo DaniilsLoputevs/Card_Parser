@@ -80,6 +80,7 @@ fun Engine.createStack(
         }
         with<GraphicComponent>() { setSpriteRegion(texture) }
         with<GameStackComponent>()
+        with<FoundationDragComponent>()
     }
     return GameStackAdapter(rsl)
 }

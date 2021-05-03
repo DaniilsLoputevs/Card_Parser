@@ -1,4 +1,4 @@
-package cardparser.ashley.systems
+package depricated
 
 import cardparser.ashley.components.FoundationStackComponent
 import cardparser.ashley.components.GameStackComponent

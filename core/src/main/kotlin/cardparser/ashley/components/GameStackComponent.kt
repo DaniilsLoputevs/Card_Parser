@@ -1,5 +1,6 @@
 package cardparser.ashley.components
 
+import cardparser.ashley.Logic
 import cardparser.ashley.components.adapters.GameCardAdapter
 import com.badlogic.ashley.core.Component
 import com.badlogic.gdx.math.Vector2
@@ -12,15 +13,15 @@ import ktx.ashley.mapperFor
 class GameStackComponent : Component, Pool.Poolable {
     var cardStack: MutableList<GameCardAdapter> = mutableListOf()
     var shiftRange = 20L
+    lateinit var logic: Logic
 
     /** Find card in stack by position. If card doesn't found -> return null */
     fun findCardByPos(position: Vector2): GameCardAdapter? {
-        val answer = cardStack.filter {
+        return cardStack.filter {
+                    it.gameCardComp.isCardOpen &&
                     it.touchComp.isTouchable &&
-                    it.transComp.shape.contains(position) &&
-                    it.gameCardComp.isCardOpen
+                    it.transComp.shape.contains(position)
         }.maxByOrNull { it.transComp.position.z }
-        return answer
     }
 
     /**
@@ -29,7 +30,7 @@ class GameStackComponent : Component, Pool.Poolable {
      */
     fun transferCardsToList(card: GameCardAdapter, list: MutableList<GameCardAdapter>) {
         val cardIndex = cardStack.indexOf(card)
-        list.addAll(cardStack.filterIndexed{ index, _ -> index >= cardIndex})
+        list.addAll(cardStack.filterIndexed { index, _ -> index >= cardIndex })
         cardStack.removeAll { list.contains(it) }
     }
 

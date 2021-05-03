@@ -51,3 +51,15 @@ inline fun <reified T : Component> Entity.findRequiredComponent(mapper: Componen
 fun Entity.toPrint(): String {
     return this.components.toString()
 }
+
+enum class Logic {
+    KLONDAIK {
+        override fun doLogic(stack: GameStackAdapter, addedCards: List<GameCardAdapter>): Boolean {
+            return super.doLogic(stack, addedCards)
+        }
+    },
+    UPSTACKS;
+
+    open fun doLogic(stack: GameStackAdapter, addedCards: List<GameCardAdapter>): Boolean = true
+
+}

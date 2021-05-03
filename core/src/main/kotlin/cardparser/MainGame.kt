@@ -99,10 +99,8 @@ class MainGame : KtxGame<KtxScreen>() {
         return PooledEngine().apply {
             addSystem(DebugSystem())
             addSystem(ScreenInputSystem(gameViewport, gameEventManager).apply { setProcessing(false) })
-            addSystem(TouchOpenCardSystem(gameEventManager).apply { setProcessing(false) })
             addSystem(MainStackSystem(gameEventManager).apply { setProcessing(false) })
             addSystem(StandardDragCardSystem(gameEventManager).apply { setProcessing(false) })
-            addSystem(FoundationDragSystem(gameEventManager).apply { setProcessing(false) })
             addSystem(StandardStackBindingSystem(gameEventManager).apply { setProcessing(false) })
             addSystem(FoundationStackBindingSystem(gameEventManager).apply { setProcessing(false) })
             addSystem(ReturnCardsSystem(gameEventManager).apply { setProcessing(false) })

@@ -31,8 +31,10 @@ class StandardStackBindingSystem(val gameEventManager: GameEventManager) : Itera
     }
 
     override fun update(deltaTime: Float) {
-        super.update(deltaTime)
-        dropEvent = null
+        dropEvent?.let {
+            super.update(deltaTime)
+            dropEvent = null
+        }
     }
 
     override fun processEntity(entity: Entity, deltaTime: Float) {

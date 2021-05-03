@@ -1,6 +1,5 @@
-package cardparser.ashley.systems
+package depricated
 
-import cardparser.ashley.components.GameStackComponent
 import cardparser.ashley.components.FoundationDragComponent
 import cardparser.ashley.components.TransformComponent
 import cardparser.ashley.components.adapters.GameCardAdapter
@@ -14,6 +13,7 @@ import com.badlogic.ashley.systems.IteratingSystem
 import com.badlogic.gdx.math.Vector2
 import ktx.ashley.allOf
 
+@Deprecated("")
 class FoundationDragSystem(val gameEventManager: GameEventManager) : IteratingSystem(
     allOf(TransformComponent::class, FoundationDragComponent::class).get()
 ), GameEventListener {
