@@ -4,12 +4,11 @@ import cardparser.MainGame
 import cardparser.asset.CardBackAtlas
 import cardparser.asset.CardDeckAtlas
 import cardparser.asset.GeneralAsset
+import cardparser.logger.logger
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import ktx.async.KtxAsync
 import ktx.collections.gdxArrayOf
-import ktx.log.info
-import ktx.log.logger
 
 /**
  * Screen for loading assert, init and setup requirement elements for app:
@@ -23,16 +22,16 @@ class LoadingScreen(
     private val logger = logger<LoadingScreen>()
 
     override fun show() {
-        logger.info {
-            "Loading Screen : Shown \n" +
-                    "Loading Screen : Load Main assets - START"
-        }
+//        logger.info {
+//            "Loading Screen : Shown \n" +
+//                    "Loading Screen : Load Main assets - START"
+//        }
         val logStartTime = System.currentTimeMillis()
         loadMainAssets()
-        logger.info {
-            "Loading Screen : Load Main assets - FINISH ### load time: " +
-                    "${(System.currentTimeMillis() - logStartTime) * 0.001f} sec"
-        }
+//        logger.info {
+//            "Loading Screen : Load Main assets - FINISH ### load time: " +
+//                    "${(System.currentTimeMillis() - logStartTime) * 0.001f} sec"
+//        }
     }
 
     private fun loadMainAssets() {
@@ -56,7 +55,7 @@ class LoadingScreen(
 
     override fun dispose() {
         super.dispose();
-        logger.info { "Loading Screen : disposed" }
+        logger.info { "Loading Screen :: DISPOSED" }
     }
 }
 //    override fun hide() {

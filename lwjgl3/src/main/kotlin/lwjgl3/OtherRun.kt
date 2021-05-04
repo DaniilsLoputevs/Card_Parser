@@ -2,80 +2,42 @@ package lwjgl3
 
 
 fun main() {
-//    val t = 6
-//
-//    if (t > 10) {
-//        println("more 10")
-//        if (t < 100) {
-//            println("less 100")
-//            if (t == 20) {
-//                println("equal 20")
-//            } else if (t == 30) {
-//                println("equal 30")
-//            }
-//        }
-//    }
-//
-//
-//    if (t > 10) println("more 10")
-//    if (t > 10 && t < 100) println("less 100")
-//    if ((t > 10 && t < 100) && (t == 20)) println("equal 20")
-//    if ((t > 10 && t < 100) && (t == 20)) println("equal 30")
 
 
-    val adapterTest = AdapterTest()
-    val adapterTestArg = AdapterTest("tup")
-
-    adapterTest.entity = "yup"
-    println("one = ${adapterTest.one}")
-    println("two = ${adapterTest.two}")
-    adapterTest.entity = "Kot"
-    println("one = ${adapterTest.one}")
-    println("two = ${adapterTest.two}")
-
-}
-
-public val DEFAULT_ENTITY = ""
-
-class AdapterTest() : AbstractAdapter() {
-    lateinit var one: String
-    lateinit var two: String
-
-
-    constructor(entity: String) : this() {this.entity = entity }
-
-    override fun refreshState() {
-        one = entity.substring(0, 1)
-        two = entity.substring(1, 2)
-    }
-}
-
-abstract class AbstractAdapter(entity: String = DEFAULT_ENTITY) {
-    var entity: String = DEFAULT_ENTITY
-        set(value) {
-            field = value
-            refreshState()
-        }
-
-    abstract fun refreshState()
+    val template = "*LEVEL* || [*CLASS*] $TEXT_BLUE=>$TEXT_RESET *INFO* $TEXT_RED::$TEXT_RESET *OBJ*"
+    println(template
+            .replace("*LEVEL*", "DEV")
+            .replace("*CLASS*", "GameStackAdapter")
+            .replace("*INFO*", "value")
+            .replace("*OBJ*", "1343523412")
+    )
 }
 
 
-
-
-
-fun find(s: String): String? {
-    return s
-}
+private const val TEXT_RESET = "\u001B[0m"
+private const val TEXT_BLACK = "\u001B[30m"
+private const val TEXT_RED = "\u001B[31m"
+private const val TEXT_GREEN = "\u001B[32m"
+private const val TEXT_YELLOW = "\u001B[33m"
+private const val TEXT_BLUE = "\u001B[34m"
+private const val TEXT_PURPLE = "\u001B[35m"
+private const val TEXT_CYAN = "\u001B[36m"
+private const val TEXT_WHITE = "\u001B[37m"
 
 class MyClass {
     var cardStack: MutableList<String> = mutableListOf("asd", "www")
 
+    fun t() {
+//        logger.
+    }
 //    fun isEmpty() = cardStack.isEmpty()
 //    fun addGameCard(card : Entity) = cardStack.add(card)
 //
 //    fun getLastCard() = cardStack.removeAt(cardStack.size.coerceAtMost(0))
 
+    companion object {
+//        val logger = ""
+    }
 
 }
 

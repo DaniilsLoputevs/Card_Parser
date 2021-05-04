@@ -2,10 +2,10 @@ package cardparser
 
 import cardparser.ashley.systems.*
 import cardparser.event.GameEventManager
+import cardparser.logger.logger
 import cardparser.screens.LoadingScreen
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.PooledEngine
-import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.FitViewport
@@ -14,8 +14,6 @@ import ktx.app.KtxGame
 import ktx.app.KtxScreen
 import ktx.assets.async.AssetStorage
 import ktx.async.KtxAsync
-import ktx.log.info
-import ktx.log.logger
 
 /**
  * Main Game class
@@ -40,12 +38,10 @@ class MainGame : KtxGame<KtxScreen>() {
 
 
     override fun create() {
-        Gdx.app.logLevel = Application.LOG_DEBUG
+//        Gdx.app.logLevel = Application.LOG_DEBUG
 
-        logger.info {
-            "Application :: START \n" +
-                    "MainGame :: Load Initialization assets - START"
-        }
+        logger.info("Application :: START")
+        logger.info("Application - Load Initialization assets :: START")
         val logStartTime = System.currentTimeMillis();
 
 //        val asyncJobsForLoading = prepareLoadingForInitializationAssets()
@@ -57,11 +53,9 @@ class MainGame : KtxGame<KtxScreen>() {
         setScreen<LoadingScreen>()
 //        }
 
-        logger.info {
-            "MainGame :: Load Initialization assets - " +
-                    "FINISH time: ${(System.currentTimeMillis() - logStartTime) * 0.001f} sec"
-        }
-//        println("GAME :: create() ## END")
+        logger.info("Application - Load Initialization assets " +
+                ":: FINISH ## time: ${(System.currentTimeMillis() - logStartTime) * 0.001f} sec")
+
     }
 
     /**
