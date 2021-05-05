@@ -7,7 +7,7 @@ private val DEFAULT_ENTITY = Entity()
 abstract class AbstractAdapter {
     var entity: Entity = DEFAULT_ENTITY
         set(value) {
-            if (value === DEFAULT_ENTITY) return
+            if (value == DEFAULT_ENTITY) return
             field = value
             refreshState()
         }

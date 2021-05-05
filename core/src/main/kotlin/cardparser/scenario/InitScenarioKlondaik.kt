@@ -27,9 +27,6 @@ fun Engine.initKlondaikGame(assets: AssetStorage, gameViewport: Viewport) {
         getSystem<StandardStackBindingSystem>().apply {
             setProcessing(true)
         }
-        getSystem<FoundationStackBindingSystem>().apply {
-            setProcessing(true)
-        }
         getSystem<CardPositionSystem>().apply {
             setProcessing(true)
         }

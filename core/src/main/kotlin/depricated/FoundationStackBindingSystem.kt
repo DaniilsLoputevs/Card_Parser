@@ -1,4 +1,4 @@
-package cardparser.ashley.systems
+package depricated
 
 import cardparser.ashley.components.*
 import cardparser.ashley.components.GameCardComponent.*
@@ -10,10 +10,10 @@ import cardparser.event.GameEventManager
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.systems.IteratingSystem
-import com.badlogic.gdx.Game
 import ktx.ashley.allOf
 import ktx.ashley.exclude
 
+@Deprecated("")
 class FoundationStackBindingSystem(val gameEventManager: GameEventManager): IteratingSystem(
     allOf(TransformComponent::class, GameStackComponent::class, FoundationStackComponent::class)
         .exclude(MainStackComponent::class).get()), GameEventListener {

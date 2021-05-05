@@ -3,7 +3,7 @@ package cardparser.ashley.systems
 import cardparser.ashley.components.TransformComponent
 import cardparser.ashley.components.adapters.GameCardAdapter
 import cardparser.ashley.components.adapters.GameStackAdapter
-import cardparser.ashley.components.FoundationDragComponent
+import cardparser.ashley.components.StandardDragComponent
 import cardparser.event.GameEvent
 import cardparser.event.GameEventListener
 import cardparser.event.GameEventManager
@@ -14,11 +14,11 @@ import com.badlogic.gdx.math.Vector2
 import ktx.ashley.allOf
 
 class StandardDragCardSystem(val gameEventManager: GameEventManager) : IteratingSystem(
-    allOf(TransformComponent::class, FoundationDragComponent::class).get()
+    allOf(TransformComponent::class, StandardDragComponent::class).get()
 ), GameEventListener {
 
     private val storeList: MutableList<GameCardAdapter> = mutableListOf()
-    private val stack: GameStackAdapter = GameStackAdapter()
+    private var stack: GameStackAdapter = GameStackAdapter()
     private var shiftRange = 30L
     private var startSearch = 0
     private var cursorPosition: Vector2 = Vector2().setZero()
@@ -44,7 +44,7 @@ class StandardDragCardSystem(val gameEventManager: GameEventManager) : Iterating
     }
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
-        stack.entity = entity
+        stack = GameStackAdapter(entity)
         when {
             startSearch == 1 && storeList.size == 0 && stack.containsPosInTotalHitBox(cursorPosition) -> {
                 stack.gameStackComp

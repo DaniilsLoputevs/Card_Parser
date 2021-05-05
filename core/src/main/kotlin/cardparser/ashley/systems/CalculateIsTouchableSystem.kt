@@ -13,7 +13,7 @@ import ktx.ashley.exclude
 
 class CalculateIsTouchableSystem(val gameEventManager: GameEventManager) : IteratingSystem(
     allOf(TransformComponent::class, GameStackComponent::class)
-        .exclude(MainStackComponent::class, FoundationDragComponent::class).get()
+        .exclude(MainStackComponent::class).get()
 ), GameEventListener {
 
     var dropEvent: GameEvent.DropEvent? = null
@@ -45,13 +45,21 @@ class CalculateIsTouchableSystem(val gameEventManager: GameEventManager) : Itera
                 if (index == 0) {
                     card.touchComp.isTouchable = true
                     card.gameCardComp.isCardOpen = true
+                    println("---START STACK---")
+                    println("index ${index}, card ${card.gameCardComp.cardRank}/${card.gameCardComp.cardSuit}")
+                    println("card rank ${card.gameCardComp.cardRank.ordinal}")
                 } else {
-                    val previousCard = cardsInStack[index - 1]
+                    val previousCard = cardsInStack.asReversed()[index - 1]
+                    println("card rank ${card.gameCardComp.cardRank.ordinal}")
+                    println("previous card rank ${previousCard.gameCardComp.cardRank.ordinal}")
                     card.touchComp.isTouchable =
-                        previousCard.touchComp.isTouchable
-                        //    && (card.gameCardComp.cardRank.ordinal + 1 == previousCard.gameCardComp.cardRank.ordinal
-                        //    || (card.gameCardComp.cardRank == GameCardComponent.CardRank.TWO
-                        //        && previousCard.gameCardComp.cardRank == GameCardComponent.CardRank.ACE))
+                        previousCard.touchComp.isTouchable &&
+                        card.gameCardComp.cardRank.ordinal == previousCard.gameCardComp.cardRank.ordinal + 1
+                    //   || (card.gameCardComp.cardRank == GameCardComponent.CardRank.TWO
+                         //       && previousCard.gameCardComp.cardRank == GameCardComponent.CardRank.ACE))
+                    println("index ${index}, card ${card.gameCardComp.cardRank}/${card.gameCardComp.cardSuit}")
+                    println("card rank ${card.gameCardComp.cardRank.ordinal}")
+                    println("card touchable ${card.touchComp.isTouchable}")
                 }
             }
         }

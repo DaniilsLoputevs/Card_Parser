@@ -1,6 +1,6 @@
 package depricated
 
-import cardparser.ashley.components.FoundationDragComponent
+import cardparser.ashley.components.StandardDragComponent
 import cardparser.ashley.components.TransformComponent
 import cardparser.ashley.components.adapters.GameCardAdapter
 import cardparser.ashley.components.adapters.GameStackAdapter
@@ -15,7 +15,7 @@ import ktx.ashley.allOf
 
 @Deprecated("")
 class FoundationDragSystem(val gameEventManager: GameEventManager) : IteratingSystem(
-    allOf(TransformComponent::class, FoundationDragComponent::class).get()
+    allOf(TransformComponent::class, StandardDragComponent::class).get()
 ), GameEventListener {
 
     override fun addedToEngine(engine: Engine?) {

@@ -96,7 +96,6 @@ class MainGame : KtxGame<KtxScreen>() {
             addSystem(MainStackSystem(gameEventManager).apply { setProcessing(false) })
             addSystem(StandardDragCardSystem(gameEventManager).apply { setProcessing(false) })
             addSystem(StandardStackBindingSystem(gameEventManager).apply { setProcessing(false) })
-            addSystem(FoundationStackBindingSystem(gameEventManager).apply { setProcessing(false) })
             addSystem(ReturnCardsSystem(gameEventManager).apply { setProcessing(false) })
             addSystem(CardPositionSystem().apply { setProcessing(false) })
             addSystem(RenderSystem(stage, gameViewport))

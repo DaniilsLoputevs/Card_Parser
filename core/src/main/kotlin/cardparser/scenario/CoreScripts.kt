@@ -1,7 +1,9 @@
 package cardparser.scenario
 
 import cardparser.CARD_HEIGHT
+import cardparser.CARD_STACK_OFFSET
 import cardparser.CARD_WIDTH
+import cardparser.ashley.Logic
 import cardparser.ashley.components.*
 import cardparser.ashley.components.adapters.GameCardAdapter
 import cardparser.ashley.components.adapters.GameStackAdapter
@@ -79,8 +81,11 @@ fun Engine.createStack(
             setSize(CARD_WIDTH, CARD_HEIGHT)
         }
         with<GraphicComponent>() { setSpriteRegion(texture) }
-        with<GameStackComponent>()
-        with<FoundationDragComponent>()
+        with<GameStackComponent>() {
+            this.logic = Logic.KLONDAIK
+            this.shiftRange = CARD_STACK_OFFSET.toLong()
+        }
+        with<StandardDragComponent>()
     }
     return GameStackAdapter(rsl)
 }
@@ -98,9 +103,11 @@ fun Engine.createFoundationStack(
             setSize(CARD_WIDTH, CARD_HEIGHT)
         }
         with<GraphicComponent>() { setSpriteRegion(texture) }
-        with<FoundationStackComponent>()
-        with<GameStackComponent>() { this.shiftRange = 0L }
-        with<FoundationDragComponent>()
+        with<GameStackComponent>() {
+            this.shiftRange = 0L
+            this.logic = Logic.UPSTACKS
+        }
+        with<StandardDragComponent>()
     }
     return GameStackAdapter(rsl)
 }
@@ -120,9 +127,12 @@ fun Engine.createMainStack(
         }
         with<GraphicComponent>() { setSpriteRegion(texture) }
         with<MainStackComponent>() { this.order = _order }
-        with<GameStackComponent>() { this.shiftRange = 0L }
+        with<GameStackComponent>() {
+            this.shiftRange = 0L
+            this.logic = Logic.UPSTACKS
+        }
         if (_order == 1) {
-            with<FoundationDragComponent>()
+            with<StandardDragComponent>()
         }
     }
     return GameStackAdapter(rsl)

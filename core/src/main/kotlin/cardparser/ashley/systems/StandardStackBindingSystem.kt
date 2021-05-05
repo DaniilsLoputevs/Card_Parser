@@ -15,7 +15,7 @@ import ktx.ashley.exclude
 
 class StandardStackBindingSystem(val gameEventManager: GameEventManager) : IteratingSystem(
     allOf(TransformComponent::class, GameStackComponent::class)
-        .exclude(MainStackComponent::class, FoundationDragComponent::class).get()
+        .exclude(MainStackComponent::class).get()
 ), GameEventListener {
 
     var dropEvent: GameEvent.DropEvent? = null;
@@ -41,7 +41,7 @@ class StandardStackBindingSystem(val gameEventManager: GameEventManager) : Itera
         dropEvent?.let {
             val stack = GameStackAdapter(entity)
             if (stack.containsPos(it.position) && it.cardList.size > 0
-                && checkIsPossibleAddCard(stack, it.cardList)
+                && stack.gameStackComp.logic.doLogic(stack, it.cardList)
             ) {
                 stack.getCards().addAll(it.cardList)
                 it.cardList.clear()
@@ -53,23 +53,6 @@ class StandardStackBindingSystem(val gameEventManager: GameEventManager) : Itera
     override fun onEvent(event: GameEvent) {
         if (event is GameEvent.DropEvent) {
             dropEvent = event
-        }
-    }
-
-    private fun checkIsPossibleAddCard(stack: GameStackAdapter, addedCards: List<GameCardAdapter>): Boolean {
-        val cardComp = addedCards.first().gameCardComp;
-        if (stack.getCards().isEmpty()) {
-            return true
-        }
-        val stackComp = stack.getCards().last().gameCardComp
-        return if (stackComp.cardSuit.colour != cardComp.cardSuit.colour) {
-            if (stackComp.cardRank == CardRank.ACE) {
-                false
-            } else if (stackComp.cardRank == CardRank.TWO && cardComp.cardRank == CardRank.ACE) {
-                true
-            } else stackComp.cardRank.ordinal - 1 == cardComp.cardRank.ordinal
-        } else {
-            false
         }
     }
 }
