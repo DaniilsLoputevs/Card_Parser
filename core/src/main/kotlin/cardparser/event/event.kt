@@ -2,12 +2,9 @@ package cardparser.event
 
 import cardparser.ashley.components.adapters.GameCardAdapter
 import cardparser.ashley.components.adapters.GameStackAdapter
-import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectMap
 import ktx.collections.GdxSet
-import ktx.log.debug
-import ktx.log.error
 import ktx.log.logger
 import kotlin.reflect.KClass
 
@@ -33,7 +30,8 @@ sealed class GameEvent {
     }
 
     object DropEvent: GameEvent() {
-        var previousStack: GameStackAdapter? = null
+        var previousStack: GameStackAdapter = GameStackAdapter()
+        var cardReturn : Boolean = false
         var cardList: MutableList<GameCardAdapter> = mutableListOf()
         var position: Vector2 = Vector2().setZero()
     }

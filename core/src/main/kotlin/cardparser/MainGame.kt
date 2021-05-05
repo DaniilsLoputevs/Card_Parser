@@ -2,7 +2,7 @@ package cardparser
 
 import cardparser.ashley.systems.*
 import cardparser.event.GameEventManager
-import cardparser.logger.logger
+import cardparser.logger.loggerApp
 import cardparser.screens.LoadingScreen
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.PooledEngine
@@ -20,7 +20,7 @@ import ktx.async.KtxAsync
  */
 class MainGame : KtxGame<KtxScreen>() {
 
-    private val logger = logger<MainGame>()
+    private val logger = loggerApp<MainGame>()
 
     val gameViewport: Viewport by lazy {
         FitViewport(V_WORLD_WIDTH_UNITS, V_WORLD_HEIGHT_UNITS)

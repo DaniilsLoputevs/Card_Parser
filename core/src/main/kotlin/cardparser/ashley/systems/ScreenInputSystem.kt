@@ -1,10 +1,9 @@
 package cardparser.ashley.systems
 
-import cardparser.DOUBLE_TOUCH_TIME_WINDOW
 import cardparser.TOUCH_RANGE
 import cardparser.event.GameEvent
 import cardparser.event.GameEventManager
-import com.badlogic.ashley.core.Engine
+import cardparser.logger.loggerApp
 import com.badlogic.ashley.core.EntitySystem
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
@@ -17,9 +16,10 @@ import com.badlogic.gdx.utils.viewport.Viewport
  *
  */
 class ScreenInputSystem(
-    var gameViewport: Viewport,
-    var gameEventManager: GameEventManager
+        var gameViewport: Viewport,
+        var gameEventManager: GameEventManager
 ) : EntitySystem() {
+    private val logger = loggerApp<ScreenInputSystem>()
 
     /** previous cursorAction */
     private var status: TouchStatus = TouchStatus.NONE;
@@ -72,19 +72,15 @@ class ScreenInputSystem(
     /* Predicates */
     private fun isPressLeftButton() = Gdx.input.isButtonPressed(Input.Buttons.LEFT)
     private fun isMemPosNotZeroAndNotEqualsToCurPos() =
-        !isPositionEquals(cursorPos, memorizedPos) && !memorizedPos.isZero
+            !isPositionEquals(cursorPos, memorizedPos) && !memorizedPos.isZero
 
     private fun isStopPressLeftButton() = !Gdx.input.isButtonPressed(Input.Buttons.LEFT)
 
 
     /* events */
-    private fun saveCurPosInMemorizedPos() {
-        memorizedPos.set(cursorPos)
-    }
+    private fun saveCurPosInMemorizedPos() = memorizedPos.set(cursorPos)
+    private fun pushNoneEvent() = gameEventManager.dispatchEvent(GameEvent.NoneEvent)
 
-    private fun pushNoneEvent() {
-        gameEventManager.dispatchEvent(GameEvent.NoneEvent)
-    }
 
     private fun pushDragEvent() {
 //        println("push drag event ${System.currentTimeMillis()}")
@@ -112,6 +108,7 @@ class ScreenInputSystem(
 //        println("push drop event ${System.currentTimeMillis()}")
         gameEventManager.dispatchEvent(GameEvent.DropEvent.apply {
             position = cursorPos
+            cardReturn = true
         })
     }
 

@@ -4,7 +4,7 @@ import cardparser.MainGame
 import cardparser.asset.CardBackAtlas
 import cardparser.asset.CardDeckAtlas
 import cardparser.asset.GeneralAsset
-import cardparser.logger.logger
+import cardparser.logger.loggerApp
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import ktx.async.KtxAsync
@@ -19,7 +19,7 @@ import ktx.collections.gdxArrayOf
 class LoadingScreen(
         game: MainGame
 ) : AbstractScreen(game) {
-    private val logger = logger<LoadingScreen>()
+    private val logger = loggerApp<LoadingScreen>()
 
     override fun show() {
 //        logger.info {

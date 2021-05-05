@@ -5,23 +5,23 @@ import cardparser.event.GameEventListener
 import cardparser.event.GameEventManager
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.EntitySystem
-import javax.swing.text.html.parser.Entity
 
-class ReturnCardsSystem(var gameEventManager: GameEventManager) : EntitySystem(), GameEventListener {
+class ReturnCardsSystem(val gameEventManager: GameEventManager)
+    : EntitySystem(), GameEventListener {
 
     var dropEvent: GameEvent.DropEvent? = null;
 
     override fun update(deltaTime: Float) {
-        dropEvent?.let { drop ->
-            if (drop.cardList.size > 0) {
-                drop.previousStack?.let { stack ->
-                    stack.getCards().addAll(drop.cardList)
-                    drop.cardList.clear()
-                }
+        dropEvent?.let {
+            if (it.cardList.size > 0 && it.cardReturn) {
+                it.previousStack.getCards().addAll(it.cardList)
+                it.cardList.clear()
+                it.cardReturn = false
             }
-            dropEvent = null
         }
+        dropEvent = null
     }
+
 
     override fun addedToEngine(engine: Engine?) {
         gameEventManager.addListener(GameEvent.DropEvent::class, this)

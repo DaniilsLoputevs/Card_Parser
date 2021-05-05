@@ -1,13 +1,13 @@
 package cardparser.screens
 
 import cardparser.MainGame
-import cardparser.logger.logger
+import cardparser.logger.loggerApp
 import cardparser.scenario.initKlondaikGame
 
 class GameScreen(
         game: MainGame
 ) : AbstractScreen(game) {
-    private val logger = logger<GameScreen>()
+    private val logger = loggerApp<GameScreen>()
 
 
     /**

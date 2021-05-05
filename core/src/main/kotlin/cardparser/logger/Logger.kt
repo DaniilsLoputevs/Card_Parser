@@ -2,36 +2,7 @@ package cardparser.logger
 
 import java.util.*
 
-// Define color constants
-private const val TEXT_RESET = "\u001B[0m"
-private const val TEXT_BLACK = "\u001B[30m"
-private const val TEXT_RED = "\u001B[31m"
-private const val TEXT_GREEN = "\u001B[32m"
-private const val TEXT_YELLOW = "\u001B[33m"
-private const val TEXT_BLUE = "\u001B[34m"
-private const val TEXT_PURPLE = "\u001B[35m"
-private const val TEXT_CYAN = "\u001B[36m"
-private const val TEXT_WHITE = "\u001B[37m"
-
-/* Printing templates */
-private const val LOG_INFO_TEMPLATE = "*LEVEL* || *CLASS* $TEXT_BLUE=>$TEXT_RESET *MSG*"
-private const val LOG_VAR_TEMPLATE = "*LEVEL* || *CLASS* $TEXT_BLUE=>$TEXT_RESET *MSG* $TEXT_RED::$TEXT_RESET *OBJ*"
-
-/**
- * TODO - class ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- * TODO - levels ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- * TODO - template ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- * TODO - colour ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- * TODO - smart cast for args ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- * TODO - smart cast extensions strategy ??? ToString() ??? - old ^^^^^
- * TODO - pretty wrap: single obj ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- * TODO - pretty wrap: store obj ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- * TODO - core ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- * TODO - ? variable replacement ? ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- * TODO - ? Multithreading ? ------------------------------------------
- * TODO - level API ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- * TODO - msg template name
- */
+inline fun <reified C : Any> loggerApp(): Logger<C> = LoggerImpl(C::class.java.simpleName)
 
 /**
  * Logger for dev & debug prints.
@@ -63,91 +34,100 @@ interface Logger<C> {
     fun levels(vararg levels: LogLevel)
 }
 
-inline fun <reified C : Any> logger(): Logger<C> = LoggerImpl(C::class.java.simpleName)
+
+/* Logger printing templates */
+private const val LOG_INF_TEMPLATE = "*LEVEL* || *CLASS* => *MSG*"
+private const val LOG_VAR_TEMPLATE = "*LEVEL* || *CLASS* => *MSG* :: *OBJ*"
+
+/* symbols for replace */
+private val specSymbols: Map<String, String> by lazy {
+    mapOf(
+            Pair(" = ", "$TEXT_RED = $TEXT_RESET"),
+            Pair(" : ", "$TEXT_RED : $TEXT_RESET"),
+            Pair("::", "$TEXT_RED::$TEXT_RESET"),
+            Pair("=>", "$TEXT_BLUE=>$TEXT_RESET"),
+    )
+}
 
 
 class LoggerImpl<C>(clazz: String) : Logger<C> {
     private val levels = mutableListOf<LogLevel>().apply { this.addAll(LogLevel.values()) }
+    private val infTemplate = LOG_INF_TEMPLATE.replace("*CLASS*", clazz)
+    private val valTemplate = LOG_VAR_TEMPLATE.replace("*CLASS*", clazz)
 
-    private val LOG_INFO = LOG_INFO_TEMPLATE.replace("*CLASS*", clazz)
-    private val LOG_VALUE = LOG_VAR_TEMPLATE.replace("*CLASS*", clazz)
 
+    override fun dev(msg: String) = check(LogLevel.DEV) { println(of(LogLevel.DEV, msg)) }
+    override fun dev(msg: String, obj: Any) = check(LogLevel.DEV) { println(of(LogLevel.DEV, msg, obj)) }
 
-    override fun dev(msg: String) = if (check(LogLevel.DEV)) println(of(LogLevel.DEV, msg)) else Unit
-    override fun dev(msg: String, obj: Any) = if (check(LogLevel.DEV)) println(of(LogLevel.DEV, msg, obj)) else Unit
+    override fun debug(msg: String) = check(LogLevel.DEBUG) { println(of(LogLevel.DEBUG, msg)) }
+    override fun debug(msg: String, obj: Any) = check(LogLevel.DEBUG) { println(of(LogLevel.DEBUG, msg, obj)) }
 
-    override fun debug(msg: String) = if (check(LogLevel.DEBUG)) println(of(LogLevel.DEBUG, msg)) else Unit
-    override fun debug(msg: String, obj: Any) = if (check(LogLevel.DEBUG)) println(of(LogLevel.DEBUG, msg, obj)) else Unit
+    override fun info(msg: String) = check(LogLevel.INFO) { println(of(LogLevel.INFO, msg)) }
+    override fun info(msg: String, obj: Any) = check(LogLevel.INFO) { println(of(LogLevel.INFO, msg, obj)) }
 
-    override fun info(msg: String) = if (check(LogLevel.INFO)) println(of(LogLevel.INFO, msg)) else Unit
-    override fun info(msg: String, obj: Any) = if (check(LogLevel.INFO)) println(of(LogLevel.INFO, msg, obj)) else Unit
+    override fun warm(msg: String) = check(LogLevel.WARM) { println(of(LogLevel.WARM, msg)) }
+    override fun warm(msg: String, obj: Any) = check(LogLevel.WARM) { println(of(LogLevel.WARM, msg, obj)) }
 
-    override fun warm(msg: String) = if (check(LogLevel.WARM)) println(of(LogLevel.WARM, msg)) else Unit
-    override fun warm(msg: String, obj: Any) = if (check(LogLevel.WARM)) println(of(LogLevel.WARM, msg, obj)) else Unit
-
-    override fun error(msg: String) = if (check(LogLevel.ERROR)) println(of(LogLevel.ERROR, msg)) else Unit
-    override fun error(msg: String, obj: Any) = if (check(LogLevel.ERROR)) println(of(LogLevel.ERROR, msg, obj)) else Unit
+    override fun error(msg: String) = check(LogLevel.ERROR) { println(of(LogLevel.ERROR, msg)) }
+    override fun error(msg: String, obj: Any) = check(LogLevel.ERROR) { println(of(LogLevel.ERROR, msg, obj)) }
 
     override fun levels(vararg levels: LogLevel) {
-        this.levels.clear()
-        this.levels.addAll(levels)
+        this.levels.clear(); this.levels.addAll(levels)
     }
 
-    private fun check(level: LogLevel): Boolean = levels.contains(level)
+
+    private fun check(level: LogLevel, print: () -> Unit) = if (levels.contains(level)) print.invoke() else Unit
+
     private fun of(level: LogLevel, msg: String): String = buildInfo(level, msg)
     private fun of(level: LogLevel, msg: String, obj: Any): String {
         return when (obj) {
-            is List<*> -> makeIterableMsg(level, msg) { obj as List<Any>; obj.iterator() }
+            is Iterable<*> -> makeIterableMsg(level, msg, obj as Iterable<Any>)
             is Map<*, *> -> makeMapMsg(level, msg, obj as Map<Any, Any>)
-            is Array<*> -> makeIterableMsg(level, msg) { obj as Array<Any>; obj.iterator() }
             else -> buildValue(level, msg, wrap(obj))
         }
     }
 
-    private fun makeIterableMsg(level: LogLevel, iterName: String, iter: () -> Iterator<Any>): String {
+    private fun makeIterableMsg(level: LogLevel, iterName: String, iterable: Iterable<Any>): String {
         val rsl = StringJoiner(System.lineSeparator())
         rsl.add(buildValue(level, "Iterable", iterName))
-        val iterator = iter.invoke()
-        var elemIndex = 0
-        if (!iterator.hasNext()) rsl.add(buildInfo(level, "Iterable is empty"))
-        else iterator.forEach { rsl.add(buildValue(level, elemIndex++.toString(), wrap(it))) }
+        if (iterable.none()) rsl.add(buildInfo(level, "Iterable is empty"))
+        else iterable.forEachIndexed { i, elem -> rsl.add(buildValue(level, "$i", wrap(elem))) }
         return rsl.toString()
     }
 
     private fun makeMapMsg(level: LogLevel, mapName: String, map: Map<Any, Any>): String {
         val rsl = StringJoiner(System.lineSeparator())
         rsl.add(buildValue(level, "Map", mapName))
-        if (map.isNotEmpty()) {
-            var elemIndex = 0
-            map.forEach { (key, value) ->
-                rsl.add(buildValue(level, elemIndex++.toString(), "key=${wrap(key)} && val=${wrap(value)}"))
-            }
-        } else rsl.add(buildInfo(level, "Map is empty"))
+        if (map.isEmpty()) rsl.add(buildInfo(level, "Map is empty"))
+        else map.onEachIndexed { i, (k, v) -> rsl.add(buildValue(level, "$i", "key=${wrap(k)} && val=${wrap(v)}")) }
         return rsl.toString()
     }
 
     private fun buildInfo(level: LogLevel, msg: String): String {
-        return LOG_INFO
+        return infTemplate
                 .replace("*LEVEL*", level.toString())
                 .replace("*MSG*", msg)
-                .replace("::", "$TEXT_RED::$TEXT_RESET")
+                .replaceSpecialSymbols()
     }
 
     private fun buildValue(level: LogLevel, msg: String, any: Any): String {
-        return LOG_VALUE
+        return valTemplate
                 .replace("*LEVEL*", level.toString())
                 .replace("*MSG*", msg)
                 .replace("*OBJ*", any.toString())
+                .replaceSpecialSymbols()
     }
 
     private fun wrap(obj: Any): String {
-        return if (obj is String) {
-            "\"" + obj + "\""
-        }
+        return if (obj is String) "\"" + obj + "\""
         else obj.toString()
-//        return obj.toString()
     }
 
+    private fun String.replaceSpecialSymbols(): String {
+        var rsl = this
+        specSymbols.forEach { (key, value) -> rsl = rsl.replace(key, value) }
+        return rsl
+    }
 }
 
 enum class LogLevel {
@@ -168,3 +148,13 @@ enum class LogLevel {
     },
 }
 
+// Define color constants
+private const val TEXT_RESET = "\u001B[0m"
+private const val TEXT_BLACK = "\u001B[30m"
+private const val TEXT_RED = "\u001B[31m"
+private const val TEXT_GREEN = "\u001B[32m"
+private const val TEXT_YELLOW = "\u001B[33m"
+private const val TEXT_BLUE = "\u001B[34m"
+private const val TEXT_PURPLE = "\u001B[35m"
+private const val TEXT_CYAN = "\u001B[36m"
+private const val TEXT_WHITE = "\u001B[37m"

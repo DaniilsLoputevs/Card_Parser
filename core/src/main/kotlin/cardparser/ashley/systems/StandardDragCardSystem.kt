@@ -1,9 +1,9 @@
 package cardparser.ashley.systems
 
+import cardparser.ashley.components.StandardDragComponent
 import cardparser.ashley.components.TransformComponent
 import cardparser.ashley.components.adapters.GameCardAdapter
 import cardparser.ashley.components.adapters.GameStackAdapter
-import cardparser.ashley.components.StandardDragComponent
 import cardparser.event.GameEvent
 import cardparser.event.GameEventListener
 import cardparser.event.GameEventManager
@@ -22,7 +22,7 @@ class StandardDragCardSystem(val gameEventManager: GameEventManager) : Iterating
     private var shiftRange = 30L
     private var startSearch = 0
     private var cursorPosition: Vector2 = Vector2().setZero()
-    private var memorizeStack: GameStackAdapter? = null
+    private var memorizeStack: GameStackAdapter = GameStackAdapter()
     private var z = 200F
     private var step = 0F
 
@@ -44,13 +44,13 @@ class StandardDragCardSystem(val gameEventManager: GameEventManager) : Iterating
     }
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
-        stack = GameStackAdapter(entity)
+        stack.entity = entity
         when {
             startSearch == 1 && storeList.size == 0 && stack.containsPosInTotalHitBox(cursorPosition) -> {
                 stack.gameStackComp
                     .findCardByPos(cursorPosition)?.let {
                     stack.gameStackComp.transferCardsToList(it, storeList)
-                    memorizeStack = stack
+                    memorizeStack.entity = stack.entity
                 }
             }
             startSearch > 1 && storeList.size > 0 -> {
@@ -67,7 +67,7 @@ class StandardDragCardSystem(val gameEventManager: GameEventManager) : Iterating
             }
             startSearch == 0 && storeList.size > 0 -> {
                 gameEventManager.dispatchEvent(GameEvent.DropEvent.apply {
-                    previousStack = memorizeStack
+                    previousStack.entity = memorizeStack.entity
                     cardList.addAll(storeList)
                     position = cursorPosition
                     storeList.clear()

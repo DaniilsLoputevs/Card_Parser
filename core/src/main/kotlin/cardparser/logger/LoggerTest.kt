@@ -4,7 +4,7 @@ class LoggerTest {
     val value = "1234567"
 }
 
-val logger = logger<LoggerTest>().apply { this.levels(LogLevel.ERROR, LogLevel.DEV) }
+private val logger = loggerApp<LoggerTest>().apply { this.levels(LogLevel.ERROR, LogLevel.DEV) }
 
 fun main() {
 
@@ -19,6 +19,9 @@ fun main() {
     println()
     logger.dev("array", arrayOf(1, 2, 3, 4, 5, 6, 7))
     logger.dev("array", arrayOf("aaa", "bbb", "ccc"))
+    println()
+    logger.dev("array", setOf(1, 2, 3, 4, 5, 6, 7))
+    logger.dev("array", setOf("aaa", "bbb", "ccc"))
     println()
     logger.dev("map", mapOf(Pair(1, "a"), Pair(2, "b"), Pair(3, "c")))
     println()
