@@ -7,6 +7,7 @@ import cardparser.ashley.components.MainStackComponent
 import cardparser.event.GameEvent
 import cardparser.event.GameEventListener
 import cardparser.event.GameEventManager
+import cardparser.logger.loggerApp
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.systems.SortedIteratingSystem
@@ -18,7 +19,7 @@ class MainStackSystem(val gameEventManager: GameEventManager) : SortedIteratingS
     allOf(TransformComponent::class, GameStackComponent::class, MainStackComponent::class).get(),
     compareBy { entity -> entity[MainStackComponent.mapper] }), GameEventListener {
 
-    private val logger = ktx.log.logger<MainStackSystem>()
+    private val logger = loggerApp<MainStackSystem>()
 
     private var transferCard: MutableList<GameCardAdapter> = mutableListOf()
     private var pos: Vector2? = null
@@ -45,27 +46,40 @@ class MainStackSystem(val gameEventManager: GameEventManager) : SortedIteratingS
 
             when (mainComp.order) {
                 0 -> {
-                    if (transComp.shape.contains(pos) && stackComp.isEmpty() && transferCard.size == 0) {
-                        returnAll = true
-                    } else if(transferCard.size > 0) {
-                        transferCard.forEach { it.gameCardComp.isCardOpen = false }
-                        stackComp.cardStack.addAll(transferCard)
-                        transferCard.clear()
-                        pos = null
-                    } else if (transComp.shape.contains(pos) && transferCard.size == 0) {
-                        transferCard.add(stackComp.cardStack.removeAt(stackComp.size() - 1))
+                    when {
+                        transComp.shape.contains(pos) && stackComp.isEmpty() && transferCard.size == 0 -> {
+                            returnAll = true
+                        }
+                        transferCard.size > 0 -> {
+                            transferCard.forEach { it.gameCardComp.isCardOpen = false }
+                            stackComp.cardStack.addAll(transferCard)
+                            transferCard.clear()
+                            pos = null
+                        }
+                        transComp.shape.contains(pos) && transferCard.size == 0 -> {
+                            transferCard.add(stackComp.cardStack.removeAt(stackComp.size() - 1))
+                        }
+                        else -> {
+                            pos = null
+                        }
                     }
                 }
                 1 -> {
-                    if (returnAll) {
-                        returnAll = false
-                        stackComp.cardStack.asReversed().forEach { transferCard.add(it) }
-                        stackComp.cardStack.clear()
-                    } else if (transferCard.size > 0) {
-                        transferCard.forEach { it.gameCardComp.isCardOpen = true }
-                        stackComp.cardStack.addAll(transferCard)
-                        transferCard.clear()
-                        pos = null
+                    when {
+                        returnAll -> {
+                            returnAll = false
+                            stackComp.cardStack.asReversed().forEach { transferCard.add(it) }
+                            stackComp.cardStack.clear()
+                        }
+                        transferCard.size > 0 -> {
+                            transferCard.forEach { it.gameCardComp.isCardOpen = true }
+                            stackComp.cardStack.addAll(transferCard)
+                            transferCard.clear()
+                            pos = null
+                        }
+                        else -> {
+                            pos = null
+                        }
                     }
                 }
                 else -> {
@@ -76,7 +90,7 @@ class MainStackSystem(val gameEventManager: GameEventManager) : SortedIteratingS
 
     override fun onEvent(event: GameEvent) {
         if (event is GameEvent.TouchEvent) {
-            pos = event.position
+            pos = event.position.cpy()
         }
     }
 }

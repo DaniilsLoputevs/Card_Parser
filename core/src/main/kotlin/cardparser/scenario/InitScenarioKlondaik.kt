@@ -1,6 +1,7 @@
 package cardparser.scenario
 
 import cardparser.CARD_WIDTH
+import cardparser.ashley.CalculateLogic
 import cardparser.ashley.components.adapters.GameCardAdapter
 import cardparser.ashley.components.adapters.GameStackAdapter
 import cardparser.ashley.systems.*
@@ -37,6 +38,7 @@ fun Engine.initKlondaikGame(assets: AssetStorage, gameViewport: Viewport) {
             setProcessing(true)
         }
         getSystem<CalculateIsTouchableSystem>().apply {
+            logic = CalculateLogic.KLONDAIK
             setProcessing(true)
         }
         getSystem<RenderSystem>().apply {

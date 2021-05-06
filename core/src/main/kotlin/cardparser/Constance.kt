@@ -8,6 +8,7 @@ const val CARD_STACK_OFFSET = 30f // world units
 const val CARD_WIDTH = 114f // world units
 const val CARD_HEIGHT = 160f // world units
 
+const val UPDATE_RATE = 1 / 15f
 
 /**
  * The radius from the starting position of the touch

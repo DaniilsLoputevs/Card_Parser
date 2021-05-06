@@ -55,7 +55,6 @@ fun Entity.toPrint(): String {
 enum class Logic {
     KLONDAIK {
         override fun doLogic(stack: GameStackAdapter, addedCards: List<GameCardAdapter>): Boolean {
-            println("DO KLONDAIK LOGIC")
             val cardComp = addedCards.first().gameCardComp;
             if (stack.getCards().isEmpty()) {
                 return true
@@ -74,7 +73,6 @@ enum class Logic {
     },
     UPSTACKS {
         override fun doLogic(stack: GameStackAdapter, addedCards: List<GameCardAdapter>): Boolean {
-            println("DO UPSTACKS LOGIC")
             val cardComp = addedCards.last().gameCardComp;
             return if (stack.getCards().isEmpty() && cardComp.cardRank == GameCardComponent.CardRank.ACE)  {
                 true
@@ -93,5 +91,28 @@ enum class Logic {
     };
 
     open fun doLogic(stack: GameStackAdapter, addedCards: List<GameCardAdapter>): Boolean = true
+}
 
+enum class CalculateLogic {
+    KLONDAIK {
+        override fun doLogic(stack: GameStackAdapter) {
+            val cardsInStack = stack.getCards()
+            cardsInStack.asReversed().forEachIndexed { index, card ->
+                if (index == 0) {
+                    card.touchComp.isTouchable = true
+                    card.gameCardComp.isCardOpen = true
+                } else {
+                    val previousCard = cardsInStack.asReversed()[index - 1]
+                    card.touchComp.isTouchable =
+                        previousCard.touchComp.isTouchable
+                                && card.gameCardComp.cardSuit.colour != previousCard.gameCardComp.cardSuit.colour
+                                && (card.gameCardComp.cardRank.ordinal == previousCard.gameCardComp.cardRank.ordinal + 1
+                                || (card.gameCardComp.cardRank == GameCardComponent.CardRank.TWO
+                                && previousCard.gameCardComp.cardRank == GameCardComponent.CardRank.ACE))
+                }
+            }
+        }
+    };
+
+    open fun doLogic(stack: GameStackAdapter): Unit {}
 }

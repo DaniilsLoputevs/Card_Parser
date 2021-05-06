@@ -1,5 +1,6 @@
 package cardparser
 
+import cardparser.ashley.CalculateLogic
 import cardparser.ashley.systems.*
 import cardparser.event.GameEventManager
 import cardparser.logger.loggerApp

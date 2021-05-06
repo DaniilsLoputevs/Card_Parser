@@ -1,5 +1,8 @@
 package cardparser.ashley.systems
 
+import cardparser.ashley.CalculateLogic
+import cardparser.ashley.components.GameCardComponent
+import cardparser.ashley.components.GameCardComponent.*
 import cardparser.ashley.components.GameStackComponent
 import cardparser.ashley.components.MainStackComponent
 import cardparser.ashley.components.TransformComponent
@@ -14,10 +17,13 @@ import com.badlogic.ashley.systems.IteratingSystem
 import ktx.ashley.allOf
 import ktx.ashley.exclude
 
-class CalculateIsTouchableSystem(val gameEventManager: GameEventManager) : IteratingSystem(
-        allOf(TransformComponent::class, GameStackComponent::class).exclude(MainStackComponent::class).get()
+class CalculateIsTouchableSystem(
+    val gameEventManager: GameEventManager
+) : IteratingSystem(
+    allOf(TransformComponent::class, GameStackComponent::class).exclude(MainStackComponent::class).get()
 ), GameEventListener {
     private val logger = loggerApp<CalculateIsTouchableSystem>()
+    lateinit var logic: CalculateLogic
     var dropEvent: GameEvent.DropEvent? = null
     var processed = false
     private val stack: GameStackAdapter = GameStackAdapter()
@@ -35,28 +41,7 @@ class CalculateIsTouchableSystem(val gameEventManager: GameEventManager) : Itera
         dropEvent?.let {
             processed = true
             stack.entity = entity
-            val cardsInStack = stack.getCards()
-            cardsInStack.asReversed().forEachIndexed { index, card ->
-                if (index == 0) {
-                    card.touchComp.isTouchable = true
-                    card.gameCardComp.isCardOpen = true
-                    logger.dev("---START STACK---")
-                    logger.dev("index = ${index}, card = ${card.gameCardComp.cardRank}/${card.gameCardComp.cardSuit}")
-                    logger.dev("card rank", card.gameCardComp.cardRank.ordinal)
-                } else {
-                    val previousCard = cardsInStack.asReversed()[index - 1]
-                    logger.dev("card rank", card.gameCardComp.cardRank.ordinal)
-                    logger.dev("previous card rank", previousCard.gameCardComp.cardRank.ordinal)
-                    card.touchComp.isTouchable =
-                            previousCard.touchComp.isTouchable &&
-                                    card.gameCardComp.cardRank.ordinal == previousCard.gameCardComp.cardRank.ordinal + 1
-                    //   || (card.gameCardComp.cardRank == GameCardComponent.CardRank.TWO
-                    //       && previousCard.gameCardComp.cardRank == GameCardComponent.CardRank.ACE))
-                    logger.dev("index = ${index}, card = ${card.gameCardComp.cardRank}/${card.gameCardComp.cardSuit}")
-                    logger.dev("card rank", card.gameCardComp.cardRank.ordinal)
-                    logger.dev("card touchable", card.touchComp.isTouchable)
-                }
-            }
+            logic.doLogic(stack)
         }
     }
 

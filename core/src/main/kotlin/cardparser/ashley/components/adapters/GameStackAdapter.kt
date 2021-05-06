@@ -34,6 +34,11 @@ class GameStackAdapter() : AbstractAdapter() {
                 && thisPos.y + thisSize.y >= position.y; // thisSize.height
     }
 
+    fun containsPosInTotalHitBox(position: Vector3): Boolean {
+        val pos = Vector2(position.x, position.y)
+        return containsPos(pos)
+    }
+
     /**
      * check: contains [position] in actual hit box area.
      * actual hit box =

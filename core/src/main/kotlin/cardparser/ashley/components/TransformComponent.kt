@@ -13,6 +13,7 @@ import ktx.math.vec3
 
 class TransformComponent : Component, Pool.Poolable, Comparable<TransformComponent> {
     val position = vec3()          // Vector3(0, 0, 0)
+    val prevPosition = vec3()
     val size = vec2(1f, 1f)  // x = width, y = height
     val shape = Rectangle()
 
@@ -52,6 +53,13 @@ class TransformComponent : Component, Pool.Poolable, Comparable<TransformCompone
     fun setPosition(newPosition: Vector3) {
         position.set(newPosition)
         shape.setPosition(newPosition.x, newPosition.y)
+    }
+
+    fun setPosition(x: Float, y: Float, z: Float) {
+        position.x = x
+        position.y = y
+        position.z = z
+        shape.setPosition(x,y)
     }
 
     fun setX(x: Float) {
