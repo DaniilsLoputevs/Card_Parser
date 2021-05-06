@@ -1,6 +1,7 @@
 package cardparser.scenario
 
 import cardparser.CARD_WIDTH
+import cardparser.STACK_GAP_STEP
 import cardparser.ashley.CalculateLogic
 import cardparser.ashley.components.adapters.GameCardAdapter
 import cardparser.ashley.components.adapters.GameStackAdapter
@@ -18,6 +19,9 @@ fun Engine.initKlondaikGame(assets: AssetStorage, gameViewport: Viewport) {
     this.run {
         val cards = createCardDeck(assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc])
         createStacksKlondaik(assets, cards.toMutableList())
+//        getSystem<StartGameSystem>().apply {
+//
+//        }
         getSystem<ScreenInputSystem>().apply {
             this.gameViewport = gameViewport
             setProcessing(true)
@@ -61,7 +65,7 @@ fun Engine.createStacksKlondaik(assets: AssetStorage, cards: MutableList<GameCar
     val list = mutableListOf<GameStackAdapter>()
     var corX = 0f
     for (i in 0..6) {
-        corX += 60.25f
+        corX += STACK_GAP_STEP
         list.add(
             createStack(
                 assets[GeneralAsset.CARD_STACK.desc],
@@ -73,9 +77,9 @@ fun Engine.createStacksKlondaik(assets: AssetStorage, cards: MutableList<GameCar
     }
     randomCards(cards, list)
     list.forEach { it.getCards().last().gameCardComp.isCardOpen = true }
-    corX = 60.25f * 3 + CARD_WIDTH * 3
+    corX = STACK_GAP_STEP * 3 + CARD_WIDTH * 3
     for (i in 0..3) {
-        corX += 60.25f
+        corX += STACK_GAP_STEP
         list.add(
             createFoundationStack(
                 assets[GeneralAsset.CARD_STACK.desc],
@@ -88,7 +92,7 @@ fun Engine.createStacksKlondaik(assets: AssetStorage, cards: MutableList<GameCar
     list.add(
         createMainStack(
             assets[GeneralAsset.CARD_STACK.desc],
-            60.25f,
+            STACK_GAP_STEP,
             520f,
             _order = 0
         )
@@ -96,7 +100,7 @@ fun Engine.createStacksKlondaik(assets: AssetStorage, cards: MutableList<GameCar
     list.add(
         createMainStack(
             assets[GeneralAsset.CARD_STACK.desc],
-            60.25f * 2 + CARD_WIDTH,
+            STACK_GAP_STEP * 2 + CARD_WIDTH,
             520f,
             _order = 1
         )

@@ -73,6 +73,7 @@ class MainStackSystem(val gameEventManager: GameEventManager) : SortedIteratingS
                         }
                         transferCard.size > 0 -> {
                             transferCard.forEach { it.gameCardComp.isCardOpen = true }
+                            transferCard.forEach { it.transComp.position.z +=50 }
                             stackComp.cardStack.addAll(transferCard)
                             transferCard.clear()
                             pos = null

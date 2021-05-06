@@ -5,8 +5,10 @@ const val V_WORLD_HEIGHT_UNITS = 720f // world units
 
 const val CARD_STACK_OFFSET = 30f // world units
 
-const val CARD_WIDTH = 114f // world units
-const val CARD_HEIGHT = 160f // world units
+const val CARD_WIDTH = 137f // world units
+const val CARD_HEIGHT = 192f // world units
+
+const val STACK_GAP_STEP = 40f
 
 const val UPDATE_RATE = 1 / 15f
 

@@ -27,18 +27,17 @@ class CardPositionSystem : IteratingSystem(
         stack.getCards().forEach {
             nextPosition.set(stack.transComp.position.x, stack.transComp.position.y - step)
             it.transComp.run {
-                val alpha = UPDATE_RATE
                 if (near(nextPosition, position)) {
                     setPosition(
-                        MathUtils.lerp(position.x, nextPosition.x, alpha*2),
-                        MathUtils.lerp(position.y, nextPosition.y, alpha*2),
-                        z +100
+                        MathUtils.lerp(position.x, nextPosition.x, UPDATE_RATE*1.75f),
+                        MathUtils.lerp(position.y, nextPosition.y, UPDATE_RATE*1.75f),
+                        z+1
                     )
                 } else {
                     position.set(
-                        MathUtils.lerp(position.x, nextPosition.x, alpha),
-                        MathUtils.lerp(position.y, nextPosition.y, alpha),
-                        z + 300
+                        MathUtils.lerp(position.x, nextPosition.x, UPDATE_RATE),
+                        MathUtils.lerp(position.y, nextPosition.y, UPDATE_RATE),
+                        position.z
                     )
                 }
             }
@@ -48,8 +47,8 @@ class CardPositionSystem : IteratingSystem(
     }
 
     private fun near(vect2: Vector2, vect3: Vector3): Boolean {
-        return vect2.x - vect3.x <= 100 && vect2.x - vect3.x >= -100 &&
-                vect2.y - vect3.y <= 100 && vect2.y - vect3.y >= -100
+        return vect2.x - vect3.x <= 50 && vect2.x - vect3.x >= -50 &&
+                vect2.y - vect3.y <= 50 && vect2.y - vect3.y >= -50
     }
 
 
