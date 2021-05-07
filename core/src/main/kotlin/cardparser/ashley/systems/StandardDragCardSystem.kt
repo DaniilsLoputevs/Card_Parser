@@ -43,17 +43,22 @@ class StandardDragCardSystem(val gameEventManager: GameEventManager) : Iterating
         startSearch = 0
     }
 
+    
+    private fun takeCardsFromStack() = startSearch == 1 && storeList.size == 0 && stack.containsPosInTotalHitBox(cursorPosition);
+    private fun dragTakenCards() = startSearch > 1 && storeList.size > 0
+    private fun dropTakenCards() = startSearch == 0 && storeList.size > 0
+    
     override fun processEntity(entity: Entity, deltaTime: Float) {
         stack.entity = entity
         when {
-            startSearch == 1 && storeList.size == 0 && stack.containsPosInTotalHitBox(cursorPosition) -> {
+            this.takeCardsFromStack() -> {
                 stack.gameStackComp
                     .findCardByPos(cursorPosition)?.let {
                     stack.gameStackComp.transferCardsToList(it, storeList)
                     memorizeStack.entity = stack.entity
                 }
             }
-            startSearch > 1 && storeList.size > 0 -> {
+            this.dragTakenCards() -> {
                 z = 200F
                 step = 0F
                 storeList.forEach {
@@ -65,7 +70,7 @@ class StandardDragCardSystem(val gameEventManager: GameEventManager) : Iterating
                     z += 1
                 }
             }
-            startSearch == 0 && storeList.size > 0 -> {
+            this.dropTakenCards() -> {
                 gameEventManager.dispatchEvent(GameEvent.DropEvent.apply {
                     previousStack.entity = memorizeStack.entity
                     cardList.addAll(storeList)

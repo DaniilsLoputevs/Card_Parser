@@ -10,8 +10,10 @@ const val CARD_HEIGHT = 192f // world units
 
 const val STACK_GAP_STEP = 40f
 
-const val UPDATE_RATE = 1 / 15f
+const val MIN_SPEED_RATE = 0.15f
+const val MAX_SPEED_RATE = MIN_SPEED_RATE * 1.75f
 
+const val STACK_START_SPEED = 0.15f
 /**
  * The radius from the starting position of the touch
  * at which the touch meaning a touch, not a dragging.

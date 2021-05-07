@@ -2,7 +2,7 @@ package cardparser.screens
 
 import cardparser.MainGame
 import cardparser.logger.loggerApp
-import cardparser.scenario.initKlondaikGame
+import cardparser.scenario.initKlondikeGame
 
 class GameScreen(
         game: MainGame
@@ -18,7 +18,7 @@ class GameScreen(
      */
     init {
         logger.info("Game init :: START")
-        engine.initKlondaikGame(assets, gameViewport)
+        engine.initKlondikeGame(assets, gameViewport)
         logger.info("Game init :: FINISH")
     }
 

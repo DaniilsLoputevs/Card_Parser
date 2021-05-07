@@ -2,8 +2,10 @@ package cardparser.ashley.systems
 
 import cardparser.TOUCH_RANGE
 import cardparser.event.GameEvent
+import cardparser.event.GameEventListener
 import cardparser.event.GameEventManager
 import cardparser.logger.loggerApp
+import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.EntitySystem
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
@@ -18,7 +20,7 @@ import com.badlogic.gdx.utils.viewport.Viewport
 class ScreenInputSystem(
         var gameViewport: Viewport,
         var gameEventManager: GameEventManager
-) : EntitySystem() {
+) : EntitySystem(), GameEventListener {
     private val logger = loggerApp<ScreenInputSystem>()
 
     /** previous cursorAction */
@@ -32,6 +34,26 @@ class ScreenInputSystem(
 
     /** track time of first TOUCH UP for check: is next TOUCH UP double click? */
     private var touchTime = -1L
+
+    override fun addedToEngine(engine: Engine?) {
+        gameEventManager.addListener(GameEvent.StartGame::class, this)
+        gameEventManager.addListener(GameEvent.StopGame::class, this)
+        super.addedToEngine(engine)
+    }
+
+    override fun removedFromEngine(engine: Engine?) {
+        gameEventManager.removeListener(GameEvent.StartGame::class, this)
+        gameEventManager.removeListener(GameEvent.StopGame::class, this)
+        super.removedFromEngine(engine)
+    }
+
+    override fun onEvent(event: GameEvent) {
+        when (event) {
+            is GameEvent.StartGame -> setProcessing(true)
+            is GameEvent.StopGame -> setProcessing(false)
+            else -> {}
+        }
+    }
 
     override fun update(deltaTime: Float) {
         refreshCursorPos()

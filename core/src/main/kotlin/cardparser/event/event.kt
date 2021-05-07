@@ -15,6 +15,9 @@ sealed class GameEvent {
 
     object NoneEvent: GameEvent()
 
+    object StartGame: GameEvent() {}
+    object StopGame: GameEvent() {}
+
     object TouchEvent: GameEvent() {
         var position: Vector2 = Vector2().setZero()
     }
