@@ -93,6 +93,7 @@ class MainGame : KtxGame<KtxScreen>() {
     private fun initEngine(): Engine {
         return PooledEngine().apply {
             addSystem(DebugSystem())
+            addSystem(StartGameSystem().apply { setProcessing(false) })
             addSystem(ScreenInputSystem(gameViewport, gameEventManager).apply { setProcessing(false) })
             addSystem(MainStackSystem(gameEventManager).apply { setProcessing(false) })
             addSystem(StandardDragCardSystem(gameEventManager).apply { setProcessing(false) })
