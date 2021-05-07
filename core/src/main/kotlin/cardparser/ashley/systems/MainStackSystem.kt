@@ -23,7 +23,7 @@ class MainStackSystem(val gameEventManager: GameEventManager) : SortedIteratingS
 
     private var transferCard: MutableList<GameCardAdapter> = mutableListOf()
     private var pos: Vector2? = null
-    private var returnAll = false;
+    private var returnAll = false
 
     override fun addedToEngine(engine: Engine?) {
         gameEventManager.addListener(GameEvent.TouchEvent::class, this)
@@ -44,43 +44,41 @@ class MainStackSystem(val gameEventManager: GameEventManager) : SortedIteratingS
             val transComp = entity[TransformComponent.mapper]
             require(transComp != null) { "TransformComponent is empty" }
 
+
             when (mainComp.order) {
                 0 -> {
-                    when {
-                        transComp.shape.contains(pos) && stackComp.isEmpty() && transferCard.size == 0 -> {
-                            returnAll = true
-                        }
-                        transferCard.size > 0 -> {
-                            transferCard.forEach { it.gameCardComp.isCardOpen = false }
-                            stackComp.cardStack.addAll(transferCard)
-                            transferCard.clear()
-                            pos = null
-                        }
-                        transComp.shape.contains(pos) && transferCard.size == 0 -> {
-                            transferCard.add(stackComp.cardStack.removeAt(stackComp.size() - 1))
-                        }
-                        else -> {
-                            pos = null
-                        }
+                    logger.dev("contains ${transferCard.size}")
+                    if (transComp.shape.contains(pos) && stackComp.isEmpty() && transferCard.size == 0) {
+                        logger.dev("transferCard stack")
+                        returnAll = true
+                    } else if (transferCard.size > 0) {
+                        logger.dev("transferCard big")
+                        transferCard.forEach { it.gameCardComp.isCardOpen = false }
+                        stackComp.cardStack.addAll(transferCard)
+                        transferCard.clear()
+                        pos = null
+                    } else if (transComp.shape.contains(pos) && transferCard.size == 0) {
+                        logger.dev("start")
+                        transferCard.add(stackComp.cardStack.removeAt(stackComp.size() - 1))
+                    } else {
+                        logger.dev("do null")
+                        pos = null
                     }
+                    logger.dev("after if")
                 }
                 1 -> {
-                    when {
-                        returnAll -> {
-                            returnAll = false
-                            stackComp.cardStack.asReversed().forEach { transferCard.add(it) }
-                            stackComp.cardStack.clear()
-                        }
-                        transferCard.size > 0 -> {
-                            transferCard.forEach { it.gameCardComp.isCardOpen = true }
-                            transferCard.forEach { it.transComp.position.z +=50 }
-                            stackComp.cardStack.addAll(transferCard)
-                            transferCard.clear()
-                            pos = null
-                        }
-                        else -> {
-                            pos = null
-                        }
+                    if (returnAll) {
+                        returnAll = false
+                        stackComp.cardStack.asReversed().forEach { transferCard.add(it) }
+                        stackComp.cardStack.clear()
+                    } else if (transferCard.size > 0) {
+                        transferCard.forEach { it.gameCardComp.isCardOpen = true }
+                        transferCard.forEach { it.transComp.position.z += 50 }
+                        stackComp.cardStack.addAll(transferCard)
+                        transferCard.clear()
+                        pos = null
+                    } else {
+                        pos = null
                     }
                 }
                 else -> {
@@ -91,6 +89,7 @@ class MainStackSystem(val gameEventManager: GameEventManager) : SortedIteratingS
 
     override fun onEvent(event: GameEvent) {
         if (event is GameEvent.TouchEvent) {
+            logger.dev("touch event")
             pos = event.position.cpy()
         }
     }

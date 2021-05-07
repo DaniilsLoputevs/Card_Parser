@@ -21,6 +21,7 @@ class StartGameSystem(val gameEventManager: GameEventManager) : EntitySystem() {
         if (accumulate > STACK_START_SPEED) {
             if (!logic.doLogic(cards, stack, stackList)) {
                 setProcessing(false)
+                stack.getCards().addAll(cards)
                 gameEventManager.dispatchEvent(GameEvent.StartGame)
             }
             accumulate = 0f
