@@ -1,19 +1,18 @@
 package cardparser.ashley.systems
 
-import cardparser.ashley.components.adapters.GameCardAdapter
-import cardparser.ashley.components.adapters.GameStackAdapter
+import cardparser.ashley.objects.Card
+import cardparser.ashley.objects.Stack
 import cardparser.logger.loggerApp
 import com.badlogic.ashley.core.EntitySystem
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 
 class DebugSystem : EntitySystem() {
-    private val logger = loggerApp<DebugSystem>()
 
-    lateinit var cards: MutableList<GameCardAdapter>
-    lateinit var mainStack: GameStackAdapter
-    lateinit var bottomStacks: List<GameStackAdapter>
-    lateinit var upStacks: List<GameStackAdapter>
+    lateinit var cards: MutableList<Card>
+    lateinit var mainStack: Stack
+    lateinit var bottomStacks: List<Stack>
+    lateinit var upStacks: List<Stack>
 
 
     /**
@@ -51,5 +50,9 @@ class DebugSystem : EntitySystem() {
             logger.debug("FOUNDATION STACKS")
             println()
         }
+    }
+
+    companion object {
+        private val logger = loggerApp<DebugSystem>()
     }
 }

@@ -3,18 +3,19 @@ package cardparser.ashley.systems
 import cardparser.event.GameEvent
 import cardparser.event.GameEventListener
 import cardparser.event.GameEventManager
+import cardparser.logger.loggerApp
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.EntitySystem
 
 class ReturnCardsSystem(val gameEventManager: GameEventManager)
     : EntitySystem(), GameEventListener {
 
-    var dropEvent: GameEvent.DropEvent? = null;
+    var dropEvent: GameEvent.DropEvent? = null
 
     override fun update(deltaTime: Float) {
         dropEvent?.let {
             if (it.cardList.size > 0 && it.cardReturn) {
-                it.previousStack.getCards().addAll(it.cardList)
+                it.previousStack.cards.addAll(it.cardList)
                 it.cardList.clear()
                 it.cardReturn = false
             }
@@ -37,5 +38,9 @@ class ReturnCardsSystem(val gameEventManager: GameEventManager)
         if (event is GameEvent.DropEvent) {
             dropEvent = event
         }
+    }
+
+    companion object {
+        private val logger = loggerApp<ReturnCardsSystem>()
     }
 }

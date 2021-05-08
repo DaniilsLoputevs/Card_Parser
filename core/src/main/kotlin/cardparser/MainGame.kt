@@ -1,6 +1,5 @@
 package cardparser
 
-import cardparser.ashley.CalculateLogic
 import cardparser.ashley.systems.*
 import cardparser.event.GameEventManager
 import cardparser.logger.loggerApp
@@ -43,7 +42,7 @@ class MainGame : KtxGame<KtxScreen>() {
 
         logger.info("Application :: START")
         logger.info("Application - Load Initialization assets :: START")
-        val logStartTime = System.currentTimeMillis();
+        val logStartTime = System.currentTimeMillis()
 
 //        val asyncJobsForLoading = prepareLoadingForInitializationAssets()
 //        KtxAsync.launch {
@@ -57,18 +56,6 @@ class MainGame : KtxGame<KtxScreen>() {
         logger.info("Application - Load Initialization assets " +
                 ":: FINISH ## time: ${(System.currentTimeMillis() - logStartTime) * 0.001f} sec")
 
-    }
-
-    /**
-     * this method will ALWAYS invoke with this.currentScreen#render()
-     * Log Example:
-     * MainGame :: render invoke time
-     * GameScreen :: render invoke time
-     * MainGame :: render invoke time
-     * GameScreen :: render invoke time
-     */
-    override fun render() {
-        super.render()
     }
 
     /** Init part */

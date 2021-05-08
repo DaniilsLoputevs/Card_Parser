@@ -1,4 +1,4 @@
-package cardparser.ashley.components.adapters
+package cardparser.ashley.objects
 
 import cardparser.ashley.components.GameCardComponent
 import cardparser.ashley.components.TouchComponent
@@ -10,10 +10,17 @@ import ktx.ashley.get
  * For friendly using Entity that is a GameCard
  * * Components never will be null.
  */
-class GameCardAdapter() : AbstractAdapter() {
+class Card() : AbstractGameObject() {
     lateinit var transComp: TransformComponent
     lateinit var gameCardComp: GameCardComponent
     lateinit var touchComp: TouchComponent
+
+    fun isTouchable(): Boolean = touchComp.isTouchable
+    fun touchable(value: Boolean) = run { touchComp.isTouchable = value }
+    fun suit(): GameCardComponent.CardSuit = gameCardComp.cardSuit
+    fun rank(): GameCardComponent.CardRank = gameCardComp.cardRank
+    fun isOpen(): Boolean = gameCardComp.isCardOpen
+    fun open(value: Boolean) = run { gameCardComp.isCardOpen = value }
 
 
     /* construction part */
@@ -38,15 +45,4 @@ class GameCardAdapter() : AbstractAdapter() {
                 "}"
     }
 
-    override fun hashCode(): Int {
-        var result = entity.hashCode()
-        result = 31 * result + transComp.hashCode()
-        result = 31 * result + gameCardComp.hashCode()
-        result = 31 * result + touchComp.hashCode()
-        return result
-    }
-
-    override fun equals(other: Any?): Boolean {
-        return super.equals(other)
-    }
 }

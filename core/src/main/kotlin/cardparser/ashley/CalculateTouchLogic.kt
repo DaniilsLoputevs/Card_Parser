@@ -1,28 +1,37 @@
 package cardparser.ashley
 
-import cardparser.ashley.components.GameCardComponent
-import cardparser.ashley.components.adapters.GameStackAdapter
+import cardparser.ashley.components.GameCardComponent.CardRank.ACE
+import cardparser.ashley.components.GameCardComponent.CardRank.TWO
+import cardparser.ashley.objects.Card
+import cardparser.ashley.objects.Stack
+import cardparser.logger.loggerApp
 
 enum class CalculateLogic {
     KLONDAIK {
-        override fun doLogic(stack: GameStackAdapter) {
-            val cardsInStack = stack.getCards()
-            cardsInStack.asReversed().forEachIndexed { index, card ->
+        override fun doLogic(stack: Stack) {
+            stack.cards.asReversed().forEachIndexed { index, card ->
                 if (index == 0) {
-                    card.touchComp.isTouchable = true
-                    card.gameCardComp.isCardOpen = true
+                    card.touchable(true)
+                    card.open(true)
                 } else {
-                    val previousCard = cardsInStack.asReversed()[index - 1]
-                    card.touchComp.isTouchable =
-                        previousCard.touchComp.isTouchable
-                                && card.gameCardComp.cardSuit.colour != previousCard.gameCardComp.cardSuit.colour
-                                && (card.gameCardComp.cardRank.ordinal == previousCard.gameCardComp.cardRank.ordinal + 1
-                                || (card.gameCardComp.cardRank == GameCardComponent.CardRank.TWO
-                                && previousCard.gameCardComp.cardRank == GameCardComponent.CardRank.ACE))
+                    val prevCard = stack.cards.asReversed()[index - 1]
+                    card.open(klondaikCardTouchable(prevCard, card))
                 }
             }
         }
     };
 
-    open fun doLogic(stack: GameStackAdapter): Unit {}
+    open fun doLogic(stack: Stack): Unit {}
+
+    companion object {
+        private val logger = loggerApp<CalculateLogic>()
+    }
+}
+
+private fun klondaikCardTouchable(prevCard: Card, card: Card): Boolean {
+    return prevCard.isTouchable()
+            && card.suit().colour != prevCard.suit().colour
+            && (card.rank().ordinal == prevCard.rank().ordinal + 1
+            || (card.rank().isIt(TWO)
+            && prevCard.rank().isIt(ACE)))
 }

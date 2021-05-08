@@ -1,7 +1,7 @@
 package cardparser.event
 
-import cardparser.ashley.components.adapters.GameCardAdapter
-import cardparser.ashley.components.adapters.GameStackAdapter
+import cardparser.ashley.objects.Card
+import cardparser.ashley.objects.Stack
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectMap
 import ktx.collections.GdxSet
@@ -13,29 +13,29 @@ private const val INITIAL_LISTENER_CAPACITY = 8
 
 sealed class GameEvent {
 
-    object NoneEvent: GameEvent()
+    object NoneEvent : GameEvent()
 
-    object StartGame: GameEvent() {}
-    object StopGame: GameEvent() {}
+    object StartGame : GameEvent()
+    object StopGame : GameEvent()
 
-    object TouchEvent: GameEvent() {
+    object TouchEvent : GameEvent() {
         var position: Vector2 = Vector2().setZero()
     }
 
-    object StartDragEvent: GameEvent() {
+    object StartDragEvent : GameEvent() {
         var cursor: Vector2 = Vector2().setZero()
         var memorized: Vector2 = Vector2().setZero()
     }
 
-    object DragEvent: GameEvent() {
+    object DragEvent : GameEvent() {
         var cursor: Vector2 = Vector2().setZero()
         var memorized: Vector2 = Vector2().setZero()
     }
 
-    object DropEvent: GameEvent() {
-        var previousStack: GameStackAdapter = GameStackAdapter()
-        var cardReturn : Boolean = false
-        var cardList: MutableList<GameCardAdapter> = mutableListOf()
+    object DropEvent : GameEvent() {
+        var previousStack: Stack = Stack()
+        var cardReturn: Boolean = false
+        var cardList: MutableList<Card> = mutableListOf()
         var position: Vector2 = Vector2().setZero()
     }
 }
@@ -57,7 +57,7 @@ class GameEventManager {
     }
 
     fun removeListener(type: KClass<out GameEvent>, listener: GameEventListener) =
-        listeners[type]?.remove(listener)
+            listeners[type]?.remove(listener)
 
     fun removeListener(listener: GameEventListener) {
         listeners.values().forEach { it.remove((listener)) }

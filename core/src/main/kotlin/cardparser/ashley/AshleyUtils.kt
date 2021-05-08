@@ -1,12 +1,8 @@
 package cardparser.ashley
 
-import cardparser.ashley.components.GraphicComponent
-import cardparser.ashley.components.TouchComponent
-import cardparser.ashley.components.TransformComponent
-import cardparser.ashley.components.adapters.GameCardAdapter
-import cardparser.ashley.components.adapters.GameStackAdapter
-import cardparser.ashley.components.GameCardComponent
-import cardparser.ashley.components.GameStackComponent
+import cardparser.ashley.components.*
+import cardparser.ashley.objects.Card
+import cardparser.ashley.objects.Stack
 import com.badlogic.ashley.core.*
 import ktx.ashley.allOf
 import ktx.ashley.get
@@ -21,12 +17,12 @@ private val GAME_CARDS_FAMILY: Family = allOf(TransformComponent::class,
         GraphicComponent::class, GameCardComponent::class, TouchComponent::class).get()
 
 
-fun Engine.getOurGameStacks(): List<GameStackAdapter> {
-    return this.getEntitiesFor(GAME_STACK_FAMILY).toList().map { GameStackAdapter(it) }
+fun Engine.getOurGameStacks(): List<Stack> {
+    return this.getEntitiesFor(GAME_STACK_FAMILY).toList().map { Stack(it) }
 }
 
-fun Engine.getOurGameCards(): List<GameCardAdapter> {
-    return this.getEntitiesFor(GAME_CARDS_FAMILY).toList().map { GameCardAdapter(it) }
+fun Engine.getOurGameCards(): List<Card> {
+    return this.getEntitiesFor(GAME_CARDS_FAMILY).toList().map { Card(it) }
 }
 
 
@@ -42,7 +38,7 @@ fun Engine.getOurGameCards(): List<GameCardAdapter> {
  * So, this function need for Smart Cast, cause Java API, Technically provide nullable return type,
  * but in real it never will happen.
  */
-inline fun <reified T : Component> Entity.findRequiredComponent(mapper: ComponentMapper<T>): T {
+inline fun <reified T : Component> Entity.findComp(mapper: ComponentMapper<T>): T {
     val rslComponent = this[mapper]
     require(rslComponent != null) { "Entity |entity| must have a ${T::class.simpleName}. entity=$this" }
     return rslComponent

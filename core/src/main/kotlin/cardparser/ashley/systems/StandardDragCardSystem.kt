@@ -3,8 +3,8 @@ package cardparser.ashley.systems
 import cardparser.CARD_STACK_OFFSET
 import cardparser.ashley.components.StandardDragComponent
 import cardparser.ashley.components.TransformComponent
-import cardparser.ashley.components.adapters.GameCardAdapter
-import cardparser.ashley.components.adapters.GameStackAdapter
+import cardparser.ashley.objects.Card
+import cardparser.ashley.objects.Stack
 import cardparser.event.GameEvent
 import cardparser.event.GameEventListener
 import cardparser.event.GameEventManager
@@ -21,11 +21,9 @@ import ktx.ashley.allOf
 class StandardDragCardSystem(val gameEventManager: GameEventManager) : IteratingSystem(
         allOf(TransformComponent::class, StandardDragComponent::class).get()
 ), GameEventListener {
-    private val logger = loggerApp<StandardDragCardSystem>()
-
-    private val capturedCards: MutableList<GameCardAdapter> = mutableListOf()
-    private val memorizeStack = GameStackAdapter()
-    private val eachStack = GameStackAdapter()
+    private val capturedCards: MutableList<Card> = mutableListOf()
+    private val memorizeStack = Stack()
+    private val eachStack = Stack()
     private val cursorPosition: Vector2 = Vector2().setZero()
     private val captureOffset: Vector2 = Vector2().setZero()
 
@@ -37,7 +35,7 @@ class StandardDragCardSystem(val gameEventManager: GameEventManager) : Iterating
         startSearch = 0
     }
 
-    private fun takeCardsFromStack() = (startSearch == 1) && capturedCards.isEmpty() && eachStack.containsPosInTotalHitBox(cursorPosition);
+    private fun takeCardsFromStack() = (startSearch == 1) && capturedCards.isEmpty() && eachStack.containsPosInTotalHitBox(cursorPosition)
     private fun dragTakenCards() = (startSearch > 1) && (capturedCards.size > 0)
     private fun dropTakenCards() = (startSearch == 0) && (capturedCards.size > 0)
 
@@ -48,7 +46,7 @@ class StandardDragCardSystem(val gameEventManager: GameEventManager) : Iterating
             this.takeCardsFromStack() -> {
                 eachStack.gameStackComp
                         .findCardByPos(cursorPosition)?.let {
-//                            logger.dev("on Touch")
+                            logger.dev("on Touch")
 //                            logger.dev("touch - cursor") { cursorPosition.toString() }
 
                             eachStack.gameStackComp.transferCardsToList(it, capturedCards)
@@ -91,16 +89,16 @@ class StandardDragCardSystem(val gameEventManager: GameEventManager) : Iterating
         val posX = cursorPosition.x - captureOffset.x
         var posY = cursorPosition.y - captureOffset.y
         capturedCards.forEach {
-            it.transComp.setPosition(posX, posY, it.transComp.position.z * 1000f)
+            it.setPos(posX, posY, it.pos.z * 1000f)
             posY -= CARD_STACK_OFFSET
         }
     }
 
     /** Calculate a card position with relating to the cursor if we start dragged the card. */
-    private fun refreshCaptureOffset(card: GameCardAdapter) {
+    private fun refreshCaptureOffset(card: Card) {
         captureOffset.set(
-                cursorPosition.x - card.transComp.position.x,
-                cursorPosition.y - card.transComp.position.y
+                cursorPosition.x - card.pos.x,
+                cursorPosition.y - card.pos.y
         )
     }
 
@@ -115,5 +113,9 @@ class StandardDragCardSystem(val gameEventManager: GameEventManager) : Iterating
         super.removedFromEngine(engine)
         gameEventManager.removeListener(GameEvent.StartDragEvent::class, this)
         gameEventManager.removeListener(GameEvent.DragEvent::class, this)
+    }
+
+    companion object {
+        private val logger = loggerApp<StandardDragCardSystem>()
     }
 }

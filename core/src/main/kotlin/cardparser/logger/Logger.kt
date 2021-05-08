@@ -12,27 +12,27 @@ inline fun <reified C : Any> loggerApp(): Logger<C> = LoggerImpl(C::class.java.s
  */
 interface Logger<C> {
     fun dev(msg: () -> String) = dev(msg.invoke())
-    fun dev(msg: String, obj : () -> Any) = dev(msg, obj.invoke())
+    fun dev(msg: String, obj: () -> Any) = dev(msg, obj.invoke())
     fun dev(msg: String)
     fun dev(msg: String, obj: Any)
 
     fun debug(msg: () -> String) = debug(msg.invoke())
-    fun debug(msg: String, obj : () -> Any) = debug(msg, obj.invoke())
+    fun debug(msg: String, obj: () -> Any) = debug(msg, obj.invoke())
     fun debug(msg: String)
     fun debug(msg: String, obj: Any)
 
     fun info(msg: () -> String) = info(msg.invoke())
-    fun info(msg: String, obj : () -> Any) = info(msg, obj.invoke())
+    fun info(msg: String, obj: () -> Any) = info(msg, obj.invoke())
     fun info(msg: String)
     fun info(msg: String, obj: Any)
 
     fun warm(msg: () -> String) = warm(msg.invoke())
-    fun warm(msg: String, obj : () -> Any) = warm(msg, obj.invoke())
+    fun warm(msg: String, obj: () -> Any) = warm(msg, obj.invoke())
     fun warm(msg: String)
     fun warm(msg: String, obj: Any)
 
     fun error(msg: () -> String) = error(msg.invoke())
-    fun error(msg: String, obj : () -> Any) = error(msg, obj.invoke())
+    fun error(msg: String, obj: () -> Any) = error(msg, obj.invoke())
     fun error(msg: String)
     fun error(msg: String, obj: Any)
 

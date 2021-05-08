@@ -7,7 +7,7 @@ import ktx.ashley.mapperFor
 /**
  * Entity with this component: can bee touched by cursor.
  */
-class TouchComponent : Component, Pool.Poolable{
+class TouchComponent : Component, Pool.Poolable {
     var isTouchable = true
 
 

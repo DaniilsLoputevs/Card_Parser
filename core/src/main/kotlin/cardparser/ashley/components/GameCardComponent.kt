@@ -36,7 +36,9 @@ class GameCardComponent : Component, Pool.Poolable {
         JACK,
         QUEEN,
         KING,
-        ACE
+        ACE;
+
+        fun isIt(value: CardRank): Boolean = this == value
     }
 
     enum class CardSuit(val colour: String) {

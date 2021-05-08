@@ -4,10 +4,11 @@ import cardparser.CARD_HEIGHT
 import cardparser.CARD_WIDTH
 import cardparser.V_WORLD_HEIGHT_UNITS
 import cardparser.V_WORLD_WIDTH_UNITS
+import cardparser.ashley.components.GameCardComponent
 import cardparser.ashley.components.GraphicComponent
 import cardparser.ashley.components.TransformComponent
-import cardparser.ashley.components.GameCardComponent
-import cardparser.ashley.findRequiredComponent
+import cardparser.ashley.findComp
+import cardparser.logger.loggerApp
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.systems.SortedIteratingSystem
@@ -102,8 +103,8 @@ class RenderSystem(
     }
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
-        val transformComp = entity.findRequiredComponent(TransformComponent.mapper)
-        val graphicComp = entity.findRequiredComponent(GraphicComponent.mapper)
+        val transformComp = entity.findComp(TransformComponent.mapper)
+        val graphicComp = entity.findComp(GraphicComponent.mapper)
 
         if (graphicComp.sprite.texture == null) {
             logger.error { "Entity has no texture for rendering" }
@@ -132,4 +133,7 @@ class RenderSystem(
     /** just pretty API. */
     private fun isCardClose(entity: Entity): Boolean = !entity[GameCardComponent.mapper]!!.isCardOpen
 
+    companion object {
+        private val logger = loggerApp<RenderSystem>()
+    }
 }

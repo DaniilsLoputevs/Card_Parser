@@ -14,7 +14,7 @@ import ktx.assets.async.AssetStorage
 abstract class AbstractScreen(
         val game: MainGame, // Singleton
         val stage: Stage = game.stage,
-        val gameViewport :Viewport = game.gameViewport,
+        val gameViewport: Viewport = game.gameViewport,
         val assets: AssetStorage = game.assets,
         var engine: Engine = game.engine,
         val gameEventManager: GameEventManager = game.gameEventManager

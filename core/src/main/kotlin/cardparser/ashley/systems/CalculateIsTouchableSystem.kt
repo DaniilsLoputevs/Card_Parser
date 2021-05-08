@@ -1,12 +1,10 @@
 package cardparser.ashley.systems
 
 import cardparser.ashley.CalculateLogic
-import cardparser.ashley.components.GameCardComponent
-import cardparser.ashley.components.GameCardComponent.*
 import cardparser.ashley.components.GameStackComponent
 import cardparser.ashley.components.MainStackComponent
 import cardparser.ashley.components.TransformComponent
-import cardparser.ashley.components.adapters.GameStackAdapter
+import cardparser.ashley.objects.Stack
 import cardparser.event.GameEvent
 import cardparser.event.GameEventListener
 import cardparser.event.GameEventManager
@@ -18,15 +16,15 @@ import ktx.ashley.allOf
 import ktx.ashley.exclude
 
 class CalculateIsTouchableSystem(
-    val gameEventManager: GameEventManager
+        val gameEventManager: GameEventManager
 ) : IteratingSystem(
-    allOf(TransformComponent::class, GameStackComponent::class).exclude(MainStackComponent::class).get()
+        allOf(TransformComponent::class, GameStackComponent::class).exclude(MainStackComponent::class).get()
 ), GameEventListener {
     private val logger = loggerApp<CalculateIsTouchableSystem>()
     lateinit var logic: CalculateLogic
     var dropEvent: GameEvent.DropEvent? = null
     var processed = false
-    private val stack: GameStackAdapter = GameStackAdapter()
+    private val stack: Stack = Stack()
 
 
     override fun update(deltaTime: Float) {
@@ -59,5 +57,9 @@ class CalculateIsTouchableSystem(
     override fun removedFromEngine(engine: Engine?) {
         super.removedFromEngine(engine)
         gameEventManager.removeListener(GameEvent.DropEvent::class, this)
+    }
+
+    companion object {
+        private val logger = loggerApp<CalculateIsTouchableSystem>()
     }
 }

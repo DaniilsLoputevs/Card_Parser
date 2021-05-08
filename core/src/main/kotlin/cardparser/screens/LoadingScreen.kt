@@ -54,7 +54,7 @@ class LoadingScreen(
     }
 
     override fun dispose() {
-        super.dispose();
+        super.dispose()
         logger.info { "Loading Screen :: DISPOSED" }
     }
 }

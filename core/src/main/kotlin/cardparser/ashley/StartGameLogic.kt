@@ -1,7 +1,8 @@
 package cardparser.ashley
 
-import cardparser.ashley.components.adapters.GameCardAdapter
-import cardparser.ashley.components.adapters.GameStackAdapter
+import cardparser.ashley.objects.Card
+import cardparser.ashley.objects.Stack
+import cardparser.logger.loggerApp
 
 enum class StartGameLogic {
     KLONDIKE_START {
@@ -9,29 +10,29 @@ enum class StartGameLogic {
         var processLogic = true
 
         override fun doLogic(
-            cards: MutableList<GameCardAdapter>,
-            startStack: GameStackAdapter,
-            stacksList: List<GameStackAdapter>
+                cards: MutableList<Card>,
+                startStack: Stack,
+                stacksList: List<Stack>
         ): Boolean {
             var z = 0f
             return when {
                 startLogic -> {
                     cards.forEach {
-                        it.transComp.position.set(startStack.transComp.position.x, startStack.transComp.position.y, z++)
-                        it.gameCardComp.isCardOpen = false
-                        it.touchComp.isTouchable = false
+                        it.setPos(startStack.pos.x, startStack.pos.y, z++)
+                        it.touchable(false)
+                        it.open(false)
                     }
                     startLogic = false
                     true
                 }
                 processLogic -> {
                     stacksList.forEachIndexed { index, stack ->
-                        if (stack.getCards().size < (index + 1)) {
-                            cards.removeLastOrNull()?.let { stack.getCards().add(it) }
-                            if (stack.getCards().size == (index + 1)) {
-                                stack.getCards().last().run {
-                                    gameCardComp.isCardOpen = true
-                                    touchComp.isTouchable = true
+                        if (stack.cards.size < (index + 1)) {
+                            cards.removeLastOrNull()?.let { stack.cards.add(it) }
+                            if (stack.cards.size == (index + 1)) {
+                                stack.cards.last().run {
+                                    this.touchable(true)
+                                    this.open(true)
                                 }
                             }
                             return true
@@ -48,9 +49,12 @@ enum class StartGameLogic {
     };
 
     open fun doLogic(
-        cards: MutableList<GameCardAdapter>,
-        startStack: GameStackAdapter,
-        stacksList: List<GameStackAdapter>
+            cards: MutableList<Card>,
+            startStack: Stack,
+            stacksList: List<Stack>
     ): Boolean = true
 
+    companion object {
+        private val logger = loggerApp<StartGameLogic>()
+    }
 }

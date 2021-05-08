@@ -24,7 +24,7 @@ class ScreenInputSystem(
     private val logger = loggerApp<ScreenInputSystem>()
 
     /** previous cursorAction */
-    private var status: TouchStatus = TouchStatus.NONE;
+    private var status: TouchStatus = TouchStatus.NONE
 
     /** cursor position buffer*/
     private var cursorPos: Vector2 = Vector2(0f, 0f)
@@ -51,7 +51,8 @@ class ScreenInputSystem(
         when (event) {
             is GameEvent.StartGame -> setProcessing(true)
             is GameEvent.StopGame -> setProcessing(false)
-            else -> {}
+            else -> {
+            }
         }
     }
 
@@ -156,6 +157,10 @@ class ScreenInputSystem(
     private fun isPositionEquals(one: Vector2, two: Vector2): Boolean {
         return (one.x < two.x + TOUCH_RANGE && one.x > two.x - TOUCH_RANGE
                 && one.y < two.y + TOUCH_RANGE && one.y > two.y - TOUCH_RANGE)
+    }
+
+    companion object {
+        private val logger = loggerApp<ScreenInputSystem>()
     }
 
     enum class TouchStatus {

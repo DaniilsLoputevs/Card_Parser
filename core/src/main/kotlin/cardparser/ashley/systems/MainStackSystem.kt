@@ -1,9 +1,10 @@
 package cardparser.ashley.systems
 
 import cardparser.ashley.components.GameStackComponent
-import cardparser.ashley.components.TransformComponent
-import cardparser.ashley.components.adapters.GameCardAdapter
 import cardparser.ashley.components.MainStackComponent
+import cardparser.ashley.components.TransformComponent
+import cardparser.ashley.findComp
+import cardparser.ashley.objects.Card
 import cardparser.event.GameEvent
 import cardparser.event.GameEventListener
 import cardparser.event.GameEventManager
@@ -16,12 +17,10 @@ import ktx.ashley.allOf
 import ktx.ashley.get
 
 class MainStackSystem(val gameEventManager: GameEventManager) : SortedIteratingSystem(
-    allOf(TransformComponent::class, GameStackComponent::class, MainStackComponent::class).get(),
-    compareBy { entity -> entity[MainStackComponent.mapper] }), GameEventListener {
-
-    private val logger = loggerApp<MainStackSystem>()
-
-    private var transferCard: MutableList<GameCardAdapter> = mutableListOf()
+        allOf(TransformComponent::class, GameStackComponent::class, MainStackComponent::class).get(),
+        compareBy { entity -> entity[MainStackComponent.mapper] }
+), GameEventListener {
+    private var transferCard: MutableList<Card> = mutableListOf()
     private var pos: Vector2? = null
     private var returnAll = false
 
@@ -37,13 +36,9 @@ class MainStackSystem(val gameEventManager: GameEventManager) : SortedIteratingS
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
         if (pos != null) {
-            val mainComp = entity[MainStackComponent.mapper]
-            require(mainComp != null) { "MainStackComponent is empty" }
-            val stackComp = entity[GameStackComponent.mapper]
-            require(stackComp != null) { "GameStackComponent is empty" }
-            val transComp = entity[TransformComponent.mapper]
-            require(transComp != null) { "TransformComponent is empty" }
-
+            val mainComp = entity.findComp(MainStackComponent.mapper)
+            val stackComp = entity.findComp(GameStackComponent.mapper)
+            val transComp = entity.findComp(TransformComponent.mapper)
 
             when (mainComp.order) {
                 0 -> {
@@ -67,18 +62,22 @@ class MainStackSystem(val gameEventManager: GameEventManager) : SortedIteratingS
                     logger.dev("after if")
                 }
                 1 -> {
-                    if (returnAll) {
-                        returnAll = false
-                        stackComp.cardStack.asReversed().forEach { transferCard.add(it) }
-                        stackComp.cardStack.clear()
-                    } else if (transferCard.size > 0) {
-                        transferCard.forEach { it.gameCardComp.isCardOpen = true }
-                        transferCard.forEach { it.transComp.position.z += 50 }
-                        stackComp.cardStack.addAll(transferCard)
-                        transferCard.clear()
-                        pos = null
-                    } else {
-                        pos = null
+                    when {
+                        returnAll -> {
+                            returnAll = false
+                            stackComp.cardStack.asReversed().forEach { transferCard.add(it) }
+                            stackComp.cardStack.clear()
+                        }
+                        transferCard.size > 0 -> {
+                            transferCard.forEach { it.gameCardComp.isCardOpen = true }
+                            transferCard.forEach { it.pos.z += 50 }
+                            stackComp.cardStack.addAll(transferCard)
+                            transferCard.clear()
+                            pos = null
+                        }
+                        else -> {
+                            pos = null
+                        }
                     }
                 }
                 else -> {
@@ -92,5 +91,9 @@ class MainStackSystem(val gameEventManager: GameEventManager) : SortedIteratingS
             logger.dev("touch event")
             pos = event.position.cpy()
         }
+    }
+
+    companion object {
+        private val logger = loggerApp<MainStackSystem>()
     }
 }
