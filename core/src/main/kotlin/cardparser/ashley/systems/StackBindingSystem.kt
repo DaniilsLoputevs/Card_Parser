@@ -14,7 +14,7 @@ import com.badlogic.ashley.systems.IteratingSystem
 import ktx.ashley.allOf
 import ktx.ashley.exclude
 
-class StandardStackBindingSystem(val gameEventManager: GameEventManager) : IteratingSystem(
+class StackBindingSystem(val gameEventManager: GameEventManager) : IteratingSystem(
         allOf(TransformComponent::class, GameStackComponent::class)
                 .exclude(MainStackComponent::class).get()
 ), GameEventListener {
@@ -42,7 +42,7 @@ class StandardStackBindingSystem(val gameEventManager: GameEventManager) : Itera
         dropEvent?.let {
             val stack = Stack(entity)
             if (stack.containsPos(it.position) && it.cardList.size > 0
-                    && stack.gameStackComp.logic.doLogic(stack, it.cardList)
+                    && stack.gameStackComp.stackLogic.doLogic(stack, it.cardList)
             ) {
                 stack.cards.addAll(it.cardList)
                 it.cardList.clear()
@@ -58,6 +58,6 @@ class StandardStackBindingSystem(val gameEventManager: GameEventManager) : Itera
     }
 
     companion object {
-        private val logger = loggerApp<StandardStackBindingSystem>()
+        private val logger = loggerApp<StackBindingSystem>()
     }
 }

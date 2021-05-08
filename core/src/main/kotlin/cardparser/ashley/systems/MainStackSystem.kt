@@ -17,21 +17,18 @@ import ktx.ashley.allOf
 import ktx.ashley.get
 
 class MainStackSystem(val gameEventManager: GameEventManager) : SortedIteratingSystem(
-        allOf(TransformComponent::class, GameStackComponent::class, MainStackComponent::class).get(),
-        compareBy { entity -> entity[MainStackComponent.mapper] }
+    allOf(TransformComponent::class, GameStackComponent::class, MainStackComponent::class).get(),
+    compareBy { entity -> entity[MainStackComponent.mapper] }
 ), GameEventListener {
+
     private var transferCard: MutableList<Card> = mutableListOf()
     private var pos: Vector2? = null
     private var returnAll = false
+    private var offSystem = 0
 
-    override fun addedToEngine(engine: Engine?) {
-        gameEventManager.addListener(GameEvent.TouchEvent::class, this)
-        super.addedToEngine(engine)
-    }
-
-    override fun removedFromEngine(engine: Engine?) {
-        gameEventManager.removeListener(GameEvent.TouchEvent::class, this)
-        super.removedFromEngine(engine)
+    override fun update(deltaTime: Float) {
+        super.update(deltaTime)
+        offSystem = 0
     }
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
@@ -39,27 +36,26 @@ class MainStackSystem(val gameEventManager: GameEventManager) : SortedIteratingS
             val mainComp = entity.findComp(MainStackComponent.mapper)
             val stackComp = entity.findComp(GameStackComponent.mapper)
             val transComp = entity.findComp(TransformComponent.mapper)
-
+            offSystem += stackComp.size()
             when (mainComp.order) {
                 0 -> {
-                    logger.dev("contains ${transferCard.size}")
-                    if (transComp.shape.contains(pos) && stackComp.isEmpty() && transferCard.size == 0) {
-                        logger.dev("transferCard stack")
-                        returnAll = true
-                    } else if (transferCard.size > 0) {
-                        logger.dev("transferCard big")
-                        transferCard.forEach { it.gameCardComp.isCardOpen = false }
-                        stackComp.cardStack.addAll(transferCard)
-                        transferCard.clear()
-                        pos = null
-                    } else if (transComp.shape.contains(pos) && transferCard.size == 0) {
-                        logger.dev("start")
-                        transferCard.add(stackComp.cardStack.removeAt(stackComp.size() - 1))
-                    } else {
-                        logger.dev("do null")
-                        pos = null
+                    when {
+                        transComp.shape.contains(pos) && stackComp.isEmpty() && transferCard.size == 0 -> {
+                            returnAll = true
+                        }
+                        transferCard.size > 0 -> {
+                            transferCard.forEach { it.gameCardComp.isCardOpen = false }
+                            stackComp.cardStack.addAll(transferCard)
+                            transferCard.clear()
+                            pos = null
+                        }
+                        transComp.shape.contains(pos) && transferCard.size == 0 -> {
+                            transferCard.add(stackComp.cardStack.removeAt(stackComp.size() - 1))
+                        }
+                        else -> {
+                            pos = null
+                        }
                     }
-                    logger.dev("after if")
                 }
                 1 -> {
                     when {
@@ -67,10 +63,16 @@ class MainStackSystem(val gameEventManager: GameEventManager) : SortedIteratingS
                             returnAll = false
                             stackComp.cardStack.asReversed().forEach { transferCard.add(it) }
                             stackComp.cardStack.clear()
+                            offSystem += stackComp.size()
+                            offSystem += transferCard.size
+                            if (offSystem == 0) {
+                                logger.info("MainStackSystem is empty. System is stopped")
+                                setProcessing(false)
+                            }
+
                         }
                         transferCard.size > 0 -> {
-                            transferCard.forEach { it.gameCardComp.isCardOpen = true }
-                            transferCard.forEach { it.pos.z += 50 }
+                            transferCard.forEach { it.open(true); it.touchable(true); it.pos.z += 50 }
                             stackComp.cardStack.addAll(transferCard)
                             transferCard.clear()
                             pos = null
@@ -91,6 +93,16 @@ class MainStackSystem(val gameEventManager: GameEventManager) : SortedIteratingS
             logger.dev("touch event")
             pos = event.position.cpy()
         }
+    }
+
+    override fun addedToEngine(engine: Engine?) {
+        gameEventManager.addListener(GameEvent.TouchEvent::class, this)
+        super.addedToEngine(engine)
+    }
+
+    override fun removedFromEngine(engine: Engine?) {
+        gameEventManager.removeListener(GameEvent.TouchEvent::class, this)
+        super.removedFromEngine(engine)
     }
 
     companion object {

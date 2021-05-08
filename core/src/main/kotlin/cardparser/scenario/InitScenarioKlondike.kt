@@ -45,13 +45,13 @@ fun Engine.initKlondikeGame(assets: AssetStorage, gameViewport: Viewport) {
         getSystem<MainStackSystem>().apply {
             setProcessing(true)
         }
-        getSystem<StandardStackBindingSystem>().apply {
+        getSystem<StackBindingSystem>().apply {
             setProcessing(true)
         }
         getSystem<CardPositionSystem>().apply {
             setProcessing(true)
         }
-        getSystem<StandardDragCardSystem>().apply {
+        getSystem<DragCardSystem>().apply {
             setProcessing(true)
         }
         getSystem<ReturnCardsSystem>().apply {

@@ -1,6 +1,6 @@
 package cardparser.ashley.components
 
-import cardparser.ashley.Logic
+import cardparser.ashley.StackLogic
 import cardparser.ashley.objects.Card
 import com.badlogic.ashley.core.Component
 import com.badlogic.gdx.math.Vector2
@@ -13,7 +13,7 @@ import ktx.ashley.mapperFor
 class GameStackComponent : Component, Pool.Poolable {
     var cardStack: MutableList<Card> = mutableListOf()
     var shiftRange = 20L
-    lateinit var logic: Logic
+    lateinit var stackLogic: StackLogic
 
     /** Find card in stack by position. If card doesn't found -> return null */
     fun findCardByPos(position: Vector2): Card? {

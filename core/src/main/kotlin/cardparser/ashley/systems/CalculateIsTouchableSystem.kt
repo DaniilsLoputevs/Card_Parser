@@ -20,7 +20,7 @@ class CalculateIsTouchableSystem(
 ) : IteratingSystem(
         allOf(TransformComponent::class, GameStackComponent::class).exclude(MainStackComponent::class).get()
 ), GameEventListener {
-    private val logger = loggerApp<CalculateIsTouchableSystem>()
+
     lateinit var logic: CalculateLogic
     var dropEvent: GameEvent.DropEvent? = null
     var processed = false

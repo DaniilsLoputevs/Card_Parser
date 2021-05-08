@@ -15,7 +15,7 @@ enum class CalculateLogic {
                     card.open(true)
                 } else {
                     val prevCard = stack.cards.asReversed()[index - 1]
-                    card.open(klondaikCardTouchable(prevCard, card))
+                    card.open(klondikeCardTouchable(prevCard, card))
                 }
             }
         }
@@ -28,10 +28,9 @@ enum class CalculateLogic {
     }
 }
 
-private fun klondaikCardTouchable(prevCard: Card, card: Card): Boolean {
+private fun klondikeCardTouchable(prevCard: Card, card: Card): Boolean {
     return prevCard.isTouchable()
+            && card.isOpen()
             && card.suit().colour != prevCard.suit().colour
-            && (card.rank().ordinal == prevCard.rank().ordinal + 1
-            || (card.rank().isIt(TWO)
-            && prevCard.rank().isIt(ACE)))
+            && ((card.rank().ordinal == prevCard.rank().ordinal + 1) || (card.rank().isIt(TWO) && prevCard.rank().isIt(ACE)))
 }

@@ -1,7 +1,7 @@
 package cardparser.ashley.systems
 
 import cardparser.CARD_STACK_OFFSET
-import cardparser.ashley.components.StandardDragComponent
+import cardparser.ashley.components.DragComponent
 import cardparser.ashley.components.TransformComponent
 import cardparser.ashley.objects.Card
 import cardparser.ashley.objects.Stack
@@ -18,8 +18,8 @@ import ktx.ashley.allOf
 /**
  * TODO - Почему длять, система которая работает со стеками, называется ...CardSystem?????????
  */
-class StandardDragCardSystem(val gameEventManager: GameEventManager) : IteratingSystem(
-        allOf(TransformComponent::class, StandardDragComponent::class).get()
+class DragCardSystem(val gameEventManager: GameEventManager) : IteratingSystem(
+        allOf(TransformComponent::class, DragComponent::class).get()
 ), GameEventListener {
     private val capturedCards: MutableList<Card> = mutableListOf()
     private val memorizeStack = Stack()
@@ -116,6 +116,6 @@ class StandardDragCardSystem(val gameEventManager: GameEventManager) : Iterating
     }
 
     companion object {
-        private val logger = loggerApp<StandardDragCardSystem>()
+        private val logger = loggerApp<DragCardSystem>()
     }
 }
