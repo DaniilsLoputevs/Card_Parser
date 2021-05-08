@@ -90,7 +90,6 @@ class MainStackSystem(val gameEventManager: GameEventManager) : SortedIteratingS
 
     override fun onEvent(event: GameEvent) {
         if (event is GameEvent.TouchEvent) {
-            logger.dev("touch event")
             pos = event.position.cpy()
         }
     }

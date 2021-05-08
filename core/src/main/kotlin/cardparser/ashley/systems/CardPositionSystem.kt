@@ -53,7 +53,11 @@ class CardPositionSystem : IteratingSystem(
                         nextZ
                 )
             }
-            step += stack.gameStackComp.shiftRange
+            step += if (it.isOpen()) {
+                stack.gameStackComp.shiftRange
+            } else {
+                (stack.gameStackComp.shiftRange/1.5).toLong()
+            }
             z++
         }
     }
