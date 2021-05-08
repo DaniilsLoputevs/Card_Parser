@@ -5,10 +5,10 @@ import cardparser.CARD_STACK_OFFSET
 import cardparser.CARD_WIDTH
 import cardparser.ashley.Logic
 import cardparser.ashley.components.*
-import cardparser.ashley.components.adapters.GameCardAdapter
-import cardparser.ashley.components.adapters.GameStackAdapter
 import cardparser.ashley.components.GameCardComponent.CardRank
 import cardparser.ashley.components.GameCardComponent.CardSuit
+import cardparser.ashley.components.adapters.GameCardAdapter
+import cardparser.ashley.components.adapters.GameStackAdapter
 import com.badlogic.ashley.core.Engine
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
@@ -18,7 +18,7 @@ import java.util.*
 
 
 /** Create card deck for game: 52 game cards */
-fun Engine.createCardDeck(textureAtlas: TextureAtlas): List<GameCardAdapter> {
+fun Engine.createCardDeck(textureAtlas: TextureAtlas): MutableList<GameCardAdapter> {
     return mutableListOf<GameCardAdapter>().apply {
         var textureIndex = 0
         CardSuit.values().forEach { suit ->

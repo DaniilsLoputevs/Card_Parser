@@ -111,6 +111,6 @@ class GameStackAdapter() : AbstractAdapter() {
         this.gameStackComp = entity[GameStackComponent.mapper]!!
     }
 
-    override fun toString(): String = "stack={ pos = ${transComp.position} size = ${gameStackComp.size()} }"
+    override fun toString(): String = "stack={ pos = ${transComp.position} & size = ${gameStackComp.size()} }"
 
 }

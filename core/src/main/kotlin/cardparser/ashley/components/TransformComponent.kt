@@ -55,7 +55,7 @@ class TransformComponent : Component, Pool.Poolable, Comparable<TransformCompone
         shape.setPosition(newPosition.x, newPosition.y)
     }
 
-    fun setPosition(x: Float, y: Float, z: Float) {
+    fun setPosition(x: Float = position.x, y: Float = position.y, z: Float = position.z) {
         position.x = x
         position.y = y
         position.z = z

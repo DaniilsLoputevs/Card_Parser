@@ -12,22 +12,27 @@ inline fun <reified C : Any> loggerApp(): Logger<C> = LoggerImpl(C::class.java.s
  */
 interface Logger<C> {
     fun dev(msg: () -> String) = dev(msg.invoke())
+    fun dev(msg: String, obj : () -> Any) = dev(msg, obj.invoke())
     fun dev(msg: String)
     fun dev(msg: String, obj: Any)
 
     fun debug(msg: () -> String) = debug(msg.invoke())
+    fun debug(msg: String, obj : () -> Any) = debug(msg, obj.invoke())
     fun debug(msg: String)
     fun debug(msg: String, obj: Any)
 
     fun info(msg: () -> String) = info(msg.invoke())
+    fun info(msg: String, obj : () -> Any) = info(msg, obj.invoke())
     fun info(msg: String)
     fun info(msg: String, obj: Any)
 
     fun warm(msg: () -> String) = warm(msg.invoke())
+    fun warm(msg: String, obj : () -> Any) = warm(msg, obj.invoke())
     fun warm(msg: String)
     fun warm(msg: String, obj: Any)
 
     fun error(msg: () -> String) = error(msg.invoke())
+    fun error(msg: String, obj : () -> Any) = error(msg, obj.invoke())
     fun error(msg: String)
     fun error(msg: String, obj: Any)
 
@@ -42,6 +47,7 @@ private const val LOG_VAR_TEMPLATE = "*LEVEL* || *CLASS* => *MSG* :: *OBJ*"
 /* symbols for replace */
 private val specSymbols: Map<String, String> by lazy {
     mapOf(
+            Pair(" & ", "$TEXT_BLUE & $TEXT_RESET"),
             Pair(" = ", "$TEXT_RED = $TEXT_RESET"),
             Pair(" : ", "$TEXT_RED : $TEXT_RESET"),
             Pair("::", "$TEXT_RED::$TEXT_RESET"),
@@ -135,7 +141,7 @@ enum class LogLevel {
         override fun toString(): String = "${TEXT_CYAN}DEV${TEXT_RESET}"
     },
     DEBUG {
-        override fun toString(): String = "${TEXT_PURPLE}DEBUG${TEXT_RESET}"
+        override fun toString(): String = "${TEXT_PURPLE}DEB${TEXT_RESET}"
     },
     INFO {
         override fun toString(): String = "${TEXT_GREEN}INFO${TEXT_RESET}"
@@ -158,3 +164,12 @@ private const val TEXT_BLUE = "\u001B[34m"
 private const val TEXT_PURPLE = "\u001B[35m"
 private const val TEXT_CYAN = "\u001B[36m"
 private const val TEXT_WHITE = "\u001B[37m"
+
+private const val BACKGROUND_BLACK = "\u001B[40m"
+private const val BACKGROUND_RED = "\u001B[41m"
+private const val BACKGROUND_GREEN = "\u001B[42m"
+private const val BACKGROUND_YELLOW = "\u001B[43m"
+private const val BACKGROUND_BLUE = "\u001B[44m"
+private const val BACKGROUND_MAGENTA = "\u001B[45m"
+private const val BACKGROUND_CYAN = "\u001B[46m"
+private const val BACKGROUND_WHITE = "\u001B[47m"

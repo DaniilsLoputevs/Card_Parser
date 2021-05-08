@@ -15,20 +15,27 @@ import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.utils.viewport.Viewport
 import ktx.ashley.getSystem
 import ktx.assets.async.AssetStorage
+import java.util.*
 
 fun Engine.initKlondikeGame(assets: AssetStorage, gameViewport: Viewport) {
     this.run {
-        var cardsSet = createCardDeck(assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc])
-        cardsSet = randomCards(cardsSet.toMutableList())
+        val cardsSet = createCardDeck(assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc])
+        cardsSet.shuffled()
         val mainStack = createStartStackKlondike(assets)
         val bottomStacks = createBottomStacksKlondike(assets)
         val upStacks = createUpStacksKlondike(assets)
         cardsSet.forEach { it.transComp.position.set(mainStack.transComp.position) }
+        getSystem<DebugSystem>().apply {
+            this.cards = cardsSet
+            this.mainStack = mainStack
+            this.bottomStacks = bottomStacks
+            this.upStacks = upStacks
+        }
         getSystem<StartGameSystem>().apply {
-            cards = cardsSet
-            stack = mainStack
-            stackList = bottomStacks
-            logic = StartGameLogic.KLONDIKE_START
+            this.cards = cardsSet
+            this.stack = mainStack
+            this.stackList = bottomStacks
+            this.logic = StartGameLogic.KLONDIKE_START
             setProcessing(true)
         }
         getSystem<ScreenInputSystem>().apply {
@@ -51,7 +58,7 @@ fun Engine.initKlondikeGame(assets: AssetStorage, gameViewport: Viewport) {
             setProcessing(true)
         }
         getSystem<CalculateIsTouchableSystem>().apply {
-            logic = CalculateLogic.KLONDAIK
+            this.logic = CalculateLogic.KLONDAIK
             setProcessing(true)
         }
         getSystem<RenderSystem>().apply {
@@ -124,7 +131,7 @@ fun Engine.createStartStackKlondike(assets: AssetStorage): GameStackAdapter {
 }
 
 fun randomCards(cards: MutableList<GameCardAdapter>): MutableList<GameCardAdapter> {
-    val random = MathUtils.random
+    val random : Random = MathUtils.random
     val list = mutableListOf<GameCardAdapter>()
     while (cards.size != 0) {
         list.add(cards.removeAt(random.nextInt(1000) and (cards.size - 1)))

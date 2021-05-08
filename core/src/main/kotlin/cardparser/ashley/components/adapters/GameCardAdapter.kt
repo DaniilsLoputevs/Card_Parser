@@ -31,9 +31,9 @@ class GameCardAdapter() : AbstractAdapter() {
 
     override fun toString(): String {
         return "card={ " +
-                "${gameCardComp.cardSuit} ${gameCardComp.cardRank} " +
-                "open = ${gameCardComp.isCardOpen} " +
-                "touch = ${touchComp.isTouchable} " +
+                "${gameCardComp.cardSuit} ${gameCardComp.cardRank} & " +
+                "open = ${gameCardComp.isCardOpen} & " +
+                "touch = ${touchComp.isTouchable} & " +
                 "pos = ${transComp.position} " +
                 "}"
     }
