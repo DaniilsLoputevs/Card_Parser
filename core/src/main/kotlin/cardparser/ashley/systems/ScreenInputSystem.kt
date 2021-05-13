@@ -12,16 +12,11 @@ import com.badlogic.gdx.Input
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.viewport.Viewport
 
-/**
- *
- * This system process player input per tick add push 4 types of events
- *
- */
+/** This system process player input per tick add push 4 types of events */
 class ScreenInputSystem(
         var gameViewport: Viewport,
         var gameEventManager: GameEventManager
 ) : EntitySystem(), GameEventListener {
-    private val logger = loggerApp<ScreenInputSystem>()
 
     /** previous cursorAction */
     private var status: TouchStatus = TouchStatus.NONE

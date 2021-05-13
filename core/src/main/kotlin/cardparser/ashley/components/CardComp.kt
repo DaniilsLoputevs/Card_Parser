@@ -4,13 +4,27 @@ import com.badlogic.ashley.core.Component
 import com.badlogic.gdx.utils.Pool
 import ktx.ashley.mapperFor
 
+interface CardAPI {
+    var cardComp: CardComp
+
+    fun suit(): CardComp.CardSuit = cardComp.cardSuit
+    fun rank(): CardComp.CardRank = cardComp.cardRank
+    fun open(): Boolean = cardComp.isCardOpen
+    fun open(value: Boolean) = run { cardComp.isCardOpen = value }
+
+}
+
 /**
  * This component say: This Entity is Game Card.
  */
-class GameCardComponent : Component, Pool.Poolable {
+class CardComp : Component, Pool.Poolable {
     lateinit var cardSuit: CardSuit
     lateinit var cardRank: CardRank
     var isCardOpen: Boolean = false
+
+    fun init(cardSuit: CardSuit, cardRank: CardRank, isCardOpen: Boolean) {
+        this.cardSuit = cardSuit; this.cardRank = cardRank; this.isCardOpen = isCardOpen
+    }
 
 
     override fun reset() {
@@ -20,7 +34,7 @@ class GameCardComponent : Component, Pool.Poolable {
     override fun toString(): String = "GameCardComponent"
 
     companion object {
-        val mapper = mapperFor<GameCardComponent>()
+        val mapper = mapperFor<CardComp>()
     }
 
     enum class CardRank {

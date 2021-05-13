@@ -1,8 +1,8 @@
 package cardparser.ashley
 
 import cardparser.ashley.components.*
-import cardparser.ashley.objects.Card
-import cardparser.ashley.objects.Stack
+import cardparser.ashley.entities.Card
+import cardparser.ashley.entities.Stack
 import com.badlogic.ashley.core.*
 import ktx.ashley.allOf
 import ktx.ashley.get
@@ -11,10 +11,10 @@ import ktx.ashley.get
 /* ECS Engine */
 
 
-private val GAME_STACK_FAMILY: Family = allOf(TransformComponent::class,
-        GraphicComponent::class, GameStackComponent::class).get()
-private val GAME_CARDS_FAMILY: Family = allOf(TransformComponent::class,
-        GraphicComponent::class, GameCardComponent::class, TouchComponent::class).get()
+private val GAME_STACK_FAMILY: Family = allOf(TransformComp::class,
+        GraphicComp::class, StackComp::class).get()
+private val GAME_CARDS_FAMILY: Family = allOf(TransformComp::class,
+        GraphicComp::class, CardComp::class, TouchComp::class).get()
 
 
 fun Engine.getOurGameStacks(): List<Stack> {

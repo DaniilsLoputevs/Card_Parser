@@ -1,7 +1,7 @@
 package cardparser.ashley
 
-import cardparser.ashley.objects.Card
-import cardparser.ashley.objects.Stack
+import cardparser.ashley.entities.Card
+import cardparser.ashley.entities.Stack
 import cardparser.logger.loggerApp
 
 enum class StartGameLogic {
@@ -18,7 +18,7 @@ enum class StartGameLogic {
             return when {
                 startLogic -> {
                     cards.forEach {
-                        it.setPos(startStack.pos.x, startStack.pos.y, z++)
+                        it.setPos(startStack.pos().x, startStack.pos().y, z++)
                         it.touchable(false)
                         it.open(false)
                     }
@@ -27,10 +27,10 @@ enum class StartGameLogic {
                 }
                 processLogic -> {
                     stacksList.forEachIndexed { index, stack ->
-                        if (stack.cards.size < (index + 1)) {
-                            cards.removeLastOrNull()?.let { stack.cards.add(it) }
-                            if (stack.cards.size == (index + 1)) {
-                                stack.cards.last().run {
+                        if (stack.cards().size < (index + 1)) {
+                            cards.removeLastOrNull()?.let { stack.cards().add(it) }
+                            if (stack.cards().size == (index + 1)) {
+                                stack.cards().last().run {
                                     this.touchable(true)
                                     this.open(true)
                                 }

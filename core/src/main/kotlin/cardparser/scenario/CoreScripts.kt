@@ -3,12 +3,12 @@ package cardparser.scenario
 import cardparser.CARD_HEIGHT
 import cardparser.CARD_STACK_OFFSET
 import cardparser.CARD_WIDTH
-import cardparser.ashley.StackLogic
+import cardparser.ashley.StackAddPredicate
 import cardparser.ashley.components.*
-import cardparser.ashley.components.GameCardComponent.CardRank
-import cardparser.ashley.components.GameCardComponent.CardSuit
-import cardparser.ashley.objects.Card
-import cardparser.ashley.objects.Stack
+import cardparser.ashley.components.CardComp.CardRank
+import cardparser.ashley.components.CardComp.CardSuit
+import cardparser.ashley.entities.Card
+import cardparser.ashley.entities.Stack
 import com.badlogic.ashley.core.Engine
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
@@ -46,26 +46,17 @@ fun Engine.createCard(
         isCardOpen: Boolean = false,
         posX: Float = 0f, posY: Float = 0f, posZ: Float = 1f
 ): Card {
-    val rsl = this.entity {
+    return Card(this.entity {
         val texture: TextureAtlas.AtlasRegion = textureAtlas.findRegion(textureRegion)
-        with<TransformComponent> {
+        with<TransformComp> {
             initThis(texture, posX, posY, posZ)
             setSize(CARD_WIDTH, CARD_HEIGHT)
 //            setSizeByHeightSAR(160f)
         }
-        with<GraphicComponent> {
-            setSpriteRegion(texture)
-        }
-        with<GameCardComponent> {
-            this.cardSuit = cardSuit
-            this.cardRank = cardRank
-            this.isCardOpen = isCardOpen
-        }
-        with<TouchComponent> {
-            isTouchable = true
-        }
-    }
-    return Card(rsl)
+        with<GraphicComp> { setSpriteRegion(texture) }
+        with<CardComp> { init(cardSuit, cardRank, isCardOpen) }
+        with<TouchComp> { isTouchable = true }
+    })
 }
 
 /**
@@ -76,16 +67,16 @@ fun Engine.createStack(
         posX: Float, posY: Float, posZ: Float = 0f
 ): Stack {
     val rsl = entity {
-        with<TransformComponent> {
+        with<TransformComp> {
             initThis(texture, posX, posY, posZ)
             setSize(CARD_WIDTH, CARD_HEIGHT)
         }
-        with<GraphicComponent> { setSpriteRegion(texture) }
-        with<GameStackComponent> {
-            this.stackLogic = StackLogic.KLONDAIK
+        with<GraphicComp> { setSpriteRegion(texture) }
+        with<StackComp> {
+            this.stackAddPredicate = StackAddPredicate.KLONDAIK
             this.shiftRange = CARD_STACK_OFFSET.toLong()
         }
-        with<DragComponent>()
+        with<DragComp>()
     }
     return Stack(rsl)
 }
@@ -98,16 +89,16 @@ fun Engine.createFoundationStack(
         posX: Float, posY: Float, posZ: Float = 0f
 ): Stack {
     val rsl = entity {
-        with<TransformComponent> {
+        with<TransformComp> {
             initThis(texture, posX, posY, posZ)
             setSize(CARD_WIDTH, CARD_HEIGHT)
         }
-        with<GraphicComponent> { setSpriteRegion(texture) }
-        with<GameStackComponent> {
+        with<GraphicComp> { setSpriteRegion(texture) }
+        with<StackComp> {
+            this.stackAddPredicate = StackAddPredicate.UPSTACKS
             this.shiftRange = 0L
-            this.stackLogic = StackLogic.UPSTACKS
         }
-        with<DragComponent>()
+        with<DragComp>()
     }
     return Stack(rsl)
 }
@@ -121,18 +112,18 @@ fun Engine.createMainStack(
         _order: Int
 ): Stack {
     val rsl = entity {
-        with<TransformComponent> {
+        with<TransformComp> {
             initThis(texture, posX, posY, posZ)
             setSize(CARD_WIDTH, CARD_HEIGHT)
         }
-        with<GraphicComponent> { setSpriteRegion(texture) }
-        with<MainStackComponent> { this.order = _order }
-        with<GameStackComponent> {
+        with<GraphicComp> { setSpriteRegion(texture) }
+        with<MainStackComp> { this.order = _order }
+        with<StackComp> {
             this.shiftRange = 0L
-            this.stackLogic = StackLogic.UPSTACKS
+            this.stackAddPredicate = StackAddPredicate.UPSTACKS
         }
         if (_order == 1) {
-            with<DragComponent>()
+            with<DragComp>()
         }
     }
     return Stack(rsl)

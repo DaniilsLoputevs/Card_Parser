@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Pool
 import ktx.ashley.mapperFor
 
-class GraphicComponent : Component, Pool.Poolable {
+class GraphicComp : Component, Pool.Poolable {
     val sprite = Sprite()
 
     override fun reset() {
@@ -33,6 +33,6 @@ class GraphicComponent : Component, Pool.Poolable {
     override fun toString(): String = "GraphicComponent"
 
     companion object {
-        val mapper = mapperFor<GraphicComponent>()
+        val mapper = mapperFor<GraphicComp>()
     }
 }

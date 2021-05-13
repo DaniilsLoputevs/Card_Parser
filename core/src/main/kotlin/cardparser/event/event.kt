@@ -1,7 +1,7 @@
 package cardparser.event
 
-import cardparser.ashley.objects.Card
-import cardparser.ashley.objects.Stack
+import cardparser.ashley.entities.Card
+import cardparser.ashley.entities.Stack
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectMap
 import ktx.collections.GdxSet

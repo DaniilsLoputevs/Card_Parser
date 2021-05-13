@@ -1,10 +1,10 @@
 package cardparser.ashley.systems
 
 import cardparser.CARD_STACK_OFFSET
-import cardparser.ashley.components.DragComponent
-import cardparser.ashley.components.TransformComponent
-import cardparser.ashley.objects.Card
-import cardparser.ashley.objects.Stack
+import cardparser.ashley.components.DragComp
+import cardparser.ashley.components.TransformComp
+import cardparser.ashley.entities.Card
+import cardparser.ashley.entities.Stack
 import cardparser.event.GameEvent
 import cardparser.event.GameEventListener
 import cardparser.event.GameEventManager
@@ -19,7 +19,7 @@ import ktx.ashley.allOf
  * TODO - Почему длять, система которая работает со стеками, называется ...CardSystem?????????
  */
 class DragCardSystem(val gameEventManager: GameEventManager) : IteratingSystem(
-        allOf(TransformComponent::class, DragComponent::class).get()
+        allOf(TransformComp::class, DragComp::class).get()
 ), GameEventListener {
     private val capturedCards: MutableList<Card> = mutableListOf()
     private val memorizeStack = Stack()
@@ -44,17 +44,16 @@ class DragCardSystem(val gameEventManager: GameEventManager) : IteratingSystem(
         eachStack.entity = entity
         when {
             this.takeCardsFromStack() -> {
-                eachStack.gameStackComp
-                        .findCardByPos(cursorPosition)?.let {
-                            logger.dev("on Touch")
-//                            logger.dev("touch - cursor") { cursorPosition.toString() }
+                eachStack[cursorPosition]?.let {
+//                    logger.dev("on Touch")
+//                    logger.dev("touch - cursor") { cursorPosition.toString() }
 
-                            eachStack.gameStackComp.transferCardsToList(it, capturedCards)
-                            memorizeStack.entity = eachStack.entity
-                            refreshCaptureOffset(it)
+                    eachStack.transferCardsToList(it, capturedCards)
+                    memorizeStack.entity = eachStack.entity
+                    refreshCaptureOffset(it)
 
-//                            logger.dev("touch - cursor") { captureOffset.toString() }
-                        }
+//                    logger.dev("touch - cursor") { captureOffset.toString() }
+                }
             }
             this.dragTakenCards() -> {
 //                logger.dev("cursor", cursorPosition)
@@ -89,7 +88,7 @@ class DragCardSystem(val gameEventManager: GameEventManager) : IteratingSystem(
         val posX = cursorPosition.x - captureOffset.x
         var posY = cursorPosition.y - captureOffset.y
         capturedCards.forEach {
-            it.setPos(posX, posY, it.pos.z * 1000f)
+            it.setPos(posX, posY, it.pos().z * 1000f)
             posY -= CARD_STACK_OFFSET
         }
     }
@@ -97,8 +96,8 @@ class DragCardSystem(val gameEventManager: GameEventManager) : IteratingSystem(
     /** Calculate a card position with relating to the cursor if we start dragged the card. */
     private fun refreshCaptureOffset(card: Card) {
         captureOffset.set(
-                cursorPosition.x - card.pos.x,
-                cursorPosition.y - card.pos.y
+                cursorPosition.x - card.pos().x,
+                cursorPosition.y - card.pos().y
         )
     }
 

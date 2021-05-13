@@ -1,9 +1,9 @@
 package cardparser.ashley.systems
 
-import cardparser.ashley.components.GameStackComponent
-import cardparser.ashley.components.MainStackComponent
-import cardparser.ashley.components.TransformComponent
-import cardparser.ashley.objects.Stack
+import cardparser.ashley.components.MainStackComp
+import cardparser.ashley.components.StackComp
+import cardparser.ashley.components.TransformComp
+import cardparser.ashley.entities.Stack
 import cardparser.event.GameEvent
 import cardparser.event.GameEventListener
 import cardparser.event.GameEventManager
@@ -15,21 +15,14 @@ import ktx.ashley.allOf
 import ktx.ashley.exclude
 
 class StackBindingSystem(val gameEventManager: GameEventManager) : IteratingSystem(
-        allOf(TransformComponent::class, GameStackComponent::class)
-                .exclude(MainStackComponent::class).get()
+        allOf(TransformComp::class, StackComp::class)
+                .exclude(MainStackComp::class).get()
 ), GameEventListener {
 
-    var dropEvent: GameEvent.DropEvent? = null
+    private val stack = Stack()
 
-    override fun addedToEngine(engine: Engine?) {
-        gameEventManager.addListener(GameEvent.DropEvent::class, this)
-        super.addedToEngine(engine)
-    }
+    private var dropEvent: GameEvent.DropEvent? = null
 
-    override fun removedFromEngine(engine: Engine?) {
-        gameEventManager.removeListener(GameEvent.DropEvent::class, this)
-        super.removedFromEngine(engine)
-    }
 
     override fun update(deltaTime: Float) {
         dropEvent?.let {
@@ -40,15 +33,26 @@ class StackBindingSystem(val gameEventManager: GameEventManager) : IteratingSyst
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
         dropEvent?.let {
-            val stack = Stack(entity)
-            if (stack.containsPos(it.position) && it.cardList.size > 0
-                    && stack.gameStackComp.stackLogic.doLogic(stack, it.cardList)
-            ) {
-                stack.cards.addAll(it.cardList)
+//            logger.dev("processEntity :: inner invoked")
+            stack.entity = entity
+//            logger.dev("stack", stack)
+//            logger.dev("cardList", it.cardList)
+            if (stack.containsPos(it.position) && it.cardList.size > 0 && stack.canAddCards(it.cardList)) {
+                stack.addAll(it.cardList)
                 it.cardList.clear()
                 dropEvent = null
             }
         }
+    }
+
+    override fun addedToEngine(engine: Engine?) {
+        gameEventManager.addListener(GameEvent.DropEvent::class, this)
+        super.addedToEngine(engine)
+    }
+
+    override fun removedFromEngine(engine: Engine?) {
+        gameEventManager.removeListener(GameEvent.DropEvent::class, this)
+        super.removedFromEngine(engine)
     }
 
     override fun onEvent(event: GameEvent) {

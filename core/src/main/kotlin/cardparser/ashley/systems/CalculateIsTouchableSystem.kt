@@ -1,10 +1,10 @@
 package cardparser.ashley.systems
 
 import cardparser.ashley.CalculateLogic
-import cardparser.ashley.components.GameStackComponent
-import cardparser.ashley.components.MainStackComponent
-import cardparser.ashley.components.TransformComponent
-import cardparser.ashley.objects.Stack
+import cardparser.ashley.components.MainStackComp
+import cardparser.ashley.components.StackComp
+import cardparser.ashley.components.TransformComp
+import cardparser.ashley.entities.Stack
 import cardparser.event.GameEvent
 import cardparser.event.GameEventListener
 import cardparser.event.GameEventManager
@@ -18,7 +18,7 @@ import ktx.ashley.exclude
 class CalculateIsTouchableSystem(
         val gameEventManager: GameEventManager
 ) : IteratingSystem(
-        allOf(TransformComponent::class, GameStackComponent::class).exclude(MainStackComponent::class).get()
+        allOf(TransformComp::class, StackComp::class).exclude(MainStackComp::class).get()
 ), GameEventListener {
 
     lateinit var logic: CalculateLogic

@@ -4,13 +4,32 @@ import com.badlogic.ashley.core.Component
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Pool
 import ktx.ashley.mapperFor
 import ktx.math.vec2
 import ktx.math.vec3
 
-class TransformComponent : Component, Pool.Poolable, Comparable<TransformComponent> {
+interface TransformAPI {
+    var transComp: TransformComp
+
+    fun pos(): Vector3 = transComp.position
+    fun transfSize(): Vector2 = transComp.size
+
+    /** Setters for position */
+    fun setPos(newPos: Vector2, z: Float = transComp.position.z) = run { transComp.setPos(newPos.x, newPos.y, z) }
+    fun setPos(x: Float = transComp.position.x, y: Float = transComp.position.y, z: Float = transComp.position.z) = run { transComp.setPos(x, y, z) }
+
+    /** Getters for position */
+    fun getPos(posBuffer: Vector2) = run { posBuffer.apply { x = transComp.position.x; y = transComp.position.y; } }
+    fun getPos(posBuffer: Vector3) = run { posBuffer.apply { x = transComp.position.x; y = transComp.position.y; z = transComp.position.z } }
+
+    fun isInShape(position: Vector2) = this.transComp.shape.contains(position)
+
+}
+
+class TransformComp : Component, Pool.Poolable, Comparable<TransformComp> {
     val position = vec3()          // Vector3(0, 0, 0)
     val size = vec2(1f, 1f)  // x = width, y = height
     val shape = Rectangle()
@@ -92,7 +111,7 @@ class TransformComponent : Component, Pool.Poolable, Comparable<TransformCompone
         shape.set(0f, 0f, 0f, 0f)
     }
 
-    override fun compareTo(other: TransformComponent): Int {
+    override fun compareTo(other: TransformComp): Int {
         val zDiff = position.z.compareTo(other.position.z)
         return if (zDiff == 0) other.position.y.compareTo(position.y) else zDiff
     }
@@ -100,6 +119,6 @@ class TransformComponent : Component, Pool.Poolable, Comparable<TransformCompone
     override fun toString(): String = "TransformComponent"
 
     companion object {
-        val mapper = mapperFor<TransformComponent>()
+        val mapper = mapperFor<TransformComp>()
     }
 }

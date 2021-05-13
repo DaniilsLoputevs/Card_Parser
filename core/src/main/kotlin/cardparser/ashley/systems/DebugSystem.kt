@@ -1,7 +1,7 @@
 package cardparser.ashley.systems
 
-import cardparser.ashley.objects.Card
-import cardparser.ashley.objects.Stack
+import cardparser.ashley.entities.Card
+import cardparser.ashley.entities.Stack
 import cardparser.logger.loggerApp
 import com.badlogic.ashley.core.EntitySystem
 import com.badlogic.gdx.Gdx

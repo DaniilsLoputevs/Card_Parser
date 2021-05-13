@@ -15,7 +15,7 @@ class ReturnCardsSystem(val gameEventManager: GameEventManager)
     override fun update(deltaTime: Float) {
         dropEvent?.let {
             if (it.cardList.size > 0 && it.cardReturn) {
-                it.previousStack.cards.addAll(it.cardList)
+                it.previousStack.addAll(it.cardList)
                 it.cardList.clear()
                 it.cardReturn = false
             }

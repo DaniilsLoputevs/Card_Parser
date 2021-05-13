@@ -4,9 +4,9 @@ import cardparser.CARD_HEIGHT
 import cardparser.CARD_WIDTH
 import cardparser.V_WORLD_HEIGHT_UNITS
 import cardparser.V_WORLD_WIDTH_UNITS
-import cardparser.ashley.components.GameCardComponent
-import cardparser.ashley.components.GraphicComponent
-import cardparser.ashley.components.TransformComponent
+import cardparser.ashley.components.CardComp
+import cardparser.ashley.components.GraphicComp
+import cardparser.ashley.components.TransformComp
 import cardparser.ashley.findComp
 import cardparser.logger.loggerApp
 import com.badlogic.ashley.core.Engine
@@ -30,15 +30,15 @@ import ktx.math.component2
 /**
  * Component processor && Game Event Listener.
  * Rendering all [Entity] with components:
- * [GraphicComponent]
- * [TransformComponent]
+ * [GraphicComp]
+ * [TransformComp]
  */
 class RenderSystem(
         private val stage: Stage,
         private val gameViewport: Viewport,
 ) : SortedIteratingSystem(
-        allOf(GraphicComponent::class, TransformComponent::class).get(),
-        compareBy { entity -> entity[TransformComponent.mapper] }
+        allOf(GraphicComp::class, TransformComp::class).get(),
+        compareBy { entity -> entity[TransformComp.mapper] }
 ) {
     private val logger = logger<RenderSystem>()
     private val batch: Batch = stage.batch
@@ -103,8 +103,8 @@ class RenderSystem(
     }
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
-        val transformComp = entity.findComp(TransformComponent.mapper)
-        val graphicComp = entity.findComp(GraphicComponent.mapper)
+        val transformComp = entity.findComp(TransformComp.mapper)
+        val graphicComp = entity.findComp(GraphicComp.mapper)
 
         if (graphicComp.sprite.texture == null) {
             logger.error { "Entity has no texture for rendering" }
@@ -114,7 +114,7 @@ class RenderSystem(
         /* If card Closed we need to ignore card's texture and render card back texture,
          after that finish method */
         val currentSprite = when {
-            entity.contains(GameCardComponent.mapper)
+            entity.contains(CardComp.mapper)
                     && isCardClose(entity) -> cardBackSprite
             else -> graphicComp.sprite
         }
@@ -131,7 +131,7 @@ class RenderSystem(
 
 
     /** just pretty API. */
-    private fun isCardClose(entity: Entity): Boolean = !entity[GameCardComponent.mapper]!!.isCardOpen
+    private fun isCardClose(entity: Entity): Boolean = !entity[CardComp.mapper]!!.isCardOpen
 
     companion object {
         private val logger = loggerApp<RenderSystem>()

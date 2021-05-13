@@ -4,8 +4,8 @@ import cardparser.CARD_WIDTH
 import cardparser.STACK_GAP_STEP
 import cardparser.ashley.CalculateLogic
 import cardparser.ashley.StartGameLogic
-import cardparser.ashley.objects.Card
-import cardparser.ashley.objects.Stack
+import cardparser.ashley.entities.Card
+import cardparser.ashley.entities.Stack
 import cardparser.ashley.systems.*
 import cardparser.asset.CardBackAtlas
 import cardparser.asset.CardDeckAtlas
@@ -23,7 +23,7 @@ fun Engine.initKlondikeGame(assets: AssetStorage, gameViewport: Viewport) {
         val bottomStacks = createBottomStacksKlondike(assets)
         val upStacks = createUpStacksKlondike(assets)
         val cardsSet = randomCards(createCardDeck(assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc]))
-                .onEach { it.pos.set(mainStack.pos) }
+                .onEach { it.pos().set(mainStack.pos()) }
 
         getSystem<DebugSystem>().apply {
             this.cards = cardsSet
@@ -58,7 +58,7 @@ fun Engine.initKlondikeGame(assets: AssetStorage, gameViewport: Viewport) {
             setProcessing(true)
         }
         getSystem<CalculateIsTouchableSystem>().apply {
-            this.logic = CalculateLogic.KLONDAIK
+            this.logic = CalculateLogic.KLONDIKE
             setProcessing(true)
         }
         getSystem<RenderSystem>().apply {

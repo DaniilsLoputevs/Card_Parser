@@ -4,10 +4,17 @@ import com.badlogic.ashley.core.Component
 import com.badlogic.gdx.utils.Pool
 import ktx.ashley.mapperFor
 
+interface TouchAPI {
+    var touchComp: TouchComp
+
+    fun touchable(): Boolean = touchComp.isTouchable
+    fun touchable(value: Boolean) = run { touchComp.isTouchable = value }
+}
+
 /**
  * Entity with this component: can bee touched by cursor.
  */
-class TouchComponent : Component, Pool.Poolable {
+class TouchComp : Component, Pool.Poolable {
     var isTouchable = true
 
 
@@ -18,7 +25,7 @@ class TouchComponent : Component, Pool.Poolable {
     override fun toString(): String = "TouchComponent"
 
     companion object {
-        val mapper = mapperFor<TouchComponent>()
+        val mapper = mapperFor<TouchComp>()
     }
 
 }
