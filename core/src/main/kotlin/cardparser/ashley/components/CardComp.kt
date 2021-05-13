@@ -38,6 +38,7 @@ class CardComp : Component, Pool.Poolable {
     }
 
     enum class CardRank {
+        ACE,
         TWO,
         THREE,
         FOUR,
@@ -49,8 +50,7 @@ class CardComp : Component, Pool.Poolable {
         TEN,
         JACK,
         QUEEN,
-        KING,
-        ACE;
+        KING;
 
         fun isIt(value: CardRank): Boolean = this == value
     }

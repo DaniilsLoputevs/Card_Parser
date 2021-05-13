@@ -29,7 +29,7 @@ fun Engine.createCardDeck(textureAtlas: TextureAtlas): MutableList<Card> {
 
                 this.add(
                         createCard(
-                                textureAtlas, "${textureIndex++}_${suitName}_${rankName}",
+                                textureAtlas, "${suitName}_${rankName}",
                                 suit, rank, false, 0f, 0f
                         )
                 )

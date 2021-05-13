@@ -22,7 +22,7 @@ fun Engine.initKlondikeGame(assets: AssetStorage, gameViewport: Viewport) {
         val mainStack = createStartStackKlondike(assets)
         val bottomStacks = createBottomStacksKlondike(assets)
         val upStacks = createUpStacksKlondike(assets)
-        val cardsSet = randomCards(createCardDeck(assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc]))
+        val cardsSet = randomCards(createCardDeck(assets[CardDeckAtlas.CARD_DECK_USSR.desc]))
                 .onEach { it.pos().set(mainStack.pos()) }
 
         getSystem<DebugSystem>().apply {

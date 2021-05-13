@@ -20,6 +20,7 @@ enum class CardDeckAtlas(
         val desc: AssetDescriptor<TextureAtlas> = AssetDescriptor("$GRAPHIC_DIR/$directory/$fileName", TextureAtlas::class.java)
 ) {
     CARD_DECK_DEFAULT("card-deck", "card_deck_default.atlas"),
+    CARD_DECK_USSR("card-deck", "card_deck_ussr.atlas"),
 }
 
 enum class GeneralAsset(
