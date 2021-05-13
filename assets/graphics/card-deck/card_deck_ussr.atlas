@@ -1,0 +1,370 @@
+
+card_deck_ussr.png
+size: 8192, 2048
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+clubs_ace
+  rotate: false
+  xy: 1, 1
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+clubs_eight
+  rotate: false
+  xy: 5565, 643
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+clubs_five
+  rotate: false
+  xy: 5565, 1
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+clubs_four
+  rotate: false
+  xy: 1713, 1285
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+clubs_jack
+  rotate: false
+  xy: 2997, 1
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+clubs_king
+  rotate: false
+  xy: 1, 1285
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+clubs_nine
+  rotate: false
+  xy: 2141, 643
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+clubs_queen
+  rotate: false
+  xy: 2569, 1285
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+clubs_seven
+  rotate: false
+  xy: 1285, 1
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+clubs_six
+  rotate: false
+  xy: 3853, 1
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+clubs_ten
+  rotate: false
+  xy: 4709, 1
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+clubs_three
+  rotate: false
+  xy: 6421, 1
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+clubs_two
+  rotate: false
+  xy: 1285, 1285
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+diamonds_ace
+  rotate: false
+  xy: 2569, 1
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+diamonds_eight
+  rotate: false
+  xy: 857, 643
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+diamonds_five
+  rotate: false
+  xy: 7277, 1285
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+diamonds_four
+  rotate: false
+  xy: 2997, 643
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+diamonds_jack
+  rotate: false
+  xy: 4281, 643
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+diamonds_king
+  rotate: false
+  xy: 429, 1
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+diamonds_nine
+  rotate: false
+  xy: 3853, 1285
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+diamonds_queen
+  rotate: false
+  xy: 5137, 1
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+diamonds_seven
+  rotate: false
+  xy: 5137, 1285
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+diamonds_six
+  rotate: false
+  xy: 6421, 1285
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+diamonds_ten
+  rotate: false
+  xy: 6849, 1
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+diamonds_three
+  rotate: false
+  xy: 1713, 1
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+diamonds_two
+  rotate: false
+  xy: 3425, 643
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+hearts_ace
+  rotate: false
+  xy: 857, 1
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+hearts_eight
+  rotate: false
+  xy: 2569, 643
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+hearts_five
+  rotate: false
+  xy: 429, 643
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+hearts_four
+  rotate: false
+  xy: 4709, 1285
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+hearts_jack
+  rotate: false
+  xy: 5993, 1285
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+hearts_king
+  rotate: false
+  xy: 2141, 1
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+hearts_nine
+  rotate: false
+  xy: 4709, 643
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+hearts_queen
+  rotate: false
+  xy: 6849, 643
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+hearts_seven
+  rotate: false
+  xy: 6421, 643
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+hearts_six
+  rotate: false
+  xy: 4281, 1
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+hearts_ten
+  rotate: false
+  xy: 5565, 1285
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+hearts_three
+  rotate: false
+  xy: 3853, 643
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+hearts_two
+  rotate: false
+  xy: 1285, 643
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+spades_ace
+  rotate: false
+  xy: 5993, 1
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+spades_eight
+  rotate: false
+  xy: 4281, 1285
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+spades_five
+  rotate: false
+  xy: 5993, 643
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+spades_four
+  rotate: false
+  xy: 1713, 643
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+spades_jack
+  rotate: false
+  xy: 3425, 1
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+spades_king
+  rotate: false
+  xy: 1, 643
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+spades_nine
+  rotate: false
+  xy: 2997, 1285
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+spades_queen
+  rotate: false
+  xy: 857, 1285
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+spades_seven
+  rotate: false
+  xy: 429, 1285
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+spades_six
+  rotate: false
+  xy: 2141, 1285
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+spades_ten
+  rotate: false
+  xy: 3425, 1285
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+spades_three
+  rotate: false
+  xy: 5137, 643
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
+spades_two
+  rotate: false
+  xy: 6849, 1285
+  size: 426, 640
+  orig: 426, 640
+  offset: 0, 0
+  index: -1
