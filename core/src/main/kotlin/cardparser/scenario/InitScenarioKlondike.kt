@@ -63,7 +63,7 @@ fun Engine.initKlondikeGame(assets: AssetStorage, gameViewport: Viewport) {
         }
         getSystem<RenderSystem>().apply {
             this.configBackground(assets[GeneralAsset.BACKGROUND_DEFAULT.desc])
-            this.configCardBack(assets[CardBackAtlas.CARD_BACK_DEFAULT.desc].findRegion("light"))
+            this.configCardBack(assets[CardBackAtlas.CARD_BACK_RED_DEFAULT.desc].findRegion("red_deck"))
             setProcessing(true)
         }
 //        prepareGameScriptsKlondaik(gameRep)

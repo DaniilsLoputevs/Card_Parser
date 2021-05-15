@@ -1,0 +1,13 @@
+
+back_red.png
+size: 512, 1024
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+red_deck
+  rotate: false
+  xy: 2, 2
+  size: 470, 640
+  orig: 470, 640
+  offset: 0, 0
+  index: -1
