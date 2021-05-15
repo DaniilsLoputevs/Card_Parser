@@ -20,7 +20,6 @@ import java.util.*
 /** Create card deck for game: 52 game cards */
 fun Engine.createCardDeck(textureAtlas: TextureAtlas): MutableList<Card> {
     return mutableListOf<Card>().apply {
-        var textureIndex = 0
         CardSuit.values().forEach { suit ->
             val suitName = suit.name.toLowerCase(Locale.ROOT)
 

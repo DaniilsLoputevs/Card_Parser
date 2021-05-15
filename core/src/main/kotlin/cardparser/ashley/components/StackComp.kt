@@ -57,6 +57,8 @@ class StackComp : Component, Pool.Poolable {
         var shiftRange = 20L
     }
 
+    override fun toString(): String = "stack comp ={ shiftRange = $shiftRange & size = ${cardStack.size} }"
+
     companion object {
         val mapper = mapperFor<StackComp>()
     }

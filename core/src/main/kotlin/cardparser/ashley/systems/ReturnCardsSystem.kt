@@ -14,13 +14,15 @@ class ReturnCardsSystem(val gameEventManager: GameEventManager)
 
     override fun update(deltaTime: Float) {
         dropEvent?.let {
+            logger.debug("Try to return cards", it.cardList)
             if (it.cardList.size > 0 && it.cardReturn) {
                 it.previousStack.addAll(it.cardList)
                 it.cardList.clear()
                 it.cardReturn = false
+                logger.debug("Cards return success")
             }
+            dropEvent = null
         }
-        dropEvent = null
     }
 
 

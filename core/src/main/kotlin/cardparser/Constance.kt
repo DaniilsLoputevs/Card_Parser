@@ -20,8 +20,8 @@ const val MAX_SPEED_RATE = MIN_SPEED_RATE * 1.75f
 //const val MIN_SPEED_RATE = 0.15f
 //const val MAX_SPEED_RATE = MIN_SPEED_RATE * 175f
 
-const val STACK_START_SPEED = 0.15f
-//const val STACK_START_SPEED = 0.00000000001f // percents 0.00f - 1.00f
+//const val STACK_START_SPEED = 0.15f
+const val STACK_START_SPEED = 0.00000000001f // percents 0.00f - 1.00f
 
 /**
  * The radius from the starting position of the touch

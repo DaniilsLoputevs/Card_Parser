@@ -8,7 +8,6 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 
 class DebugSystem : EntitySystem() {
-
     lateinit var cards: MutableList<Card>
     lateinit var mainStack: Stack
     lateinit var bottomStacks: List<Stack>

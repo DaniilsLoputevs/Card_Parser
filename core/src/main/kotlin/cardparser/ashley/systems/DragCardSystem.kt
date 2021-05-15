@@ -72,16 +72,6 @@ class DragCardSystem(val gameEventManager: GameEventManager) : IteratingSystem(
         }
     }
 
-    override fun onEvent(event: GameEvent) {
-        if (event is GameEvent.DragEvent) {
-            startSearch += 2
-            cursorPosition.set(event.cursor)
-        }
-        if (event is GameEvent.StartDragEvent) {
-            startSearch += 1
-            cursorPosition.set(event.cursor)
-        }
-    }
 
     /** Refresh coordinates of all cards that is in dragged stack if we shift cursor and drag stack. */
     private fun dragTouchList() {
@@ -101,6 +91,16 @@ class DragCardSystem(val gameEventManager: GameEventManager) : IteratingSystem(
         )
     }
 
+    override fun onEvent(event: GameEvent) {
+        if (event is GameEvent.DragEvent) {
+            startSearch += 2
+            cursorPosition.set(event.cursor)
+        }
+        if (event is GameEvent.StartDragEvent) {
+            startSearch += 1
+            cursorPosition.set(event.cursor)
+        }
+    }
 
     override fun addedToEngine(engine: Engine?) {
         super.addedToEngine(engine)

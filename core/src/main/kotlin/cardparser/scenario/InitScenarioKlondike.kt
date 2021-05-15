@@ -58,7 +58,7 @@ fun Engine.initKlondikeGame(assets: AssetStorage, gameViewport: Viewport) {
             setProcessing(true)
         }
         getSystem<CalculateIsTouchableSystem>().apply {
-            this.logic = CalculateLogic.KLONDIKE
+            this.touchLogic = CalculateLogic.KLONDIKE
             setProcessing(true)
         }
         getSystem<RenderSystem>().apply {

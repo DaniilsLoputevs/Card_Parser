@@ -8,20 +8,20 @@ import cardparser.logger.loggerApp
 
 enum class CalculateLogic {
     KLONDIKE {
-        override fun doLogic(stack: Stack) {
-            stack.cards().asReversed().forEachIndexed { index, card ->
+        override fun setTouchable(stack: Stack) {
+            val reversed = stack.cards().asReversed()
+            reversed.forEachIndexed { index, card ->
                 if (index == 0) {
                     card.touchable(true)
                     card.open(true)
                 } else {
-                    val prevCard = stack.cards().asReversed()[index - 1]
-                    card.open(klondikeCardTouchable(prevCard, card))
+                    card.open(klondikeCardTouchable(reversed[index - 1], card))
                 }
             }
         }
     };
 
-    open fun doLogic(stack: Stack) {}
+    open fun setTouchable(stack: Stack) {}
 
     companion object {
         private val logger = loggerApp<CalculateLogic>()

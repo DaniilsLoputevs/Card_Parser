@@ -18,16 +18,19 @@ class StartGameSystem(val gameEventManager: GameEventManager) : EntitySystem() {
     lateinit var stackList: List<Stack>
 
     override fun update(deltaTime: Float) {
+//        logger.info("execute :: START")
         accumulate += deltaTime
         if (accumulate > STACK_START_SPEED) {
             if (!logic.doLogic(cards, stack, stackList)) {
                 setProcessing(false)
                 stack.cards().addAll(cards)
                 gameEventManager.dispatchEvent(GameEvent.StartGame)
+                logger.info("execute :: FINISH")
             }
             accumulate = 0f
         }
     }
+
 
     companion object {
         private val logger = loggerApp<StartGameSystem>()

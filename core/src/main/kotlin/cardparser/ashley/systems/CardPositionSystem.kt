@@ -23,7 +23,7 @@ class CardPositionSystem : IteratingSystem(
 
     override fun update(deltaTime: Float) {
         z = 0F
-        super.update(deltaTime)
+        entities.forEach { processEntity(it, deltaTime) }
     }
 
     /** process each stack */

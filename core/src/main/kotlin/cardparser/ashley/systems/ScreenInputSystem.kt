@@ -27,21 +27,6 @@ class ScreenInputSystem(
     /** track pos of first TOUCH DOWN for check: is next TOUCH UP click OR drag? */
     private var memorizedPos: Vector2 = Vector2(0f, 0f)
 
-    /** track time of first TOUCH UP for check: is next TOUCH UP double click? */
-    private var touchTime = -1L
-
-    override fun addedToEngine(engine: Engine?) {
-        gameEventManager.addListener(GameEvent.StartGame::class, this)
-        gameEventManager.addListener(GameEvent.StopGame::class, this)
-        super.addedToEngine(engine)
-    }
-
-    override fun removedFromEngine(engine: Engine?) {
-        gameEventManager.removeListener(GameEvent.StartGame::class, this)
-        gameEventManager.removeListener(GameEvent.StopGame::class, this)
-        super.removedFromEngine(engine)
-    }
-
     override fun onEvent(event: GameEvent) {
         when (event) {
             is GameEvent.StartGame -> setProcessing(true)
@@ -54,9 +39,7 @@ class ScreenInputSystem(
     override fun update(deltaTime: Float) {
         refreshCursorPos()
         when {
-            /**
-             * Press button actions
-             */
+            /** Press button actions */
             isPressLeftButton() && status == TouchStatus.NONE -> {
                 status = TouchStatus.TOUCH
                 saveCurPosInMemorizedPos()
@@ -71,9 +54,7 @@ class ScreenInputSystem(
                 refreshCursorPos()
                 pushStartDragEvent()
             }
-            /**
-             * Stop press button actions
-             */
+            /** Stop press button actions */
             isStopPressLeftButton() && status == TouchStatus.DRAGGED -> {
                 status = TouchStatus.NONE
                 pushDropEvent()
@@ -89,19 +70,14 @@ class ScreenInputSystem(
 
     /* Predicates */
     private fun isPressLeftButton() = Gdx.input.isButtonPressed(Input.Buttons.LEFT)
+    private fun isStopPressLeftButton() = !Gdx.input.isButtonPressed(Input.Buttons.LEFT)
     private fun isMemPosNotZeroAndNotEqualsToCurPos() =
             !isPositionEquals(cursorPos, memorizedPos) && !memorizedPos.isZero
 
-    private fun isStopPressLeftButton() = !Gdx.input.isButtonPressed(Input.Buttons.LEFT)
-
-
     /* events */
-    private fun saveCurPosInMemorizedPos() = memorizedPos.set(cursorPos)
     private fun pushNoneEvent() = gameEventManager.dispatchEvent(GameEvent.NoneEvent)
-
-
     private fun pushDragEvent() {
-//        println("push drag event ${System.currentTimeMillis()}")
+//        logger.debug("pushDragEvent :: x=${cursorPos.x} & y=${cursorPos.y}")
         gameEventManager.dispatchEvent(GameEvent.DragEvent.apply {
             cursor = cursorPos
             memorized = memorizedPos
@@ -116,33 +92,28 @@ class ScreenInputSystem(
     }
 
     private fun pushTouchEvent() {
-//        println("push touch event ${System.currentTimeMillis()}")
+//        logger.debug("pushTouchEvent :: x=${cursorPos.x} & y=${cursorPos.y}")
         gameEventManager.dispatchEvent(GameEvent.TouchEvent.apply {
             position = cursorPos
         })
     }
 
     private fun pushDropEvent() {
-//        println("push drop event ${System.currentTimeMillis()}")
+//        logger.debug("pushDropEvent :: x=${cursorPos.x} & y=${cursorPos.y}")
         gameEventManager.dispatchEvent(GameEvent.DropEvent.apply {
             position = cursorPos
             cardReturn = true
         })
     }
 
+    /* private methods */
+    private fun saveCurPosInMemorizedPos() = memorizedPos.set(cursorPos)
     private fun posToZero() {
         cursorPos.setZero()
         memorizedPos.setZero()
     }
 
-    /* Non main part */
-    private fun reset() {
-        posToZero()
-    }
-
-    /**
-     *  Convert cursor position -> WU position
-     */
+    /** Convert cursor position -> WU position */
     private fun refreshCursorPos() {
         cursorPos.set(Gdx.input.x.toFloat(), Gdx.input.y.toFloat())
         gameViewport.unproject(cursorPos)
@@ -153,6 +124,20 @@ class ScreenInputSystem(
         return (one.x < two.x + TOUCH_RANGE && one.x > two.x - TOUCH_RANGE
                 && one.y < two.y + TOUCH_RANGE && one.y > two.y - TOUCH_RANGE)
     }
+
+    /* Inner part */
+    override fun addedToEngine(engine: Engine?) {
+        gameEventManager.addListener(GameEvent.StartGame::class, this)
+        gameEventManager.addListener(GameEvent.StopGame::class, this)
+        super.addedToEngine(engine)
+    }
+
+    override fun removedFromEngine(engine: Engine?) {
+        gameEventManager.removeListener(GameEvent.StartGame::class, this)
+        gameEventManager.removeListener(GameEvent.StopGame::class, this)
+        super.removedFromEngine(engine)
+    }
+
 
     companion object {
         private val logger = loggerApp<ScreenInputSystem>()

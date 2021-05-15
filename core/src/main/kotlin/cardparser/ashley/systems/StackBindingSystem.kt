@@ -18,29 +18,27 @@ class StackBindingSystem(val gameEventManager: GameEventManager) : IteratingSyst
         allOf(TransformComp::class, StackComp::class)
                 .exclude(MainStackComp::class).get()
 ), GameEventListener {
-
     private val stack = Stack()
-
     private var dropEvent: GameEvent.DropEvent? = null
 
 
     override fun update(deltaTime: Float) {
-        dropEvent?.let {
-            super.update(deltaTime)
+        dropEvent?.let { event ->
+            logger.debug("Try to bind cards")
+            logger.debug("cardList", event.cardList)
+            entities.forEach { processEntity(it, deltaTime) }
             dropEvent = null
         }
     }
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
         dropEvent?.let {
-//            logger.dev("processEntity :: inner invoked")
             stack.entity = entity
-//            logger.dev("stack", stack)
-//            logger.dev("cardList", it.cardList)
             if (stack.containsPos(it.position) && it.cardList.size > 0 && stack.canAddCards(it.cardList)) {
                 stack.addAll(it.cardList)
                 it.cardList.clear()
                 dropEvent = null
+                logger.debug("Cards bind success")
             }
         }
     }

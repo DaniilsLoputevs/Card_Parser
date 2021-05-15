@@ -17,9 +17,10 @@ class GameScreen(
      * -- prepare UI and etc...
      */
     init {
+        val logStartTime = System.currentTimeMillis()
         logger.info("Game init :: START")
         engine.initKlondikeGame(assets, gameViewport)
-        logger.info("Game init :: FINISH")
+        logger.info("Game init :: FINISH ## time = ${(System.currentTimeMillis() - logStartTime) * 0.001f} sec")
     }
 
     override fun render(delta: Float) = engine.update(delta)

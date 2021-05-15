@@ -39,10 +39,10 @@ class MainGame : KtxGame<KtxScreen>() {
 
     override fun create() {
 //        Gdx.app.logLevel = Application.LOG_DEBUG
-
         logger.info("Application :: START")
-        logger.info("Application - Load Initialization assets :: START")
+
         val logStartTime = System.currentTimeMillis()
+        logger.info("Application - Load Initialization assets :: START")
 
 //        val asyncJobsForLoading = prepareLoadingForInitializationAssets()
 //        KtxAsync.launch {
@@ -53,9 +53,9 @@ class MainGame : KtxGame<KtxScreen>() {
         setScreen<LoadingScreen>()
 //        }
 
-        logger.info("Application - Load Initialization assets " +
-                ":: FINISH ## time: ${(System.currentTimeMillis() - logStartTime) * 0.001f} sec")
 
+        logger.info("Application - Load Initialization assets " +
+                ":: FINISH ## time = ${(System.currentTimeMillis() - logStartTime) * 0.001f} sec")
     }
 
     /** Init part */

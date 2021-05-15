@@ -2,13 +2,12 @@ package cardparser.event
 
 import cardparser.ashley.entities.Card
 import cardparser.ashley.entities.Stack
+import cardparser.logger.loggerApp
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectMap
 import ktx.collections.GdxSet
-import ktx.log.logger
 import kotlin.reflect.KClass
 
-private val LOG = logger<GameEventManager>()
 private const val INITIAL_LISTENER_CAPACITY = 8
 
 sealed class GameEvent {
@@ -64,6 +63,9 @@ class GameEventManager {
     }
 
     fun dispatchEvent(event: GameEvent) {
-        listeners[event::class]?.forEach { it.onEvent(event) }
+        listeners[event::class]?.let { it.forEach { each -> each.onEvent(event) } }
+//                ?: logger.warm("Event = ${event::class.simpleName}, doesn't have listeners!")
     }
 }
+
+private val logger = loggerApp<GameEventManager>()
