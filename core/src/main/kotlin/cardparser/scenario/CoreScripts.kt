@@ -7,8 +7,9 @@ import cardparser.ashley.StackAddPredicate
 import cardparser.ashley.components.*
 import cardparser.ashley.components.CardComp.CardRank
 import cardparser.ashley.components.CardComp.CardSuit
-import cardparser.ashley.entities.Card
-import cardparser.ashley.entities.Stack
+import cardparser.entities.Card
+import cardparser.entities.MainStack
+import cardparser.entities.Stack
 import com.badlogic.ashley.core.Engine
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
@@ -83,7 +84,7 @@ fun Engine.createStack(
 /**
  * temple for create FoundationGameStack
  */
-fun Engine.createFoundationStack(
+fun Engine.createUpStack(
         texture: Texture,
         posX: Float, posY: Float, posZ: Float = 0f
 ): Stack {
@@ -109,7 +110,7 @@ fun Engine.createMainStack(
         texture: Texture,
         posX: Float, posY: Float, posZ: Float = 0f,
         _order: Int
-): Stack {
+): MainStack {
     val rsl = entity {
         with<TransformComp> {
             initThis(texture, posX, posY, posZ)
@@ -125,5 +126,5 @@ fun Engine.createMainStack(
             with<DragComp>()
         }
     }
-    return Stack(rsl)
+    return MainStack(rsl)
 }

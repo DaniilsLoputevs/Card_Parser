@@ -1,7 +1,7 @@
 package cardparser.ashley.components
 
 import cardparser.ashley.StackAddPredicate
-import cardparser.ashley.entities.Card
+import cardparser.entities.Card
 import com.badlogic.ashley.core.Component
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Pool

@@ -3,8 +3,8 @@ package cardparser.ashley.systems
 import cardparser.ashley.components.MainStackComp
 import cardparser.ashley.components.StackComp
 import cardparser.ashley.components.TransformComp
-import cardparser.ashley.entities.Card
-import cardparser.ashley.entities.MainStack
+import cardparser.entities.Card
+import cardparser.entities.MainStack
 import cardparser.event.GameEvent
 import cardparser.event.GameEventListener
 import cardparser.event.GameEventManager
@@ -16,10 +16,14 @@ import com.badlogic.gdx.math.Vector2
 import ktx.ashley.allOf
 import ktx.ashley.get
 
-class MainStackSystem(val gameEventManager: GameEventManager) : SortedIteratingSystem(
+class MainStackSystem : SortedIteratingSystem(
         allOf(TransformComp::class, StackComp::class, MainStackComp::class).get(),
         compareBy { entity -> entity[MainStackComp.mapper] }
 ), GameEventListener {
+
+//class MainStackSystem(val gameEventManager: GameEventManager)
+//    : SortedIteratingSystem(MAIN_STACK_FAMILY, compareBy { entity -> entity[MainStackComp.mapper] }),
+//        GameEventListener {
 
     private val currStack = MainStack()
     private val transferCard: MutableList<Card> = mutableListOf()
@@ -92,12 +96,12 @@ class MainStackSystem(val gameEventManager: GameEventManager) : SortedIteratingS
     private fun resetPosBuffer() = run { pos.set(-1f, -1f); isPosActual = false }
 
     override fun addedToEngine(engine: Engine?) {
-        gameEventManager.addListener(GameEvent.TouchEvent::class, this)
+        GameEventManager.addListener(GameEvent.TouchEvent::class, this)
         super.addedToEngine(engine)
     }
 
     override fun removedFromEngine(engine: Engine?) {
-        gameEventManager.removeListener(GameEvent.TouchEvent::class, this)
+        GameEventManager.removeListener(GameEvent.TouchEvent::class, this)
         super.removedFromEngine(engine)
     }
 

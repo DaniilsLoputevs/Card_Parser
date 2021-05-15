@@ -4,12 +4,12 @@ import cardparser.CARD_WIDTH
 import cardparser.STACK_GAP_STEP
 import cardparser.ashley.CalculateLogic
 import cardparser.ashley.StartGameLogic
-import cardparser.ashley.entities.Card
-import cardparser.ashley.entities.Stack
 import cardparser.ashley.systems.*
 import cardparser.asset.CardBackAtlas
 import cardparser.asset.CardDeckAtlas
 import cardparser.asset.GeneralAsset
+import cardparser.entities.Card
+import cardparser.entities.Stack
 import com.badlogic.ashley.core.Engine
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.utils.viewport.Viewport
@@ -102,7 +102,7 @@ fun Engine.createUpStacksKlondike(assets: AssetStorage): List<Stack> {
     for (i in 0..3) {
         corX += STACK_GAP_STEP
         list.add(
-                createFoundationStack(
+                createUpStack(
                         assets[GeneralAsset.CARD_STACK.desc],
                         corX,
                         520f

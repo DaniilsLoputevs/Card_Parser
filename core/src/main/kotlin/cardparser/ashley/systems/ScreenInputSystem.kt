@@ -14,8 +14,7 @@ import com.badlogic.gdx.utils.viewport.Viewport
 
 /** This system process player input per tick add push 4 types of events */
 class ScreenInputSystem(
-        var gameViewport: Viewport,
-        var gameEventManager: GameEventManager
+        var gameViewport: Viewport
 ) : EntitySystem(), GameEventListener {
 
     /** previous cursorAction */
@@ -64,7 +63,6 @@ class ScreenInputSystem(
                 pushTouchEvent()
                 posToZero()
             }
-            else -> pushNoneEvent()
         }
     }
 
@@ -75,17 +73,16 @@ class ScreenInputSystem(
             !isPositionEquals(cursorPos, memorizedPos) && !memorizedPos.isZero
 
     /* events */
-    private fun pushNoneEvent() = gameEventManager.dispatchEvent(GameEvent.NoneEvent)
     private fun pushDragEvent() {
 //        logger.debug("pushDragEvent :: x=${cursorPos.x} & y=${cursorPos.y}")
-        gameEventManager.dispatchEvent(GameEvent.DragEvent.apply {
+        GameEventManager.dispatchEvent(GameEvent.DragEvent.apply {
             cursor = cursorPos
             memorized = memorizedPos
         })
     }
 
     private fun pushStartDragEvent() {
-        gameEventManager.dispatchEvent(GameEvent.StartDragEvent.apply {
+        GameEventManager.dispatchEvent(GameEvent.StartDragEvent.apply {
             cursor = cursorPos
             memorized = memorizedPos
         })
@@ -93,14 +90,14 @@ class ScreenInputSystem(
 
     private fun pushTouchEvent() {
 //        logger.debug("pushTouchEvent :: x=${cursorPos.x} & y=${cursorPos.y}")
-        gameEventManager.dispatchEvent(GameEvent.TouchEvent.apply {
+        GameEventManager.dispatchEvent(GameEvent.TouchEvent.apply {
             position = cursorPos
         })
     }
 
     private fun pushDropEvent() {
-//        logger.debug("pushDropEvent :: x=${cursorPos.x} & y=${cursorPos.y}")
-        gameEventManager.dispatchEvent(GameEvent.DropEvent.apply {
+        logger.debug("pushDropEvent :: x=${cursorPos.x} & y=${cursorPos.y}")
+        GameEventManager.dispatchEvent(GameEvent.DropEvent.apply {
             position = cursorPos
             cardReturn = true
         })
@@ -127,14 +124,14 @@ class ScreenInputSystem(
 
     /* Inner part */
     override fun addedToEngine(engine: Engine?) {
-        gameEventManager.addListener(GameEvent.StartGame::class, this)
-        gameEventManager.addListener(GameEvent.StopGame::class, this)
+        GameEventManager.addListener(GameEvent.StartGame::class, this)
+        GameEventManager.addListener(GameEvent.StopGame::class, this)
         super.addedToEngine(engine)
     }
 
     override fun removedFromEngine(engine: Engine?) {
-        gameEventManager.removeListener(GameEvent.StartGame::class, this)
-        gameEventManager.removeListener(GameEvent.StopGame::class, this)
+        GameEventManager.removeListener(GameEvent.StartGame::class, this)
+        GameEventManager.removeListener(GameEvent.StopGame::class, this)
         super.removedFromEngine(engine)
     }
 

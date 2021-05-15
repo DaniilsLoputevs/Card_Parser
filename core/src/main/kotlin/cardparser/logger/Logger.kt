@@ -47,6 +47,8 @@ private const val LOG_VAR_TEMPLATE = "*LEVEL* || *CLASS* => *MSG* :: *OBJ*"
 /* symbols for replace */
 private val specSymbols: Map<String, String> by lazy {
     mapOf(
+            Pair("-", "$TEXT_GREEN-$TEXT_RESET"),
+            Pair("--", "$TEXT_GREEN--$TEXT_RESET"),
             Pair(" & ", "$TEXT_BLUE & $TEXT_RESET"),
             Pair(" = ", "$TEXT_RED = $TEXT_RESET"),
             Pair(" : ", "$TEXT_RED : $TEXT_RESET"),

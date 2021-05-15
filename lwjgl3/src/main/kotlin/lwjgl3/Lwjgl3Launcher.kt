@@ -1,6 +1,7 @@
 package lwjgl3
 
 import cardparser.MainGame
+import cardparser.event.GameEventManager
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration
 
@@ -16,14 +17,20 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration
  * 240p: 426 x 240
  */
 fun main() {
-    Lwjgl3Application(
-            MainGame(), // create game
-            Lwjgl3ApplicationConfiguration().apply {
-                setTitle("Card Parser by Daniils & Maksim. ))))")
-                setWindowSizeLimits(426, 240, -1, -1)
-                setWindowedMode(854, 480) // 16 : 9
-                setWindowIcon("libgdx128.png", "libgdx64.png", "libgdx32.png", "libgdx16.png")
-            })
+    try {
+        Lwjgl3Application(
+                MainGame(), // create game
+                Lwjgl3ApplicationConfiguration().apply {
+                    setTitle("Card Parser by Daniils & Maksim. ))))")
+                    setWindowSizeLimits(426, 240, -1, -1)
+                    setWindowedMode(854, 480) // 16 : 9
+                    setWindowIcon("libgdx128.png", "libgdx64.png", "libgdx32.png", "libgdx16.png")
+                })
+    } catch (e: Exception) {
+        e.printStackTrace()
+        GameEventManager.logHistory()
+    }
+
 }
 
 //            setWindowedMode(1280, 720) // 16 : 9

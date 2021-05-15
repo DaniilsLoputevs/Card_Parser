@@ -3,7 +3,7 @@ package cardparser.ashley
 import cardparser.ashley.components.CardComp.CardRank.ACE
 import cardparser.ashley.components.CardComp.CardRank.TWO
 import cardparser.ashley.components.StackAPI
-import cardparser.ashley.entities.Card
+import cardparser.entities.Card
 import cardparser.logger.loggerApp
 
 enum class StackAddPredicate {

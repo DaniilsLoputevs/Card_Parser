@@ -7,7 +7,7 @@ import cardparser.logger.loggerApp
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.EntitySystem
 
-class ReturnCardsSystem(val gameEventManager: GameEventManager)
+class ReturnCardsSystem
     : EntitySystem(), GameEventListener {
 
     var dropEvent: GameEvent.DropEvent? = null
@@ -16,7 +16,7 @@ class ReturnCardsSystem(val gameEventManager: GameEventManager)
         dropEvent?.let {
             logger.debug("Try to return cards", it.cardList)
             if (it.cardList.size > 0 && it.cardReturn) {
-                it.previousStack.addAll(it.cardList)
+                it.prevStack.addAll(it.cardList)
                 it.cardList.clear()
                 it.cardReturn = false
                 logger.debug("Cards return success")
@@ -27,12 +27,12 @@ class ReturnCardsSystem(val gameEventManager: GameEventManager)
 
 
     override fun addedToEngine(engine: Engine?) {
-        gameEventManager.addListener(GameEvent.DropEvent::class, this)
+        GameEventManager.addListener(GameEvent.DropEvent::class, this)
         super.addedToEngine(engine)
     }
 
     override fun removedFromEngine(engine: Engine?) {
-        gameEventManager.removeListener(GameEvent.DropEvent::class, this)
+        GameEventManager.removeListener(GameEvent.DropEvent::class, this)
         super.removedFromEngine(engine)
     }
 

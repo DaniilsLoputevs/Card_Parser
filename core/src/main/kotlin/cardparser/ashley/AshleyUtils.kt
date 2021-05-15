@@ -1,30 +1,10 @@
 package cardparser.ashley
 
-import cardparser.ashley.components.*
-import cardparser.ashley.entities.Card
-import cardparser.ashley.entities.Stack
-import com.badlogic.ashley.core.*
-import ktx.ashley.allOf
+import com.badlogic.ashley.core.Component
+import com.badlogic.ashley.core.ComponentMapper
+import com.badlogic.ashley.core.Entity
+import com.badlogic.ashley.core.EntitySystem
 import ktx.ashley.get
-
-
-/* ECS Engine */
-
-
-private val GAME_STACK_FAMILY: Family = allOf(TransformComp::class,
-        GraphicComp::class, StackComp::class).get()
-private val GAME_CARDS_FAMILY: Family = allOf(TransformComp::class,
-        GraphicComp::class, CardComp::class, TouchComp::class).get()
-
-
-fun Engine.getOurGameStacks(): List<Stack> {
-    return this.getEntitiesFor(GAME_STACK_FAMILY).toList().map { Stack(it) }
-}
-
-fun Engine.getOurGameCards(): List<Card> {
-    return this.getEntitiesFor(GAME_CARDS_FAMILY).toList().map { Card(it) }
-}
-
 
 /* ECS Entity */
 

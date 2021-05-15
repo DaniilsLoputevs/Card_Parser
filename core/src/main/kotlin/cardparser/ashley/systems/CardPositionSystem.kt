@@ -4,7 +4,7 @@ import cardparser.MAX_SPEED_RATE
 import cardparser.MIN_SPEED_RATE
 import cardparser.ashley.components.StackComp
 import cardparser.ashley.components.TransformComp
-import cardparser.ashley.entities.Stack
+import cardparser.entities.Stack
 import cardparser.logger.loggerApp
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.systems.IteratingSystem
@@ -15,11 +15,15 @@ import ktx.ashley.allOf
 
 class CardPositionSystem : IteratingSystem(
         allOf(TransformComp::class, StackComp::class).get()
+//                ALL_STACK_FAMILY
 ) {
+
+
     private var step = 0F
     private var z = 0F
     private var nextZ = 0F
     private val nextPos: Vector2 = Vector2.Zero
+
 
     override fun update(deltaTime: Float) {
         z = 0F

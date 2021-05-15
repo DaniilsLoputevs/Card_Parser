@@ -3,8 +3,8 @@ package cardparser.ashley.systems
 import cardparser.CARD_STACK_OFFSET
 import cardparser.ashley.components.DragComp
 import cardparser.ashley.components.TransformComp
-import cardparser.ashley.entities.Card
-import cardparser.ashley.entities.Stack
+import cardparser.entities.Card
+import cardparser.entities.Stack
 import cardparser.event.GameEvent
 import cardparser.event.GameEventListener
 import cardparser.event.GameEventManager
@@ -18,7 +18,7 @@ import ktx.ashley.allOf
 /**
  * TODO - Почему длять, система которая работает со стеками, называется ...CardSystem?????????
  */
-class DragCardSystem(val gameEventManager: GameEventManager) : IteratingSystem(
+class DragCardSystem : IteratingSystem(
         allOf(TransformComp::class, DragComp::class).get()
 ), GameEventListener {
     private val capturedCards: MutableList<Card> = mutableListOf()
@@ -50,6 +50,7 @@ class DragCardSystem(val gameEventManager: GameEventManager) : IteratingSystem(
 
                     eachStack.transferCardsToList(it, capturedCards)
                     memorizeStack.entity = eachStack.entity
+//                    logger.dev("on touch -- eachStack.entity", eachStack.entity)
                     refreshCaptureOffset(it)
 
 //                    logger.dev("touch - cursor") { captureOffset.toString() }
@@ -62,8 +63,9 @@ class DragCardSystem(val gameEventManager: GameEventManager) : IteratingSystem(
             }
             this.dropTakenCards() -> {
 //                logger.dev("on Drop")
-                gameEventManager.dispatchEvent(GameEvent.DropEvent.apply {
-                    previousStack.entity = memorizeStack.entity
+                GameEventManager.dispatchEvent(GameEvent.DropEvent.apply {
+//                    logger.dev("memorizeStack.entity", memorizeStack.entity)
+                    prevStack.entity = memorizeStack.entity
                     cardList.addAll(capturedCards)
                     position.set(cursorPosition)
                     capturedCards.clear()
@@ -104,14 +106,14 @@ class DragCardSystem(val gameEventManager: GameEventManager) : IteratingSystem(
 
     override fun addedToEngine(engine: Engine?) {
         super.addedToEngine(engine)
-        gameEventManager.addListener(GameEvent.StartDragEvent::class, this)
-        gameEventManager.addListener(GameEvent.DragEvent::class, this)
+        GameEventManager.addListener(GameEvent.StartDragEvent::class, this)
+        GameEventManager.addListener(GameEvent.DragEvent::class, this)
     }
 
     override fun removedFromEngine(engine: Engine?) {
         super.removedFromEngine(engine)
-        gameEventManager.removeListener(GameEvent.StartDragEvent::class, this)
-        gameEventManager.removeListener(GameEvent.DragEvent::class, this)
+        GameEventManager.removeListener(GameEvent.StartDragEvent::class, this)
+        GameEventManager.removeListener(GameEvent.DragEvent::class, this)
     }
 
     companion object {

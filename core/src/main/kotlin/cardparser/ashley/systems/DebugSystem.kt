@@ -1,7 +1,7 @@
 package cardparser.ashley.systems
 
-import cardparser.ashley.entities.Card
-import cardparser.ashley.entities.Stack
+import cardparser.entities.Card
+import cardparser.entities.Stack
 import cardparser.logger.loggerApp
 import com.badlogic.ashley.core.EntitySystem
 import com.badlogic.gdx.Gdx
@@ -47,6 +47,13 @@ class DebugSystem : EntitySystem() {
             logger.debug("FOUNDATION STACKS")
             upStacks.forEach { logger.debug(it.toString()) }
             logger.debug("FOUNDATION STACKS")
+            println()
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
+            println()
+            logger.debug("EXCEPTION")
+            throw IllegalAccessError()
+            logger.debug("EXCEPTION")
             println()
         }
     }

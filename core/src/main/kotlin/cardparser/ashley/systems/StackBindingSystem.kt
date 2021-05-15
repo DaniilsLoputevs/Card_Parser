@@ -3,7 +3,7 @@ package cardparser.ashley.systems
 import cardparser.ashley.components.MainStackComp
 import cardparser.ashley.components.StackComp
 import cardparser.ashley.components.TransformComp
-import cardparser.ashley.entities.Stack
+import cardparser.entities.Stack
 import cardparser.event.GameEvent
 import cardparser.event.GameEventListener
 import cardparser.event.GameEventManager
@@ -14,7 +14,7 @@ import com.badlogic.ashley.systems.IteratingSystem
 import ktx.ashley.allOf
 import ktx.ashley.exclude
 
-class StackBindingSystem(val gameEventManager: GameEventManager) : IteratingSystem(
+class StackBindingSystem : IteratingSystem(
         allOf(TransformComp::class, StackComp::class)
                 .exclude(MainStackComp::class).get()
 ), GameEventListener {
@@ -44,12 +44,12 @@ class StackBindingSystem(val gameEventManager: GameEventManager) : IteratingSyst
     }
 
     override fun addedToEngine(engine: Engine?) {
-        gameEventManager.addListener(GameEvent.DropEvent::class, this)
+        GameEventManager.addListener(GameEvent.DropEvent::class, this)
         super.addedToEngine(engine)
     }
 
     override fun removedFromEngine(engine: Engine?) {
-        gameEventManager.removeListener(GameEvent.DropEvent::class, this)
+        GameEventManager.removeListener(GameEvent.DropEvent::class, this)
         super.removedFromEngine(engine)
     }
 

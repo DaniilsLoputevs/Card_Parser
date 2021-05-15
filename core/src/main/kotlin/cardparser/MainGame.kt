@@ -1,7 +1,6 @@
 package cardparser
 
 import cardparser.ashley.systems.*
-import cardparser.event.GameEventManager
 import cardparser.logger.loggerApp
 import cardparser.screens.LoadingScreen
 import com.badlogic.ashley.core.Engine
@@ -33,7 +32,6 @@ class MainGame : KtxGame<KtxScreen>() {
 
     //    val stage: Stage by lazy { initStage() }
     val assets: AssetStorage by lazy { initAssetStorage() }
-    val gameEventManager by lazy { GameEventManager() }
     val engine: Engine by lazy { initEngine() }
 
 
@@ -80,15 +78,15 @@ class MainGame : KtxGame<KtxScreen>() {
     private fun initEngine(): Engine {
         return PooledEngine().apply {
             addSystem(DebugSystem())
-            addSystem(StartGameSystem(gameEventManager).apply { setProcessing(false) })
-            addSystem(ScreenInputSystem(gameViewport, gameEventManager).apply { setProcessing(false) })
-            addSystem(MainStackSystem(gameEventManager).apply { setProcessing(false) })
-            addSystem(DragCardSystem(gameEventManager).apply { setProcessing(false) })
-            addSystem(StackBindingSystem(gameEventManager).apply { setProcessing(false) })
-            addSystem(ReturnCardsSystem(gameEventManager).apply { setProcessing(false) })
+            addSystem(StartGameSystem().apply { setProcessing(false) })
+            addSystem(ScreenInputSystem(gameViewport).apply { setProcessing(false) })
+            addSystem(MainStackSystem().apply { setProcessing(false) })
+            addSystem(DragCardSystem().apply { setProcessing(false) })
+            addSystem(StackBindingSystem().apply { setProcessing(false) })
+            addSystem(ReturnCardsSystem().apply { setProcessing(false) })
             addSystem(CardPositionSystem().apply { setProcessing(false) })
             addSystem(RenderSystem(stage, gameViewport))
-            addSystem(CalculateIsTouchableSystem(gameEventManager).apply { setProcessing(false) })
+            addSystem(CalculateIsTouchableSystem().apply { setProcessing(false) })
         }
     }
 

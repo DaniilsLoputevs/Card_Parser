@@ -2,14 +2,14 @@ package cardparser.ashley.systems
 
 import cardparser.STACK_START_SPEED
 import cardparser.ashley.StartGameLogic
-import cardparser.ashley.entities.Card
-import cardparser.ashley.entities.Stack
+import cardparser.entities.Card
+import cardparser.entities.Stack
 import cardparser.event.GameEvent
 import cardparser.event.GameEventManager
 import cardparser.logger.loggerApp
 import com.badlogic.ashley.core.EntitySystem
 
-class StartGameSystem(val gameEventManager: GameEventManager) : EntitySystem() {
+class StartGameSystem : EntitySystem() {
 
     var accumulate = 0f
     lateinit var logic: StartGameLogic
@@ -24,7 +24,7 @@ class StartGameSystem(val gameEventManager: GameEventManager) : EntitySystem() {
             if (!logic.doLogic(cards, stack, stackList)) {
                 setProcessing(false)
                 stack.cards().addAll(cards)
-                gameEventManager.dispatchEvent(GameEvent.StartGame)
+                GameEventManager.dispatchEvent(GameEvent.StartGame)
                 logger.info("execute :: FINISH")
             }
             accumulate = 0f
