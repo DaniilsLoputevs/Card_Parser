@@ -19,6 +19,8 @@ class CardPositionSystem : IteratingSystem(
 ) {
 
 
+    private val stack = Stack()
+
     private var step = 0F
     private var z = 0F
     private var nextZ = 0F
@@ -32,36 +34,34 @@ class CardPositionSystem : IteratingSystem(
 
     /** process each stack */
     override fun processEntity(entity: Entity, deltaTime: Float) {
-        val stack = Stack(entity)
+        stack.entity = entity
         step = 0F
 
-        stack.cards().forEachIndexed { index, it ->
+        stack.cards().forEachIndexed { index, card ->
             nextPos.set(stack.pos().x, stack.pos().y - step)
-            if (isNear(nextPos, it.pos())) {
-                it.setPos(
-                        lerp(it.pos().x, nextPos.x, MAX_SPEED_RATE),
-                        lerp(it.pos().y, nextPos.y, MAX_SPEED_RATE),
+            if (isNear(nextPos, card.pos())) {
+                card.setPos(
+                        lerp(card.pos().x, nextPos.x, MAX_SPEED_RATE),
+                        lerp(card.pos().y, nextPos.y, MAX_SPEED_RATE),
                         z + 1
                 )
             } else {
-                nextZ = if (index == 0) it.pos().z + z
+                nextZ = if (index == 0) card.pos().z + z
                 else {
                     val prevCardDepth = stack[index - 1].pos().z
-                    if (prevCardDepth > it.pos().z) prevCardDepth + z
-                    else it.pos().z + z
+                    if (prevCardDepth > card.pos().z) prevCardDepth + z
+                    else card.pos().z + z
                 }
 
-                it.setPos(
-                        lerp(it.pos().x, nextPos.x, MIN_SPEED_RATE),
-                        lerp(it.pos().y, nextPos.y, MIN_SPEED_RATE),
+                card.setPos(
+                        lerp(card.pos().x, nextPos.x, MIN_SPEED_RATE),
+                        lerp(card.pos().y, nextPos.y, MIN_SPEED_RATE),
                         nextZ
                 )
             }
-            step += if (it.open()) {
-                stack.stackComp.shiftRange
-            } else {
-                (stack.stackComp.shiftRange / 1.5).toLong()
-            }
+            step += if (card.open()) stack.stackComp.shiftRange
+             else (stack.stackComp.shiftRange / 1.5).toLong()
+
             z++
         }
     }

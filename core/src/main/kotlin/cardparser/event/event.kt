@@ -49,12 +49,11 @@ sealed class GameEvent {
     object DropEvent : GameEvent() {
         //        var activityID: Int = 8
         var prevStack: Stack = Stack()
-        var cardReturn: Boolean = false
         var cardList: MutableList<Card> = mutableListOf()
         var position: Vector2 = Vector2().setZero()
 
         override fun toString(): String {
-            return "DropEvent -- prevStack = $prevStack & cardReturn = $cardReturn & cardList = $cardList & position = $position"
+            return "DropEvent -- prevStack = $prevStack & cardList = $cardList & position = $position"
         }
     }
 }

@@ -4,9 +4,7 @@ import cardparser.ashley.components.MainStackComp
 import cardparser.ashley.components.StackComp
 import cardparser.ashley.components.TransformComp
 import cardparser.entities.Stack
-import cardparser.event.GameEvent
-import cardparser.event.GameEventListener
-import cardparser.event.GameEventManager
+import cardparser.event.*
 import cardparser.logger.loggerApp
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
@@ -20,6 +18,7 @@ class StackBindingSystem : IteratingSystem(
 ), GameEventListener {
     private val stack = Stack()
     private var dropEvent: GameEvent.DropEvent? = null
+    private var isBindingSuccess = false
 
 
     override fun update(deltaTime: Float) {
@@ -27,6 +26,9 @@ class StackBindingSystem : IteratingSystem(
             logger.debug("Try to bind cards")
             logger.debug("cardList", event.cardList)
             entities.forEach { processEntity(it, deltaTime) }
+
+            logger.dev("dev event", event)
+            if (!isBindingSuccess) TaskManager.dispatchTask(ReturnCards(event.prevStack, event.cardList))
             dropEvent = null
         }
     }
@@ -39,6 +41,7 @@ class StackBindingSystem : IteratingSystem(
                 it.cardList.clear()
                 dropEvent = null
                 logger.debug("Cards bind success")
+                isBindingSuccess = true
             }
         }
     }
