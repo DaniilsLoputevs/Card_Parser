@@ -1,0 +1,34 @@
+
+fonts.png
+size: 2048, 2048
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+Purisa_24_black
+  rotate: false
+  xy: 1, 1
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+Purisa_24_white
+  rotate: false
+  xy: 1, 515
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+Purisa_32_black
+  rotate: false
+  xy: 515, 1029
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+Purisa_32_white
+  rotate: false
+  xy: 1, 1029
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1

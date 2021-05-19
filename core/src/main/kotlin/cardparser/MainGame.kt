@@ -1,18 +1,24 @@
 package cardparser
 
 import cardparser.ashley.systems.*
+import cardparser.asset.FontAsset
+import cardparser.asset.UIAtlasAssets
 import cardparser.logger.loggerApp
 import cardparser.screens.LoadingScreen
+import cardparser.utils.createSkin
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.PooledEngine
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.Viewport
+import kotlinx.coroutines.joinAll
+import kotlinx.coroutines.launch
 import ktx.app.KtxGame
 import ktx.app.KtxScreen
 import ktx.assets.async.AssetStorage
 import ktx.async.KtxAsync
+import ktx.collections.gdxArrayOf
 
 /**
  * Main Game class
@@ -31,7 +37,10 @@ class MainGame : KtxGame<KtxScreen>() {
     }
 
     //    val stage: Stage by lazy { initStage() }
-    val assets: AssetStorage by lazy { initAssetStorage() }
+    val assets: AssetStorage by lazy {
+        KtxAsync.initiate()
+        AssetStorage().apply {  }
+    }
     val engine: Engine by lazy { initEngine() }
 
 
@@ -42,25 +51,21 @@ class MainGame : KtxGame<KtxScreen>() {
         val logStartTime = System.currentTimeMillis()
         logger.info("Application - Load Initialization assets :: START")
 
-//        val asyncJobsForLoading = prepareLoadingForInitializationAssets()
-//        KtxAsync.launch {
-//            asyncJobsForLoading.joinAll()
-//          }
-        /* go to LoadingScreen to load remaining assets */
-        addScreen(LoadingScreen(this@MainGame))
-        setScreen<LoadingScreen>()
-//        }
+        var uiAssets = gdxArrayOf(
+            UIAtlasAssets.values().map { assets.loadAsync(it.desc) },
+            FontAsset.values().map { assets.loadAsync(it.desc) }
+        ).flatten()
 
-
-        logger.info("Application - Load Initialization assets " +
-                ":: FINISH ## time = ${(System.currentTimeMillis() - logStartTime) * 0.001f} sec")
-    }
-
-    /** Init part */
-
-    private fun initAssetStorage(): AssetStorage {
-        KtxAsync.initiate()
-        return AssetStorage()
+        KtxAsync.launch {
+            uiAssets.joinAll()
+            createSkin(assets)
+            addScreen(LoadingScreen(this@MainGame))
+            setScreen<LoadingScreen>()
+        }
+        logger.info(
+            "Application - Load Initialization assets " +
+                    ":: FINISH ## time = ${(System.currentTimeMillis() - logStartTime) * 0.001f} sec"
+        )
     }
 
     /**
