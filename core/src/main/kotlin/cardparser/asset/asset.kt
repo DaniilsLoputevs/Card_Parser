@@ -42,7 +42,7 @@ enum class UIAtlasAssets(
     directory: String = UI_DIR,
     val desc: AssetDescriptor<TextureAtlas> = AssetDescriptor("$directory/$fileName", TextureAtlas::class.java)
 ) {
-    FONTS("fonts.atlas")
+    UI("ui.atlas")
 }
 
 enum class FontAsset(
@@ -52,7 +52,7 @@ enum class FontAsset(
         AssetDescriptor("$directory/$fileName",
             BitmapFont::class.java,
         BitmapFontLoader.BitmapFontParameter().apply {
-            atlasName = UIAtlasAssets.FONTS.desc.fileName
+            atlasName = UIAtlasAssets.UI.desc.fileName
         })
 ) {
     FONT_LARGE_BLACK("Purisa_32_black.fnt"),

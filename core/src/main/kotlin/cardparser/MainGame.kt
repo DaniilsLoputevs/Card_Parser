@@ -43,6 +43,12 @@ class MainGame : KtxGame<KtxScreen>() {
     }
     val engine: Engine by lazy { initEngine() }
 
+    override fun dispose() {
+        logger.info("start main dispose")
+        assets.dispose()
+        stage.dispose()
+        super.dispose()
+    }
 
     override fun create() {
 //        Gdx.app.logLevel = Application.LOG_DEBUG
@@ -51,7 +57,7 @@ class MainGame : KtxGame<KtxScreen>() {
         val logStartTime = System.currentTimeMillis()
         logger.info("Application - Load Initialization assets :: START")
 
-        var uiAssets = gdxArrayOf(
+        val uiAssets = gdxArrayOf(
             UIAtlasAssets.values().map { assets.loadAsync(it.desc) },
             FontAsset.values().map { assets.loadAsync(it.desc) }
         ).flatten()

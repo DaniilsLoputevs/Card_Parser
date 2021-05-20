@@ -8,19 +8,12 @@ class GameScreen(
         game: MainGame
 ) : AbstractScreen(game) {
     private val logger = loggerApp<GameScreen>()
+    var chosen: String = "none"
 
-
-    /**
-     * Screen init Scenario: run all Scripts that make game game field:
-     * -- create cards
-     * -- create GameContext
-     * -- prepare UI and etc...
-     */
-    init {
-        val logStartTime = System.currentTimeMillis()
-        logger.info("Game init :: START")
+    override fun show() {
+        super.show()
+        logger.info("Chosen $chosen")
         engine.initKlondikeGame(assets, gameViewport)
-        logger.info("Game init :: FINISH ## time = ${(System.currentTimeMillis() - logStartTime) * 0.001f} sec")
     }
 
     override fun render(delta: Float) = engine.update(delta)

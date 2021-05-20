@@ -1,0 +1,69 @@
+
+ui.png
+size: 4096, 2048
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+Purisa_24_black
+  rotate: false
+  xy: 1923, 311
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+Purisa_24_white
+  rotate: false
+  xy: 1923, 825
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+Purisa_32_black
+  rotate: false
+  xy: 2437, 1339
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+Purisa_32_white
+  rotate: false
+  xy: 1923, 1339
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+ALL_SUITS
+  rotate: false
+  xy: 1, 1
+  size: 1920, 1850
+  orig: 1920, 1850
+  offset: 0, 0
+  index: -1
+SPADES
+  rotate: false
+  xy: 1, 1
+  size: 960, 925
+  orig: 960, 925
+  offset: 0, 0
+  index: -1
+HEARTS
+  rotate: false
+  xy: 960, 1
+  size: 960, 925
+  orig: 960, 925
+  offset: 0, 0
+  index: -1
+DIAMONDS
+  rotate: false
+  xy: 1, 925
+  size: 960, 925
+  orig: 960, 925
+  offset: 0, 0
+  index: -1
+CLUBS
+  rotate: false
+  xy: 960, 925
+  size: 960, 925
+  orig: 960, 925
+  offset: 0, 0
+  index: -1

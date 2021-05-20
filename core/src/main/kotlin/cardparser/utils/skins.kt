@@ -7,16 +7,21 @@ import ktx.scene2d.Scene2DSkin
 import ktx.style.label
 import ktx.style.skin
 import cardparser.utils.LabelStyles.*
+import cardparser.utils.ImageButtonStyle.*
+import com.badlogic.gdx.scenes.scene2d.ui.Skin
+import ktx.style.imageButton
 
-enum class LabelStyles { BLACK32, BLACK24, WHITE32, WHITE24; }
+enum class LabelStyles { BLACK32, BLACK24, WHITE32, WHITE24 }
+
+enum class ImageButtonStyle { SPADES, HEARTS, CLUBS, DIAMONDS }
 
 fun createSkin(assets: AssetStorage) {
-    val uiFontSkins = assets[UIAtlasAssets.FONTS.desc]
+    val gui = assets[UIAtlasAssets.UI.desc]
     val black32 = assets[FontAsset.FONT_LARGE_BLACK.desc]
     val black24 = assets[FontAsset.FONT_MEDIUM_BLACK.desc]
     val white32 = assets[FontAsset.FONT_LARGE_WHITE.desc]
     val white24 = assets[FontAsset.FONT_MEDIUM_WHITE.desc]
-    Scene2DSkin.defaultSkin = skin(uiFontSkins) {
+    Scene2DSkin.defaultSkin = skin(gui) {
         label(BLACK32.name) {
             font = black32
         }
@@ -28,6 +33,22 @@ fun createSkin(assets: AssetStorage) {
         }
         label(WHITE24.name) {
             font = white24
+        }
+        imageButton(SPADES.name) {
+            imageUp = this@skin.getDrawable(SPADES.name)
+            imageDown = imageUp
+        }
+        imageButton(HEARTS.name) {
+            imageUp = this@skin.getDrawable(HEARTS.name)
+            imageDown = imageUp
+        }
+        imageButton(CLUBS.name) {
+            imageUp = this@skin.getDrawable(CLUBS.name)
+            imageDown = imageUp
+        }
+        imageButton(DIAMONDS.name) {
+            imageUp = this@skin.getDrawable(DIAMONDS.name)
+            imageDown = imageUp
         }
     }
 }
