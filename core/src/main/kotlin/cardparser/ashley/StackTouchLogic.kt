@@ -6,10 +6,10 @@ import cardparser.entities.Card
 import cardparser.entities.Stack
 import cardparser.logger.loggerApp
 
-enum class CalculateLogic {
+enum class StackTouchLogic {
     KLONDIKE {
         override fun setTouchable(stack: Stack) {
-            val reversed = stack.cards().asReversed()
+            val reversed = stack.asReversed()
             reversed.forEachIndexed { index, card ->
                 if (index == 0) {
                     card.touchable(true)
@@ -19,18 +19,19 @@ enum class CalculateLogic {
                 }
             }
         }
+
+        private fun klondikeCardTouchable(prevCard: Card, card: Card): Boolean {
+            return prevCard.touchable()
+                    && card.open()
+                    && card.suit().colour != prevCard.suit().colour
+                    && ((card.rank().ordinal == prevCard.rank().ordinal + 1) || (card.rank().isIt(TWO) && prevCard.rank().isIt(ACE)))
+        }
     };
 
     open fun setTouchable(stack: Stack) {}
 
     companion object {
-        private val logger = loggerApp<CalculateLogic>()
+        private val logger by lazy { loggerApp<StackTouchLogic>() }
     }
 }
 
-private fun klondikeCardTouchable(prevCard: Card, card: Card): Boolean {
-    return prevCard.touchable()
-            && card.open()
-            && card.suit().colour != prevCard.suit().colour
-            && ((card.rank().ordinal == prevCard.rank().ordinal + 1) || (card.rank().isIt(TWO) && prevCard.rank().isIt(ACE)))
-}

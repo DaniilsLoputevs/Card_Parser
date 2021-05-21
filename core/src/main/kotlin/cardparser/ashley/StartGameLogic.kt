@@ -4,12 +4,13 @@ import cardparser.entities.Card
 import cardparser.entities.Stack
 import cardparser.logger.loggerApp
 
+@Deprecated("NOT IN USE")
 enum class StartGameLogic {
     KLONDIKE_START {
         var startLogic = true
         var processLogic = true
 
-        override fun doLogic(
+        override fun start(
                 cards: MutableList<Card>,
                 startStack: Stack,
                 stacksList: List<Stack>
@@ -27,10 +28,10 @@ enum class StartGameLogic {
                 }
                 processLogic -> {
                     stacksList.forEachIndexed { index, stack ->
-                        if (stack.cards().size < (index + 1)) {
-                            cards.removeLastOrNull()?.let { stack.cards().add(it) }
-                            if (stack.cards().size == (index + 1)) {
-                                stack.cards().last().run {
+                        if (stack.size() < (index + 1)) {
+                            cards.removeLastOrNull()?.let { stack.add(it) }
+                            if (stack.size() == (index + 1)) {
+                                stack.last().run {
                                     this.touchable(true)
                                     this.open(true)
                                 }
@@ -48,7 +49,7 @@ enum class StartGameLogic {
         }
     };
 
-    open fun doLogic(
+    open fun start(
             cards: MutableList<Card>,
             startStack: Stack,
             stacksList: List<Stack>

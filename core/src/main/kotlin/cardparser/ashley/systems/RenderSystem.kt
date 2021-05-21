@@ -2,14 +2,13 @@ package cardparser.ashley.systems
 
 import cardparser.CARD_HEIGHT
 import cardparser.CARD_WIDTH
-import cardparser.V_WORLD_HEIGHT_UNITS
-import cardparser.V_WORLD_WIDTH_UNITS
+import cardparser.WORLD_HEIGHT_WU
+import cardparser.WORLD_WIDTH_WU
 import cardparser.ashley.components.CardComp
 import cardparser.ashley.components.GraphicComp
 import cardparser.ashley.components.TransformComp
 import cardparser.ashley.findComp
 import cardparser.logger.loggerApp
-import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.systems.SortedIteratingSystem
 import com.badlogic.gdx.graphics.Texture
@@ -47,48 +46,30 @@ class RenderSystem(
     var cardBackSprite: Sprite = Sprite()
 
 
-    fun configBackground(backgroundTexture: Texture) {
+    fun setBackground(backgroundTexture: Texture) {
         background.apply {
             setRegion(backgroundTexture)
             // pixels but equals to WU, so World is 1280 x 720, - background as well
-            setSize(V_WORLD_WIDTH_UNITS, V_WORLD_HEIGHT_UNITS)
+            setSize(WORLD_WIDTH_WU, WORLD_HEIGHT_WU)
         }
     }
 
-    fun configCardBack(cardBackTexture: TextureRegion) {
+    fun setCardBack(cardBackTexture: TextureRegion) {
         cardBackSprite.apply {
             setRegion(cardBackTexture)
             setSize(CARD_WIDTH, CARD_HEIGHT)
         }
     }
 
-    /**
-     * Called when this EntitySystem is added to an {@link Engine}.
-     * @param engine The {@link Engine} this system was added to.
-     */
-    override fun addedToEngine(engine: Engine?) {
-        super.addedToEngine(engine)
-    }
-
-    override fun removedFromEngine(engine: Engine?) {
-        super.removedFromEngine(engine)
-    }
-
     override fun update(deltaTime: Float) {
-
-        // render background
         renderBackground()
-
-        // render entities
         renderEntity(deltaTime)
     }
 
     private fun renderBackground() {
         if (background.texture == null) return
         stage.viewport.apply()
-        batch.use(stage.camera.combined) {
-            background.draw(it)
-        }
+        batch.use(stage.camera.combined) { background.draw(it) }
     }
 
     private fun renderEntity(deltaTime: Float) {
@@ -114,8 +95,7 @@ class RenderSystem(
         /* If card Closed we need to ignore card's texture and render card back texture,
          after that finish method */
         val currentSprite = when {
-            entity.contains(CardComp.mapper)
-                    && isCardClose(entity) -> cardBackSprite
+            entity.contains(CardComp.mapper) && isCardClose(entity) -> cardBackSprite
             else -> graphicComp.sprite
         }
 
@@ -134,6 +114,6 @@ class RenderSystem(
     private fun isCardClose(entity: Entity): Boolean = !entity[CardComp.mapper]!!.isCardOpen
 
     companion object {
-        private val logger = loggerApp<RenderSystem>()
+        private val logger by lazy { loggerApp<RenderSystem>() }
     }
 }

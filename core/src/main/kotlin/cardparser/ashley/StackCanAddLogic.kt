@@ -6,12 +6,12 @@ import cardparser.ashley.components.StackAPI
 import cardparser.entities.Card
 import cardparser.logger.loggerApp
 
-enum class StackAddPredicate {
+enum class StackCanAddLogic {
     KLONDAIK {
         override fun check(stack: StackAPI, addedCards: List<Card>): Boolean {
-            if (stack.cards().isEmpty()) return true
+            if (stack.isEmpty()) return true
             val addedCard = addedCards.first()
-            val stackLastCard = stack.cards().last()
+            val stackLastCard = stack.last()
             return if (stackLastCard.suit().colour != addedCard.suit().colour) {
                 if (stackLastCard.rank().isIt(ACE)) {
                     false
@@ -34,15 +34,15 @@ enum class StackAddPredicate {
 //            val stackLastCard = stack.cards().last()
 //            logger.dev("card new ", addedCard)
 //            logger.dev("card last", addedCard)
-            return if (stack.cards().isEmpty() && addedCard.rank().isIt(ACE)) {
+            return if (stack.isEmpty() && addedCard.rank().isIt(ACE)) {
                 true
-            } else if (stack.cards().isNotEmpty()) {
-                val stackLastCard = stack.cards().last()
+            } else if (stack.isNotEmpty()) {
+                val stackLastCard = stack.last()
 
                 if (addedCard.suit() == stackLastCard.suit()) {
                     if (stackLastCard.rank().isIt(ACE) && addedCard.rank().isIt(TWO)
                     ) true
-                    else stack.cards().last().rank().ordinal + 1 == addedCard.rank().ordinal
+                    else stack.last().rank().ordinal + 1 == addedCard.rank().ordinal
                 } else false
 
             } else {
@@ -54,6 +54,6 @@ enum class StackAddPredicate {
     open fun check(stack: StackAPI, addedCards: List<Card>): Boolean = true
 
     companion object {
-        private val logger = loggerApp<StackAddPredicate>()
+        private val logger by lazy { loggerApp<StackCanAddLogic>() }
     }
 }

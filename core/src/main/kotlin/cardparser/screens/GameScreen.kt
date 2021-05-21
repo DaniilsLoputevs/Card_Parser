@@ -7,7 +7,6 @@ import cardparser.scenario.initKlondikeGame
 class GameScreen(
         game: MainGame
 ) : AbstractScreen(game) {
-    private val logger = loggerApp<GameScreen>()
 
 
     /**
@@ -28,5 +27,9 @@ class GameScreen(
     override fun resize(width: Int, height: Int) {
         game.stage.viewport.update(width, height, true)
         game.gameViewport.update(width, height, true)
+    }
+
+    companion object {
+        private val logger by lazy { loggerApp<GameScreen>() }
     }
 }

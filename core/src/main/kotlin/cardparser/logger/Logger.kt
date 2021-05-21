@@ -2,6 +2,12 @@ package cardparser.logger
 
 import java.util.*
 
+/**
+ * TODO : msg background
+ * TODO : (optional) make THREAD template
+ * TODO : (optional) make TIMESTAMP template
+ * TODO : (optional) make option BACKGROUND for levels or symbols
+ */
 inline fun <reified C : Any> loggerApp(): Logger<C> = LoggerImpl(C::class.java.simpleName)
 
 /**
@@ -59,7 +65,7 @@ private val specSymbols: Map<String, String> by lazy {
 
 
 class LoggerImpl<C>(clazz: String) : Logger<C> {
-    private val levels = mutableListOf<LogLevel>().apply { this.addAll(LogLevel.values()) }
+    private val levels = mutableSetOf<LogLevel>().apply { this.addAll(LogLevel.values()) }
     private val infTemplate = LOG_INF_TEMPLATE.replace("*CLASS*", clazz)
     private val valTemplate = LOG_VAR_TEMPLATE.replace("*CLASS*", clazz)
 
@@ -79,9 +85,7 @@ class LoggerImpl<C>(clazz: String) : Logger<C> {
     override fun error(msg: String) = check(LogLevel.ERROR) { println(of(LogLevel.ERROR, msg)) }
     override fun error(msg: String, obj: Any) = check(LogLevel.ERROR) { println(of(LogLevel.ERROR, msg, obj)) }
 
-    override fun levels(vararg levels: LogLevel) {
-        this.levels.clear(); this.levels.addAll(levels)
-    }
+    override fun levels(vararg levels: LogLevel): Unit = run { this.levels.clear(); this.levels.addAll(levels) }
 
 
     private fun check(level: LogLevel, print: () -> Unit) = if (levels.contains(level)) print.invoke() else Unit

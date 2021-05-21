@@ -1,7 +1,7 @@
 package cardparser.ashley.systems
 
-import cardparser.MAX_SPEED_RATE
-import cardparser.MIN_SPEED_RATE
+import cardparser.MAX_CARD_MOVE_SPEED_RATE
+import cardparser.MIN_CARD_MOVE_SPEED_RATE
 import cardparser.ashley.components.StackComp
 import cardparser.ashley.components.TransformComp
 import cardparser.entities.Stack
@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
 import ktx.ashley.allOf
 
+@Deprecated("off")
 class CardPositionSystem : IteratingSystem(
         allOf(TransformComp::class, StackComp::class).get()
 //                ALL_STACK_FAMILY
@@ -37,12 +38,12 @@ class CardPositionSystem : IteratingSystem(
         stack.entity = entity
         step = 0F
 
-        stack.cards().forEachIndexed { index, card ->
+        stack.forEachIndexed { index, card ->
             nextPos.set(stack.pos().x, stack.pos().y - step)
             if (isNear(nextPos, card.pos())) {
                 card.setPos(
-                        lerp(card.pos().x, nextPos.x, MAX_SPEED_RATE),
-                        lerp(card.pos().y, nextPos.y, MAX_SPEED_RATE),
+                        lerp(card.pos().x, nextPos.x, MAX_CARD_MOVE_SPEED_RATE),
+                        lerp(card.pos().y, nextPos.y, MAX_CARD_MOVE_SPEED_RATE),
                         z + 1
                 )
             } else {
@@ -54,13 +55,13 @@ class CardPositionSystem : IteratingSystem(
                 }
 
                 card.setPos(
-                        lerp(card.pos().x, nextPos.x, MIN_SPEED_RATE),
-                        lerp(card.pos().y, nextPos.y, MIN_SPEED_RATE),
+                        lerp(card.pos().x, nextPos.x, MIN_CARD_MOVE_SPEED_RATE),
+                        lerp(card.pos().y, nextPos.y, MIN_CARD_MOVE_SPEED_RATE),
                         nextZ
                 )
             }
-            step += if (card.open()) stack.stackComp.shiftRange
-             else (stack.stackComp.shiftRange / 1.5).toLong()
+            step += if (card.open()) stack.stackComp.shiftStep
+            else (stack.stackComp.shiftStep / 1.5).toLong()
 
             z++
         }

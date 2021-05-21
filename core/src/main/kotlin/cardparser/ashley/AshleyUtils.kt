@@ -6,9 +6,6 @@ import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.core.EntitySystem
 import ktx.ashley.get
 
-/* ECS Entity */
-
-
 /**
  * For using in [EntitySystem].
  *
@@ -23,8 +20,3 @@ inline fun <reified T : Component> Entity.findComp(mapper: ComponentMapper<T>): 
     require(rslComponent != null) { "Entity |entity| must have a ${T::class.simpleName}. entity=$this" }
     return rslComponent
 }
-
-fun Entity.toPrint(): String {
-    return this.components.toString()
-}
-

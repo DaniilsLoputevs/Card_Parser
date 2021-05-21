@@ -1,6 +1,6 @@
 package cardparser.ashley.systems
 
-import cardparser.event.TaskManager
+import cardparser.tasks.TaskManager
 import com.badlogic.ashley.core.EntitySystem
 
 class TaskExecutorSystem : EntitySystem() {

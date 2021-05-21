@@ -19,7 +19,6 @@ import ktx.collections.gdxArrayOf
 class LoadingScreen(
         game: MainGame
 ) : AbstractScreen(game) {
-    private val logger = loggerApp<LoadingScreen>()
 
     override fun show() {
 //        logger.info {
@@ -56,6 +55,10 @@ class LoadingScreen(
     override fun dispose() {
         super.dispose()
         logger.info { "Loading Screen :: DISPOSED" }
+    }
+
+    companion object {
+        private val logger by lazy { loggerApp<LoadingScreen>() }
     }
 }
 //    override fun hide() {

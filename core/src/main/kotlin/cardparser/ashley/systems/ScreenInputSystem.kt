@@ -1,21 +1,19 @@
 package cardparser.ashley.systems
 
+import cardparser.GAME_TITLE
 import cardparser.TOUCH_RANGE
 import cardparser.event.GameEvent
-import cardparser.event.GameEventListener
 import cardparser.event.GameEventManager
 import cardparser.logger.loggerApp
-import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.EntitySystem
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.viewport.Viewport
+import kotlin.math.roundToLong
 
-/** This system process player input per tick add push 4 types of events */
-class ScreenInputSystem(
-        var gameViewport: Viewport
-) : EntitySystem(), GameEventListener {
+/** This system process player input per tick add push SIS events */
+class ScreenInputSystem(var gameViewport: Viewport) : EntitySystem() {
 
     /** previous cursorAction */
     private var status: TouchStatus = TouchStatus.NONE
@@ -26,30 +24,22 @@ class ScreenInputSystem(
     /** track pos of first TOUCH DOWN for check: is next TOUCH UP click OR drag? */
     private var memorizedPos: Vector2 = Vector2(0f, 0f)
 
-    override fun onEvent(event: GameEvent) {
-        when (event) {
-            is GameEvent.StartGame -> setProcessing(true)
-            is GameEvent.StopGame -> setProcessing(false)
-            else -> {
-            }
-        }
-    }
-
     override fun update(deltaTime: Float) {
         refreshCursorPos()
+        setTitlePosInfo()
         when {
             /** Press button actions */
             isPressLeftButton() && status == TouchStatus.NONE -> {
                 status = TouchStatus.TOUCH
                 saveCurPosInMemorizedPos()
             }
-            isPressLeftButton() && (status == TouchStatus.START_DRAGGED || status == TouchStatus.DRAGGED) -> {
+            isPressLeftButton() && (status == TouchStatus.GRAB || status == TouchStatus.DRAGGED) -> {
                 status = TouchStatus.DRAGGED
                 refreshCursorPos()
                 pushDragEvent()
             }
             isPressLeftButton() && isMemPosNotZeroAndNotEqualsToCurPos() -> {
-                status = TouchStatus.START_DRAGGED
+                status = TouchStatus.GRAB
                 refreshCursorPos()
                 pushStartDragEvent()
             }
@@ -76,6 +66,7 @@ class ScreenInputSystem(
     private fun pushDragEvent() {
 //        logger.debug("pushDragEvent :: x=${cursorPos.x} & y=${cursorPos.y}")
         GameEventManager.dispatchEvent(GameEvent.DragEvent.apply {
+            eventId = GameEventManager.genId()
             cursor = cursorPos
             memorized = memorizedPos
         })
@@ -83,6 +74,7 @@ class ScreenInputSystem(
 
     private fun pushStartDragEvent() {
         GameEventManager.dispatchEvent(GameEvent.StartDragEvent.apply {
+            eventId = GameEventManager.genId()
             cursor = cursorPos
             memorized = memorizedPos
         })
@@ -91,15 +83,22 @@ class ScreenInputSystem(
     private fun pushTouchEvent() {
 //        logger.debug("pushTouchEvent :: x=${cursorPos.x} & y=${cursorPos.y}")
         GameEventManager.dispatchEvent(GameEvent.TouchEvent.apply {
+            eventId = GameEventManager.genId()
             position = cursorPos
         })
     }
 
     private fun pushDropEvent() {
         logger.debug("pushDropEvent :: x=${cursorPos.x} & y=${cursorPos.y}")
-        GameEventManager.dispatchEvent(GameEvent.DropEvent.apply {
-            position = cursorPos
+        GameEventManager.dispatchEvent(GameEvent.DropEventNew.apply {
+            eventId = GameEventManager.genId()
+            cursor = cursorPos
         })
+    }
+
+    private fun setTitlePosInfo() {
+        if (cursorPos.x.isNaN()) return // Avoid invoke NaN.roundToLong() -> NaN Exception
+        Gdx.graphics.setTitle("$GAME_TITLE ${cursorPos.x.roundToLong()} # ${cursorPos.y.roundToLong()}")
     }
 
     /* private methods */
@@ -122,28 +121,16 @@ class ScreenInputSystem(
     }
 
     /* Inner part */
-    override fun addedToEngine(engine: Engine?) {
-        GameEventManager.addListener(GameEvent.StartGame::class, this)
-        GameEventManager.addListener(GameEvent.StopGame::class, this)
-        super.addedToEngine(engine)
-    }
-
-    override fun removedFromEngine(engine: Engine?) {
-        GameEventManager.removeListener(GameEvent.StartGame::class, this)
-        GameEventManager.removeListener(GameEvent.StopGame::class, this)
-        super.removedFromEngine(engine)
-    }
 
 
     companion object {
-        private val logger = loggerApp<ScreenInputSystem>()
+        private val logger by lazy { loggerApp<ScreenInputSystem>() }
     }
 
     enum class TouchStatus {
         NONE,
         TOUCH,
-        START_DRAGGED,
+        GRAB,
         DRAGGED
     }
 }
-

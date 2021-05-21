@@ -18,11 +18,8 @@ import ktx.async.KtxAsync
  * Main Game class
  */
 class MainGame : KtxGame<KtxScreen>() {
-
-    private val logger = loggerApp<MainGame>()
-
     val gameViewport: Viewport by lazy {
-        FitViewport(V_WORLD_WIDTH_UNITS, V_WORLD_HEIGHT_UNITS)
+        FitViewport(WORLD_WIDTH_WU, WORLD_HEIGHT_WU)
     }
     val stage: Stage by lazy {
         val result = Stage(gameViewport)
@@ -78,18 +75,22 @@ class MainGame : KtxGame<KtxScreen>() {
     private fun initEngine(): Engine {
         return PooledEngine().apply {
             addSystem(DebugSystem())
-            addSystem(StartGameSystem().apply { setProcessing(false) })
+//            addSystem(StartGameSystem().apply { setProcessing(false) })
             addSystem(ScreenInputSystem(gameViewport).apply { setProcessing(false) })
-            addSystem(MainStackSystem().apply { setProcessing(false) })
-            addSystem(DragCardSystem().apply { setProcessing(false) })
-            addSystem(StackBindingSystem().apply { setProcessing(false) })
-            addSystem(ReturnCardsSystem().apply { setProcessing(false) })
-            addSystem(CardPositionSystem().apply { setProcessing(false) })
+//            addSystem(MainStackSystem().apply { setProcessing(false) }) // TODO : SIS Even Applier (Maybe SIS -> TASK)
+//            addSystem(DragCardSystem().apply { setProcessing(false) })  // TODO : SIS Even Applier
+//            addSystem(StackBindingSystem().apply { setProcessing(false) })
+//            addSystem(ReturnCardsSystem().apply { setProcessing(false) })
+//            addSystem(CardPositionSystem().apply { setProcessing(false) })
             addSystem(TaskExecutorSystem().apply { setProcessing(false) })
-            addSystem(CalculateIsTouchableSystem().apply { setProcessing(false) })
+//            addSystem(CalculateIsTouchableSystem().apply { setProcessing(false) })
             addSystem(RenderSystem(stage, gameViewport))
         }
     }
 
+
+    companion object {
+        private val logger by lazy { loggerApp<MainGame>() }
+    }
 }
 
