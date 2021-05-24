@@ -5,10 +5,22 @@ import cardparser.asset.CardBackAtlas
 import cardparser.asset.CardDeckAtlas
 import cardparser.asset.GeneralAsset
 import cardparser.logger.loggerApp
+import cardparser.utils.ImageButtonStyle
+import cardparser.utils.LabelStyles
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input
+import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.badlogic.gdx.scenes.scene2d.ui.Label
+import com.badlogic.gdx.utils.Align
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
+import ktx.actors.plus
+import ktx.actors.plusAssign
+import ktx.app.clearScreen
 import ktx.async.KtxAsync
 import ktx.collections.gdxArrayOf
+import ktx.scene2d.*
+import javax.swing.text.StyleConstants.setAlignment
 
 /**
  * Screen for loading assert, init and setup requirement elements for app:
@@ -17,39 +29,69 @@ import ktx.collections.gdxArrayOf
  * -- prepare all others Screens for app
  */
 class LoadingScreen(
-        game: MainGame
+    game: MainGame
 ) : AbstractScreen(game) {
 
-    override fun show() {
-//        logger.info {
-//            "Loading Screen : Shown \n" +
-//                    "Loading Screen : Load Main assets - START"
-//        }
-        val logStartTime = System.currentTimeMillis()
-        loadMainAssets()
-//        logger.info {
-//            "Loading Screen : Load Main assets - FINISH ### load time: " +
-//                    "${(System.currentTimeMillis() - logStartTime) * 0.001f} sec"
-//        }
-    }
+    private val logger = loggerApp<LoadingScreen>()
+    private lateinit var loadingLabel: Label
+    private lateinit var touchToBeginLabel: Label
 
-    private fun loadMainAssets() {
+    /** turn off to see GUI */
+    private val justStart = true
+
+    override fun show() {
         val assetRefs = gdxArrayOf(
-                CardDeckAtlas.values().map { assets.loadAsync(it.desc) },
-                CardBackAtlas.values().map { assets.loadAsync(it.desc) },
-                GeneralAsset.values().map { assets.loadAsync(it.desc) },
+            CardDeckAtlas.values().map { assets.loadAsync(it.desc) },
+            CardBackAtlas.values().map { assets.loadAsync(it.desc) },
+            GeneralAsset.values().map { assets.loadAsync(it.desc) },
         ).flatten()
         KtxAsync.launch {
             assetRefs.joinAll()
-            showGameWhenAssetsLoaded()
+            game.addScreen(MenuScreen(game))
+            loadingLabel.color.a = 0f
+            touchToBeginLabel += Actions.forever(Actions.fadeIn(0.5f) + Actions.fadeOut(0.5f))
         }
+        showLoadingUI()
     }
 
-    private fun showGameWhenAssetsLoaded() {
-        game.removeScreen<LoadingScreen>()
-        game.addScreen(GameScreen(game))
-        game.setScreen<GameScreen>()
-        dispose()
+
+    private fun showLoadingUI() {
+        stage.clear()
+        stage.actors {
+            table {
+                stack {
+                    loadingLabel = label("Loading...", LabelStyles.WHITE46_BI.name) {
+                        setAlignment(Align.center)
+                    }
+                    touchToBeginLabel = label("Touch to start...", LabelStyles.WHITE46_BI.name) {
+                        setAlignment(Align.center)
+                        color.a = 0f
+                    }
+                }
+
+                setFillParent(true)
+                pack()
+            }
+        }
+        stage.isDebugAll = false
+    }
+
+    override fun render(delta: Float) {
+        if (assets.progress.isFinished && (Gdx.input.isKeyPressed(Input.Keys.S) || justStart)) {
+            game.addScreen(GameScreen(game))
+            game.setScreen<GameScreen>()
+            game.removeScreen<LoadingScreen>()
+        }
+        if (assets.progress.isFinished && Gdx.input.justTouched() && game.containsScreen<MenuScreen>()) {
+            game.setScreen<MenuScreen>()
+            game.removeScreen<LoadingScreen>()
+            dispose()
+        }
+        stage.run {
+            viewport.apply()
+            act()
+            draw()
+        }
     }
 
     override fun dispose() {
@@ -61,32 +103,7 @@ class LoadingScreen(
         private val logger by lazy { loggerApp<LoadingScreen>() }
     }
 }
-//    override fun hide() {
-//        stage.clear()
-//    }
 
-
-//    override fun resize(width: Int, height: Int) {
-//        stage.viewport.update(width, height, true)
-//        game.gameViewport.update(width, height)
-//    }
-
-//    override fun render(delta: Float) {
-//        if (assets.progress.isFinished && isAssetsLoadingFinish) {
-//            game.removeScreen<LoadingScreen>()
-//            dispose()
-//            game.addScreen(GameScreen(game))
-//            game.setScreen<GameScreen>()
-//        renderProgressBar()
-//    }
-
-//    private fun renderProgressBar() {
-//        progressBar.scaleX = assets.progress.percent
-//        stage.run {
-//            viewport.apply()
-//            act()
-//            draw()
-//        }
 
 
 
