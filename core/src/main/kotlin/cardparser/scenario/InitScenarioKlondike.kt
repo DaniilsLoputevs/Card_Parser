@@ -1,144 +1,137 @@
 package cardparser.scenario
 
 import cardparser.CARD_WIDTH
-import cardparser.STACK_GAP_STEP
-import cardparser.ashley.CalculateLogic
-import cardparser.ashley.StartGameLogic
+import cardparser.STACK_GAP
+import cardparser.ashley.StackTouchLogic
 import cardparser.ashley.systems.*
 import cardparser.asset.CardBackAtlas
 import cardparser.asset.CardDeckAtlas
 import cardparser.asset.GeneralAsset
 import cardparser.entities.Card
+import cardparser.entities.MainStack
 import cardparser.entities.Stack
+import cardparser.event.CardDragListener
+import cardparser.event.GameEventManager
+import cardparser.event.MainStackListener
+import cardparser.logger.loggerApp
+import cardparser.tasks.CalculateTouchable
+import cardparser.tasks.CardPosition
+import cardparser.tasks.StackBinding
+import cardparser.tasks.TaskManager
+import cardparser.tasks.cancel.MainStackTouchCancel
 import com.badlogic.ashley.core.Engine
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.utils.viewport.Viewport
 import ktx.ashley.getSystem
 import ktx.assets.async.AssetStorage
-import java.util.*
+
+private lateinit var mainStack: MainStack
+private lateinit var subStack: MainStack
+private lateinit var upStacks: MutableList<Stack>
+private lateinit var bottomStacks: MutableList<Stack>
+
+private lateinit var upSubStacks: MutableList<Stack>
+private lateinit var botUpStacks: MutableList<Stack>
+private lateinit var botUpSubStacks: MutableList<Stack>
+private lateinit var allStacks: MutableList<Stack>
+
+private lateinit var cards: MutableList<Card>
+
 
 fun Engine.initKlondikeGame(assets: AssetStorage, gameViewport: Viewport) {
     this.run {
-        val mainStack = createStartStackKlondike(assets)
-        val bottomStacks = createBottomStacksKlondike(assets)
-        val upStacks = createUpStacksKlondike(assets)
-        val cardsSet = randomCards(createCardDeck(assets[CardDeckAtlas.CARD_DECK_USSR.desc]))
-                .onEach { it.pos().set(mainStack.pos()) }
+        mainStack = createMasterStack(assets)
+        subStack = createSubStack(assets)
+        upStacks = createUpStacks(assets)
+        bottomStacks = createBottomStacks(assets)
 
-        getSystem<DebugSystem>().apply {
-            this.cards = cardsSet
-            this.mainStack = mainStack
-            this.bottomStacks = bottomStacks
-            this.upStacks = upStacks
-        }
-        getSystem<StartGameSystem>().apply {
-            this.cards = cardsSet
-            this.stack = mainStack
-            this.stackList = bottomStacks
-            this.logic = StartGameLogic.KLONDIKE_START
-            setProcessing(true)
-        }
+        upSubStacks = (upStacks + subStack) as MutableList<Stack>
+        botUpStacks = (bottomStacks + upStacks) as MutableList<Stack>
+        botUpSubStacks = (bottomStacks + upStacks + subStack) as MutableList<Stack>
+        allStacks = (bottomStacks + upStacks + mainStack + subStack) as MutableList<Stack>
+
+        cards = createCardDeck(assets[CardDeckAtlas.CARD_DECK_DEFAULT.desc], mainStack.pos())
+                .shuffleCards().onEachIndexed { index, card -> card.setPos(z = index.toFloat()) }
+
+        /* Debug environment init */
+        Debug.cards = cards
+        Debug.mainStack = mainStack
+        Debug.subStack = subStack
+        Debug.bottomStacks = bottomStacks
+        Debug.upStacks = upStacks
+
+        /* Task's environment init */
+        StackBinding.botUpStacks = botUpStacks
+        CalculateTouchable.botUpStacks = botUpStacks
+        CalculateTouchable.touchTouchLogic = StackTouchLogic.KLONDIKE
+        CardPosition.allStacks = allStacks
+        MainStackTouchCancel.mainStack = mainStack
+        MainStackTouchCancel.subStack = subStack
+
+        /* Systems init */
+        getSystem<DebugSystem>().apply { setProcessing(true) }
         getSystem<ScreenInputSystem>().apply {
             this.gameViewport = gameViewport
-            setProcessing(false)
-        }
-        getSystem<MainStackSystem>().apply {
             setProcessing(true)
         }
-        getSystem<StackBindingSystem>().apply {
-            setProcessing(true)
-        }
-        getSystem<CardPositionSystem>().apply {
-            setProcessing(true)
-        }
-        getSystem<DragCardSystem>().apply {
-            setProcessing(true)
-        }
-        getSystem<ReturnCardsSystem>().apply {
-//            setProcessing(true)
-        }
-        getSystem<CalculateIsTouchableSystem>().apply {
-            this.touchLogic = CalculateLogic.KLONDIKE
-            setProcessing(true)
-        }
-        getSystem<TaskExecutorSystem>().apply {
-            setProcessing(true)
-        }
+        getSystem<TaskExecutorSystem>().apply { setProcessing(true) }
         getSystem<RenderSystem>().apply {
-            this.configBackground(assets[GeneralAsset.BACKGROUND_DEFAULT.desc])
-            this.configCardBack(assets[CardBackAtlas.CARD_BACK_RED_DEFAULT.desc].findRegion("red_deck"))
+            this.setBackground(assets[GeneralAsset.BACKGROUND_DEFAULT.desc])
+//            this.configCardBack(assets[CardBackAtlas.CARD_BACK_RED_DEFAULT.desc].findRegion("red_deck"))
+            this.setCardBack(assets[CardBackAtlas.CARD_BACK_DEFAULT.desc].findRegion("dark"))
             setProcessing(true)
         }
-//        prepareGameScriptsKlondaik(gameRep)
+
+        // add event listeners
+        GameEventManager.addListener(CardDragListener.eventTypes, CardDragListener(botUpSubStacks))
+        GameEventManager.addListener(MainStackListener.eventTypes, MainStackListener(mainStack, subStack))
+
+        // start game
+        startKlondikeGame()
+        TaskManager.commit(CalculateTouchable(TaskManager.genId()))
+
+//        Debug.act("F", "LAST BOT STACK") { logger.debug("bot", bottomStacks.last().cards())}
     }
 }
 
-//    addCardsToStack(stacks[0], listOf(cards[0], cards[1], cards[2], cards[3]))
-//    addCardToStack(stacks[0], cards[0])
-//    unbindCardFromStack(stacks, cards[0])
+fun startKlondikeGame() {
+    // add all cards to Main Stack
+    mainStack.addAll(cards)
 
-/**
- * Create game slot/stacks for card: 13 stacks
- * * this script for: Default GameType
- */
-fun Engine.createBottomStacksKlondike(assets: AssetStorage): List<Stack> {
-    val list = mutableListOf<Stack>()
-    var corX = 0f
-    for (i in 0..6) {
-        corX += STACK_GAP_STEP
-        list.add(
-                createStack(
-                        assets[GeneralAsset.CARD_STACK.desc],
-                        corX,
-                        290f
-                )
-        )
-        corX += CARD_WIDTH
+    // throw cards to Bottom Stacks
+    repeat(7) {
+        bottomStacks.forEachIndexed { index, stack ->
+            val cards = stack.cards()
+            if (cards.size < (index + 1)) {
+                mainStack.cards().removeLastOrNull()?.let { stack.add(it) }
+                if (cards.size == (index + 1)) cards.last().apply { touchable(true); open(true) }
+            }
+        }
     }
-    return list
 }
 
-fun Engine.createUpStacksKlondike(assets: AssetStorage): List<Stack> {
-    val list = mutableListOf<Stack>()
-    var corX = 0f
-    corX = STACK_GAP_STEP * 3 + CARD_WIDTH * 3
-    for (i in 0..3) {
-        corX += STACK_GAP_STEP
-        list.add(
-                createUpStack(
-                        assets[GeneralAsset.CARD_STACK.desc],
-                        corX,
-                        520f
-                )
-        )
-        corX += CARD_WIDTH
-    }
-    list.add(
-            createMainStack(
-                    assets[GeneralAsset.CARD_STACK.desc],
-                    STACK_GAP_STEP * 2 + CARD_WIDTH,
-                    520f,
-                    _order = 1
-            )
-    )
-    return list
+
+private fun Engine.createBottomStacks(assets: AssetStorage): MutableList<Stack> {
+    return createStackRaw(assets, 7, 31f, 290f, STACK_GAP, this::createBottomStack)
 }
 
-fun Engine.createStartStackKlondike(assets: AssetStorage): Stack {
-    return createMainStack(
-            assets[GeneralAsset.CARD_STACK.desc],
-            STACK_GAP_STEP,
-            520f,
-            _order = 0
+private fun Engine.createUpStacks(assets: AssetStorage): MutableList<Stack> {
+    val initX = STACK_GAP * 3 + CARD_WIDTH * 3 + 31f
+    return createStackRaw(assets, 4, initX, 520f, STACK_GAP, this::createUpStack)
+}
+
+private fun Engine.createMasterStack(assets: AssetStorage): MainStack {
+    return createMainStack(assets[GeneralAsset.CARD_STACK.desc], STACK_GAP + 31f, 520f, _order = 0, isMain = true)
+}
+
+private fun Engine.createSubStack(assets: AssetStorage): MainStack {
+    return createMainStack(assets[GeneralAsset.CARD_STACK.desc],
+            STACK_GAP * 2 + CARD_WIDTH + 31f, 520f, _order = 1, isMain = false
     )
 }
 
-fun randomCards(cards: MutableList<Card>): MutableList<Card> {
-    val random: Random = MathUtils.random
-    val list = mutableListOf<Card>()
-    while (cards.size != 0) {
-        list.add(cards.removeAt(random.nextInt(1000) and (cards.size - 1)))
-    }
-    return list
-}
+private fun MutableList<Card>.shuffleCards(): MutableList<Card> = this.apply { shuffle(MathUtils.random) }
 
+private val logger by lazy { loggerApp<InitScenarioKlondike>() }
+
+class InitScenarioKlondike

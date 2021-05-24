@@ -20,12 +20,14 @@ interface TransformAPI {
     /** Setters for position */
     fun setPos(newPos: Vector2, z: Float = transComp.position.z) = run { transComp.setPos(newPos.x, newPos.y, z) }
     fun setPos(x: Float = transComp.position.x, y: Float = transComp.position.y, z: Float = transComp.position.z) = run { transComp.setPos(x, y, z) }
+    fun setPos(newPos: Vector3) = run { transComp.setPos(newPos.x, newPos.y, newPos.z) }
 
     /** Getters for position */
     fun getPos(posBuffer: Vector2) = run { posBuffer.apply { x = transComp.position.x; y = transComp.position.y; } }
     fun getPos(posBuffer: Vector3) = run { posBuffer.apply { x = transComp.position.x; y = transComp.position.y; z = transComp.position.z } }
 
     fun isInShape(position: Vector2) = this.transComp.shape.contains(position)
+    fun isNotInShape(position: Vector2) = !this.transComp.shape.contains(position)
 
 }
 

@@ -31,6 +31,7 @@ import javax.swing.text.StyleConstants.setAlignment
 class LoadingScreen(
     game: MainGame
 ) : AbstractScreen(game) {
+
     private val logger = loggerApp<LoadingScreen>()
     private lateinit var loadingLabel: Label
     private lateinit var touchToBeginLabel: Label
@@ -96,6 +97,10 @@ class LoadingScreen(
     override fun dispose() {
         super.dispose()
         logger.info { "Loading Screen :: DISPOSED" }
+    }
+
+    companion object {
+        private val logger by lazy { loggerApp<LoadingScreen>() }
     }
 }
 

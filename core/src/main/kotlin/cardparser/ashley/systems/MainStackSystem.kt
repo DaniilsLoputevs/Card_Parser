@@ -16,6 +16,7 @@ import com.badlogic.gdx.math.Vector2
 import ktx.ashley.allOf
 import ktx.ashley.get
 
+@Deprecated("off")
 class MainStackSystem : SortedIteratingSystem(
         allOf(TransformComp::class, StackComp::class, MainStackComp::class).get(),
         compareBy { entity -> entity[MainStackComp.mapper] }
@@ -34,6 +35,7 @@ class MainStackSystem : SortedIteratingSystem(
     private var offSystem = 0
 
     override fun update(deltaTime: Float) {
+        logger.error("MainStackSystem -- work")
         super.update(deltaTime)
         offSystem = 0
     }
@@ -64,7 +66,7 @@ class MainStackSystem : SortedIteratingSystem(
                     when {
                         returnAll -> {
                             returnAll = false
-                            currStack.cards().asReversed().forEach { transferCard.add(it) }
+                            currStack.asReversed().forEach { transferCard.add(it) }
                             currStack.clear()
                             offSystem += currStack.size() + transferCard.size
                             if (offSystem == 0) {

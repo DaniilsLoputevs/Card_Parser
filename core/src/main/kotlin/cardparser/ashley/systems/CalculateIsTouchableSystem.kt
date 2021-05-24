@@ -1,6 +1,6 @@
 package cardparser.ashley.systems
 
-import cardparser.ashley.CalculateLogic
+import cardparser.ashley.StackTouchLogic
 import cardparser.ashley.components.MainStackComp
 import cardparser.ashley.components.StackComp
 import cardparser.ashley.components.TransformComp
@@ -15,6 +15,7 @@ import com.badlogic.ashley.systems.IteratingSystem
 import ktx.ashley.allOf
 import ktx.ashley.exclude
 
+@Deprecated("off")
 class CalculateIsTouchableSystem
     : IteratingSystem(allOf(TransformComp::class, StackComp::class).exclude(MainStackComp::class).get()
 ), GameEventListener {
@@ -24,7 +25,7 @@ class CalculateIsTouchableSystem
 
     private val stack: Stack = Stack()
 
-    lateinit var touchLogic: CalculateLogic
+    lateinit var touchTouchLogic: StackTouchLogic
 
     private var dropEvent: GameEvent.DropEvent? = null
     private var log = true
@@ -33,7 +34,7 @@ class CalculateIsTouchableSystem
         dropEvent?.let {
             entities.forEach {
                 stack.entity = it
-                touchLogic.setTouchable(stack)
+                touchTouchLogic.setTouchable(stack)
             }
             dropEvent = null
         }

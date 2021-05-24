@@ -25,6 +25,6 @@ abstract class GameEntity : TransformAPI {
 
     companion object {
         private val DEFAULT_ENTITY = Entity()
-        private val logger = loggerApp<GameEntity>()
+        private val logger by lazy { loggerApp<GameEntity>() }
     }
 }

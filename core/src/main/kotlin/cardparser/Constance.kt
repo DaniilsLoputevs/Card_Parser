@@ -1,27 +1,37 @@
 package cardparser
 
-const val V_WORLD_WIDTH_UNITS = 1280f // world units
-const val V_WORLD_HEIGHT_UNITS = 720f // world units
+const val GAME_TITLE = "Card Parser by Daniils & Maksim. ))))"
 
-const val CARD_STACK_OFFSET = 30f // world units
+const val WORLD_WIDTH_WU = 1280f // world units
+const val WORLD_HEIGHT_WU = 720f // world units
 
-//const val CARD_WIDTH = 137f // world units
-//const val CARD_HEIGHT = 192f // world units
-const val CARD_WIDTH = 128f // world units
-const val CARD_HEIGHT = 192f // world units
+const val CARD_WIDTH = 128f // world units     --    137f
+const val CARD_HEIGHT = 192f // world units    --    192f
 
-const val STACK_GAP_STEP = 40f
-const val STACK_CLOSE_CARD_RATE = 1.5f
+const val STACK_OPEN_CARD_OFFSET = 30f // world units
 
-const val MIN_SPEED_RATE = 0.15f
-const val MAX_SPEED_RATE = MIN_SPEED_RATE * 1.75f
+/**
+ * how much less the offset for closed cards.
+ * 1 == same[STACK_OPEN_CARD_OFFSET]  ||  2 == two times less
+ */
+const val STACK_CLOSE_CARD_OFFSET = 1.5 // times
 
-/** Ржака константы!!! гы-гы-гы! */
-//const val MIN_SPEED_RATE = 0.15f
-//const val MAX_SPEED_RATE = MIN_SPEED_RATE * 175f
+const val STACK_GAP = 40f // world units
 
-//const val STACK_START_SPEED = 0.15f
-const val STACK_START_SPEED = 0.00000000001f // percents 0.00f - 1.00f
+const val MIN_CARD_MOVE_SPEED_RATE = 0.15f
+const val MAX_CARD_MOVE_SPEED_RATE = MIN_CARD_MOVE_SPEED_RATE * 1.50f
+
+/**
+ * If card's pos is different more that (this const) from requirment card's pos,
+ * card moves by [MAX_CARD_MOVE_SPEED_RATE] speed
+ */
+const val DISTANCE_CARD_MOVE_SLOW = 90F // world units
+
+@Deprecated("use in old system. For remove")
+const val STACK_START_SPEED = 0.00000000001f // percents 0.00f - 1.00f (default 0.15)
+
+@Deprecated("not in use")
+const val GAME_START_DELAY = 1f // ? second || percents 0.00f - 1.00f
 
 /**
  * The radius from the starting position of the touch
@@ -29,11 +39,11 @@ const val STACK_START_SPEED = 0.00000000001f // percents 0.00f - 1.00f
  */
 const val TOUCH_RANGE = 3f // world units
 
-const val DOUBLE_TOUCH_TIME_WINDOW = 200f // milliseconds
+/** [cardparser.tasks.GameActionHistory] */
+const val ACTION_HISTORY_SIZE = 25 // actions
+
 
 /* Simon part */
-
-//const val UNIT_SCALE = 1 / 64f //   1/8 == 0.125   ||   1/64f == 0,015625   || 1/128 == 0,0078125
 
 //const val PREFERENCE_MUSIC_ENABLED_KEY = "musicEnabled"
 //const val PREFERENCE_HIGHSCORE_KEY = "highScore"

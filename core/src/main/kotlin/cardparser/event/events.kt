@@ -13,36 +13,41 @@ private const val INITIAL_LISTENER_CAPACITY = 8
 sealed class GameEvent {
 
     object StartGame : GameEvent() {
-        override fun toString() = "StartGame"
+        var eventId: Int = GameEventManager.genId()
+        override fun toString() = "$eventId || StartGame"
     }
 
     object StopGame : GameEvent() {
-        override fun toString() = "StopGame"
+        var eventId: Int = GameEventManager.genId()
+        override fun toString() = "$eventId || StopGame"
     }
 
     object TouchEvent : GameEvent() {
+        var eventId: Int = GameEventManager.genId()
         var position: Vector2 = Vector2().setZero()
 
         override fun toString(): String {
-            return "TouchEvent -- position = $position"
+            return "$eventId || TouchEvent -- position = $position"
         }
     }
 
     object StartDragEvent : GameEvent() {
+        var eventId: Int = GameEventManager.genId()
         var cursor: Vector2 = Vector2().setZero()
         var memorized: Vector2 = Vector2().setZero()
 
         override fun toString(): String {
-            return "StartDragEvent -- cursor = $cursor & memorized = $memorized"
+            return "$eventId || StartDragEvent -- cursor = $cursor & memorized = $memorized"
         }
     }
 
     object DragEvent : GameEvent() {
+        var eventId: Int = GameEventManager.genId()
         var cursor: Vector2 = Vector2().setZero()
         var memorized: Vector2 = Vector2().setZero()
 
         override fun toString(): String {
-            return "DragEvent -- cursor = $cursor & memorized = $memorized"
+            return "$eventId || DragEvent -- cursor = $cursor & memorized = $memorized"
         }
     }
 
@@ -56,6 +61,15 @@ sealed class GameEvent {
             return "DropEvent -- prevStack = $prevStack & cardList = $cardList & position = $position"
         }
     }
+
+    object DropEventNew : GameEvent() {
+        var eventId: Int = GameEventManager.genId()
+        var cursor: Vector2 = Vector2()
+
+        override fun toString(): String {
+            return "$eventId || DropEvent -- position = $cursor"
+        }
+    }
 }
 
 interface GameEventListener {
@@ -63,8 +77,15 @@ interface GameEventListener {
 }
 
 object GameEventManager {
+    private var nextEventId: Int = 0
     private val listeners = ObjectMap<KClass<out GameEvent>, GdxSet<GameEventListener>>()
-    private val eventHistory = mutableListOf<GameEvent>()
+    private val eventHistory = mutableListOf<String>()
+
+    fun genId() = nextEventId++
+
+    fun addListener(eventTypes: List<KClass<out GameEvent>>, listener: GameEventListener) {
+        eventTypes.forEach { addListener(it, listener) }
+    }
 
     fun addListener(type: KClass<out GameEvent>, listener: GameEventListener) {
         var eventListeners = listeners[type]
@@ -83,12 +104,12 @@ object GameEventManager {
     }
 
     fun dispatchEvent(event: GameEvent) {
-        if (event !is GameEvent.DragEvent) eventHistory.add(event)
+        if (event !is GameEvent.DragEvent) eventHistory.add(event.toString())
         listeners[event::class]?.let { it.forEach { each -> each.onEvent(event) } }
                 ?: logger.warm("Event = ${event::class.simpleName}, doesn't have listeners!")
     }
 
     fun logHistory() = logger.error("event history", eventHistory)
-}
 
-private val logger = loggerApp<GameEventManager>()
+    private val logger by lazy { loggerApp<GameEventManager>() }
+}

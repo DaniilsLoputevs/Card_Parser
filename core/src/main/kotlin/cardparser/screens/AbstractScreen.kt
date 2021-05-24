@@ -1,6 +1,7 @@
 package cardparser.screens
 
 import cardparser.MainGame
+import cardparser.logger.loggerApp
 import com.badlogic.ashley.core.Engine
 import com.badlogic.gdx.Preferences
 import com.badlogic.gdx.scenes.scene2d.Stage
@@ -64,4 +65,8 @@ abstract class AbstractScreen(
     }
 
 //    override fun onEvent(event: GameEvent) = Unit
+
+    companion object {
+        private val logger by lazy { loggerApp<AbstractScreen>() }
+    }
 }
