@@ -9,6 +9,7 @@ import cardparser.utils.createSkin
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.PooledEngine
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Preferences
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.Viewport
@@ -42,6 +43,7 @@ class MainGame : KtxGame<KtxScreen>() {
         AssetStorage().apply {  }
     }
     val engine: Engine by lazy { initEngine() }
+    val preferences: Preferences by lazy { Gdx.app.getPreferences("cards-fame") }
 
     override fun dispose() {
         logger.info("start main dispose")

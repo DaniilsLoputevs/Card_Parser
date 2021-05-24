@@ -1,6 +1,7 @@
 package cardparser.screens
 
 import cardparser.MainGame
+import cardparser.utils.AnglesButtonStyle
 import cardparser.utils.ImageButtonStyle
 import cardparser.utils.LabelStyles
 import com.badlogic.gdx.Gdx
@@ -8,6 +9,10 @@ import com.badlogic.gdx.utils.Align
 import ktx.actors.onClick
 import ktx.app.clearScreen
 import ktx.scene2d.*
+
+enum class GamesList(val game: String) {
+    KLONDIKE_GAME("Klondike")
+}
 
 class MenuScreen(game: MainGame) : AbstractScreen(game) {
 
@@ -20,7 +25,6 @@ class MenuScreen(game: MainGame) : AbstractScreen(game) {
     }
 
     override fun render(delta: Float) {
-        clearScreen(255f, 255f, 255f, 0.5f)
         stage.run {
             viewport.apply()
             act()
@@ -33,10 +37,10 @@ class MenuScreen(game: MainGame) : AbstractScreen(game) {
         stage.actors {
             stack {
                 setBounds(260f, 360f, 360f, 360f)
-                imageButton(ImageButtonStyle.SPADES.name) {
+                imageButton(AnglesButtonStyle.LEFTUP.name) {
                     setFillParent(true)
                 }
-                label("Start game", LabelStyles.WHITE32.name) {
+                label("Start \n game", LabelStyles.WHITE46_BI.name) {
                     setAlignment(Align.center)
                 }
                 onClick {
@@ -45,28 +49,28 @@ class MenuScreen(game: MainGame) : AbstractScreen(game) {
             }
             stack {
                 setBounds(660f, 360f, 360f, 360f)
-                imageButton(ImageButtonStyle.HEARTS.name) {
+                imageButton(AnglesButtonStyle.RIGHTUP.name) {
                     setFillParent(true)
                 }
-                label("Achievements", LabelStyles.BLACK32.name) {
+                label("Hall \n of fame", LabelStyles.WHITE46_BI.name) {
                     setAlignment(Align.center)
                 }
             }
             stack {
                 setBounds(260f, 1f, 360f, 360f)
-                imageButton(ImageButtonStyle.DIAMONDS.name) {
+                imageButton(AnglesButtonStyle.LEFTDOWN.name) {
                     setFillParent(true)
                 }
-                label("Options", LabelStyles.BLACK32.name) {
+                label("Options", LabelStyles.WHITE46_BI.name) {
                     setAlignment(Align.center)
                 }
             }
             stack {
                 setBounds(660f, 1f, 360f, 360f)
-                imageButton(ImageButtonStyle.CLUBS.name) {
+                imageButton(AnglesButtonStyle.RIGHTDOWN.name) {
                     setFillParent(true)
                 }
-                label("Quit", LabelStyles.WHITE32.name) {
+                label("Quit", LabelStyles.WHITE46_BI.name) {
                     setAlignment(Align.center)
                 }
                 onClick {
@@ -81,13 +85,15 @@ class MenuScreen(game: MainGame) : AbstractScreen(game) {
         stage.clear()
         stage.actors {
             table {
-                label("Klondike Game", LabelStyles.BLACK32.name) {
-                    setAlignment(Align.center)
-                    onClick {
-                        game.addScreen(GameScreen(game).apply {
-                            chosen = "Klondike Game"
-                        })
-                        game.setScreen<GameScreen>()
+                GamesList.values().forEach { elem ->
+                    label(elem.game, LabelStyles.WHITE46_BI.name) {
+                        setAlignment(Align.center)
+                        onClick {
+                            game.addScreen(GameScreen(game).apply {
+                                chosen = elem.game
+                            })
+                            game.setScreen<GameScreen>()
+                        }
                     }
                 }
                 setFillParent(true)

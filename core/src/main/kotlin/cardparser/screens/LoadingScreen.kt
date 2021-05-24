@@ -8,6 +8,7 @@ import cardparser.logger.loggerApp
 import cardparser.utils.ImageButtonStyle
 import cardparser.utils.LabelStyles
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
@@ -34,6 +35,9 @@ class LoadingScreen(
     private lateinit var loadingLabel: Label
     private lateinit var touchToBeginLabel: Label
 
+    /** turn off to see GUI */
+    private val justStart = true
+
     override fun show() {
         val assetRefs = gdxArrayOf(
             CardDeckAtlas.values().map { assets.loadAsync(it.desc) },
@@ -55,10 +59,10 @@ class LoadingScreen(
         stage.actors {
             table {
                 stack {
-                    loadingLabel = label("Loading...", LabelStyles.WHITE32.name) {
+                    loadingLabel = label("Loading...", LabelStyles.WHITE46_BI.name) {
                         setAlignment(Align.center)
                     }
-                    touchToBeginLabel = label("Touch to start...", LabelStyles.WHITE32.name) {
+                    touchToBeginLabel = label("Touch to start...", LabelStyles.WHITE46_BI.name) {
                         setAlignment(Align.center)
                         color.a = 0f
                     }
@@ -72,6 +76,11 @@ class LoadingScreen(
     }
 
     override fun render(delta: Float) {
+        if (assets.progress.isFinished && (Gdx.input.isKeyPressed(Input.Keys.S) || justStart)) {
+            game.addScreen(GameScreen(game))
+            game.setScreen<GameScreen>()
+            game.removeScreen<LoadingScreen>()
+        }
         if (assets.progress.isFinished && Gdx.input.justTouched() && game.containsScreen<MenuScreen>()) {
             game.setScreen<MenuScreen>()
             game.removeScreen<LoadingScreen>()

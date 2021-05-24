@@ -55,8 +55,18 @@ enum class FontAsset(
             atlasName = UIAtlasAssets.UI.desc.fileName
         })
 ) {
-    FONT_LARGE_BLACK("Purisa_32_black.fnt"),
-    FONT_LARGE_WHITE("Purisa_32_white.fnt"),
-    FONT_MEDIUM_BLACK("Purisa_24_black.fnt"),
-    FONT_MEDIUM_WHITE("Purisa_24_white.fnt");
+    FONT_46_WHITE("Purisa_46_white.fnt"),
+    FONT_46_WHITE_BOLD("Purisa_46_white_bold.fnt"),
+    FONT_46_WHITE_ITALIC("Purisa_46_white_italic.fnt"),
+    FONT_46_WHITE_BOLD_ITALIC("Purisa_46_white_bold_italic.fnt"),
+    FONT_32_BLACK("Purisa_32_black.fnt"),
+    FONT_32_WHITE("Purisa_32_white.fnt"),
+    FONT_32_WHITE_BOLD("Purisa_32_white_bold.fnt"),
+    FONT_32_WHITE_ITALIC("Purisa_32_white_italic.fnt"),
+    FONT_32_WHITE_BOLD_ITALIC("Purisa_32_white_bold_italic.fnt"),
+    FONT_24_BLACK("Purisa_24_black.fnt"),
+    FONT_24_WHITE("Purisa_24_white.fnt"),
+    FONT_24_WHITE_BOLD("Purisa_24_white_bold.fnt"),
+    FONT_24_WHITE_ITALIC("Purisa_24_white_italic.fnt"),
+    FONT_24_WHITE_BOLD_ITALIC("Purisa_24_white_bold_italic.fnt"),
 }

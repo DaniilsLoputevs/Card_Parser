@@ -2,6 +2,7 @@ package cardparser.screens
 
 import cardparser.MainGame
 import com.badlogic.ashley.core.Engine
+import com.badlogic.gdx.Preferences
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.Viewport
 import ktx.app.KtxScreen
@@ -15,7 +16,8 @@ abstract class AbstractScreen(
         val stage: Stage = game.stage,
         val gameViewport: Viewport = game.gameViewport,
         val assets: AssetStorage = game.assets,
-        var engine: Engine = game.engine
+        var engine: Engine = game.engine,
+        var preferences: Preferences = game.preferences
 //    private val musicAsset: MusicAsset
 ) : KtxScreen
 //    ,GameEventListener

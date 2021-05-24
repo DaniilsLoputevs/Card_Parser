@@ -1,66 +1,171 @@
 
 ui.png
-size: 4096, 2048
+size: 4096, 4096
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
 Purisa_24_black
   rotate: false
-  xy: 1923, 311
+  xy: 3465, 3191
   size: 512, 512
   orig: 512, 512
   offset: 0, 0
   index: -1
 Purisa_24_white
   rotate: false
-  xy: 1923, 825
+  xy: 2437, 2677
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+Purisa_24_white_bold
+  rotate: false
+  xy: 3465, 2677
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+Purisa_24_white_bold_italic
+  rotate: false
+  xy: 2437, 2163
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+Purisa_24_white_italic
+  rotate: false
+  xy: 1923, 1649
   size: 512, 512
   orig: 512, 512
   offset: 0, 0
   index: -1
 Purisa_32_black
   rotate: false
-  xy: 2437, 1339
+  xy: 2951, 2677
   size: 512, 512
   orig: 512, 512
   offset: 0, 0
   index: -1
 Purisa_32_white
   rotate: false
-  xy: 1923, 1339
+  xy: 2437, 3191
   size: 512, 512
   orig: 512, 512
   offset: 0, 0
   index: -1
-ALL_SUITS
+Purisa_32_white_bold
   rotate: false
-  xy: 1, 1
+  xy: 1923, 1135
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+Purisa_32_white_bold_italic
+  rotate: false
+  xy: 2437, 1649
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+Purisa_32_white_italic
+  rotate: false
+  xy: 1923, 2163
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+Purisa_46_white
+  rotate: false
+  xy: 1923, 3191
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+Purisa_46_white_bold
+  rotate: false
+  xy: 2951, 2163
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+Purisa_46_white_bold_italic
+  rotate: false
+  xy: 2951, 3191
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+Purisa_46_white_italic
+  rotate: false
+  xy: 1923, 2677
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+buttons2
+  rotate: false
+  xy: 1, 1853
   size: 1920, 1850
   orig: 1920, 1850
   offset: 0, 0
   index: -1
 SPADES
   rotate: false
-  xy: 1, 1
+  xy: 1, 1853
   size: 960, 925
   orig: 960, 925
   offset: 0, 0
   index: -1
 HEARTS
   rotate: false
-  xy: 960, 1
+  xy: 960, 1853
   size: 960, 925
   orig: 960, 925
   offset: 0, 0
   index: -1
 DIAMONDS
   rotate: false
-  xy: 1, 925
+  xy: 1, 2778
   size: 960, 925
   orig: 960, 925
   offset: 0, 0
   index: -1
 CLUBS
+  rotate: false
+  xy: 960, 2778
+  size: 960, 925
+  orig: 960, 925
+  offset: 0, 0
+  index: -1
+buttons_white
+  rotate: false
+  xy: 1, 1
+  size: 1920, 1850
+  orig: 1920, 1850
+  offset: 0, 0
+  index: -1
+LEFTUP
+  rotate: false
+  xy: 1, 1
+  size: 960, 925
+  orig: 960, 925
+  offset: 0, 0
+  index: -1
+RIGHTUP
+  rotate: false
+  xy: 960, 1
+  size: 960, 925
+  orig: 960, 925
+  offset: 0, 0
+  index: -1
+LEFTDOWN
+  rotate: false
+  xy: 1, 925
+  size: 960, 925
+  orig: 960, 925
+  offset: 0, 0
+  index: -1
+RIGHTDOWN
   rotate: false
   xy: 960, 925
   size: 960, 925
