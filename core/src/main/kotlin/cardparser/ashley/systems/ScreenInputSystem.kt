@@ -99,7 +99,6 @@ class ScreenInputSystem(
         logger.debug("pushDropEvent :: x=${cursorPos.x} & y=${cursorPos.y}")
         GameEventManager.dispatchEvent(GameEvent.DropEvent.apply {
             position = cursorPos
-            cardReturn = true
         })
     }
 

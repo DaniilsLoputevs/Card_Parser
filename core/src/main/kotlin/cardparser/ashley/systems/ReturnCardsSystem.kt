@@ -14,12 +14,11 @@ class ReturnCardsSystem
 
     override fun update(deltaTime: Float) {
         dropEvent?.let {
-            logger.debug("Try to return cards", it.cardList)
-            if (it.cardList.size > 0 && it.cardReturn) {
+//            logger.debug("Try to return cards", it.cardList)
+            if (it.cardList.size > 0) {
                 it.prevStack.addAll(it.cardList)
                 it.cardList.clear()
-                it.cardReturn = false
-                logger.debug("Cards return success")
+//                logger.debug("Cards return success")
             }
             dropEvent = null
         }
