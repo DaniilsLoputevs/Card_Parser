@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.viewport.Viewport
 import kotlin.math.roundToLong
 
+@Deprecated("Off")
 /** This system process player input per tick add push SIS events */
 class ScreenInputSystem(var gameViewport: Viewport) : EntitySystem() {
 
@@ -25,6 +26,7 @@ class ScreenInputSystem(var gameViewport: Viewport) : EntitySystem() {
     private var memorizedPos: Vector2 = Vector2(0f, 0f)
 
     override fun update(deltaTime: Float) {
+        logger.dev("delta = $deltaTime")
         refreshCursorPos()
         setTitlePosInfo()
         when {

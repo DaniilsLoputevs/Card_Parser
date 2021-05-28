@@ -1,21 +1,22 @@
-package cardparser.utils
+package cardparser.ui
 
 import cardparser.asset.FontAsset
 import cardparser.asset.UIAtlasAssets
+import cardparser.ui.LabelStyles.*
+import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import ktx.assets.async.AssetStorage
 import ktx.scene2d.Scene2DSkin
+import ktx.style.imageButton
 import ktx.style.label
 import ktx.style.skin
-import cardparser.utils.LabelStyles.*
-import cardparser.utils.ImageButtonStyle.*
-import com.badlogic.gdx.scenes.scene2d.ui.Skin
-import ktx.style.imageButton
 
-enum class LabelStyles { BLACK32, BLACK24,
+enum class LabelStyles {
+    BLACK32, BLACK24,
     WHITE46, WHITE32, WHITE24,
     WHITE46_B, WHITE32_B, WHITE24_B,
     WHITE46_BI, WHITE32_BI, WHITE24_BI,
-    WHITE46_I, WHITE32_I, WHITE24_I,}
+    WHITE46_I, WHITE32_I, WHITE24_I,
+}
 
 enum class ImageButtonStyle { SPADES, HEARTS, CLUBS, DIAMONDS }
 

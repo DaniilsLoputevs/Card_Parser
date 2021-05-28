@@ -1,4 +1,4 @@
-package cardparser.ashley
+package cardparser.ashley.logics
 
 import cardparser.entities.Card
 import cardparser.entities.Stack

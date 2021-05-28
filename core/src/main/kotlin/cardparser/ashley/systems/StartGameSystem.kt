@@ -1,7 +1,7 @@
 package cardparser.ashley.systems
 
 import cardparser.STACK_START_SPEED
-import cardparser.ashley.StartGameLogic
+import cardparser.ashley.logics.StartGameLogic
 import cardparser.entities.Card
 import cardparser.entities.Stack
 import cardparser.event.GameEvent

@@ -1,13 +1,11 @@
 package cardparser.screens
 
 import cardparser.MainGame
-import cardparser.utils.AnglesButtonStyle
-import cardparser.utils.ImageButtonStyle
-import cardparser.utils.LabelStyles
+import cardparser.ui.AnglesButtonStyle
+import cardparser.ui.LabelStyles
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.utils.Align
 import ktx.actors.onClick
-import ktx.app.clearScreen
 import ktx.scene2d.*
 
 enum class GamesList(val game: String) {

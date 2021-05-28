@@ -24,11 +24,14 @@ object TaskManager {
 
     fun update() {
         if (tasks.isEmpty()) return
-        logger.info("TM update -- current tasks", tasks)
+//        logger.info("TM update -- current tasks", tasks)
+
 //        logger.warm("commit history", commitHistory)
         updateEachTask()
+//        logger.warm("tasks size", tasks.size)
 //        logger.dev("finished task", tasks.filter { it.isFinished })
         tasks.removeAll { it.isFinished }
+//        logger.warm("tasks size", tasks.size)
     }
 
     /**

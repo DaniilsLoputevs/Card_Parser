@@ -1,4 +1,4 @@
-package cardparser.ashley
+package cardparser.ashley.logics
 
 import cardparser.ashley.components.CardComp.CardRank.ACE
 import cardparser.ashley.components.CardComp.CardRank.TWO

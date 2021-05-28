@@ -2,17 +2,20 @@ package cardparser.scenario
 
 import cardparser.CARD_WIDTH
 import cardparser.STACK_GAP
-import cardparser.ashley.StackTouchLogic
-import cardparser.ashley.systems.*
+import cardparser.ashley.logics.StackTouchLogic
+import cardparser.ashley.systems.Debug
+import cardparser.ashley.systems.DebugSystem
+import cardparser.ashley.systems.RenderSystem
+import cardparser.ashley.systems.TaskExecutorSystem
+import cardparser.ashley.systems.input.screen.CardDragListenerNew
+import cardparser.ashley.systems.input.screen.MainStackListenerNew
+import cardparser.ashley.systems.input.screen.ScreenTouchSystem
 import cardparser.asset.CardBackAtlas
 import cardparser.asset.CardDeckAtlas
 import cardparser.asset.GeneralAsset
 import cardparser.entities.Card
 import cardparser.entities.MainStack
 import cardparser.entities.Stack
-import cardparser.event.CardDragListener
-import cardparser.event.GameEventManager
-import cardparser.event.MainStackListener
 import cardparser.logger.loggerApp
 import cardparser.tasks.CalculateTouchable
 import cardparser.tasks.CardPosition
@@ -21,7 +24,6 @@ import cardparser.tasks.TaskManager
 import cardparser.tasks.cancel.MainStackTouchCancel
 import com.badlogic.ashley.core.Engine
 import com.badlogic.gdx.math.MathUtils
-import com.badlogic.gdx.utils.viewport.Viewport
 import ktx.ashley.getSystem
 import ktx.assets.async.AssetStorage
 
@@ -38,7 +40,7 @@ private lateinit var allStacks: MutableList<Stack>
 private lateinit var cards: MutableList<Card>
 
 
-fun Engine.initKlondikeGame(assets: AssetStorage, gameViewport: Viewport) {
+fun Engine.initKlondikeGame(assets: AssetStorage) {
     this.run {
         mainStack = createMasterStack(assets)
         subStack = createSubStack(assets)
@@ -70,9 +72,14 @@ fun Engine.initKlondikeGame(assets: AssetStorage, gameViewport: Viewport) {
 
         /* Systems init */
         getSystem<DebugSystem>().apply { setProcessing(true) }
-        getSystem<ScreenInputSystem>().apply {
-            this.gameViewport = gameViewport
+        getSystem<ScreenTouchSystem>().apply {
             setProcessing(true)
+            addListeners { cursor ->
+                setOf(
+                        CardDragListenerNew(botUpStacks, cursor),
+                        MainStackListenerNew(mainStack, subStack, cursor)
+                )
+            }
         }
         getSystem<TaskExecutorSystem>().apply { setProcessing(true) }
         getSystem<RenderSystem>().apply {
@@ -81,10 +88,6 @@ fun Engine.initKlondikeGame(assets: AssetStorage, gameViewport: Viewport) {
             this.setCardBack(assets[CardBackAtlas.CARD_BACK_DEFAULT.desc].findRegion("dark"))
             setProcessing(true)
         }
-
-        // add event listeners
-        GameEventManager.addListener(CardDragListener.eventTypes, CardDragListener(botUpSubStacks))
-        GameEventManager.addListener(MainStackListener.eventTypes, MainStackListener(mainStack, subStack))
 
         // start game
         startKlondikeGame()

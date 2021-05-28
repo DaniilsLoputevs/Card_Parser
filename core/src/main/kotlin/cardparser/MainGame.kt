@@ -1,11 +1,12 @@
 package cardparser
 
 import cardparser.ashley.systems.*
+import cardparser.ashley.systems.input.screen.ScreenTouchSystem
 import cardparser.asset.FontAsset
 import cardparser.asset.UIAtlasAssets
 import cardparser.logger.loggerApp
 import cardparser.screens.LoadingScreen
-import cardparser.utils.createSkin
+import cardparser.ui.createSkin
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.PooledEngine
 import com.badlogic.gdx.Gdx
@@ -37,7 +38,7 @@ class MainGame : KtxGame<KtxScreen>() {
     //    val stage: Stage by lazy { initStage() }
     val assets: AssetStorage by lazy {
         KtxAsync.initiate()
-        AssetStorage().apply {  }
+        AssetStorage().apply { }
     }
     val engine: Engine by lazy { initEngine() }
     val preferences: Preferences by lazy { Gdx.app.getPreferences("cards-fame") }
@@ -57,8 +58,8 @@ class MainGame : KtxGame<KtxScreen>() {
         logger.info("Application - Load Initialization assets :: START")
 
         val uiAssets = gdxArrayOf(
-            UIAtlasAssets.values().map { assets.loadAsync(it.desc) },
-            FontAsset.values().map { assets.loadAsync(it.desc) }
+                UIAtlasAssets.values().map { assets.loadAsync(it.desc) },
+                FontAsset.values().map { assets.loadAsync(it.desc) }
         ).flatten()
 
         KtxAsync.launch {
@@ -68,8 +69,8 @@ class MainGame : KtxGame<KtxScreen>() {
             setScreen<LoadingScreen>()
         }
         logger.info(
-            "Application - Load Initialization assets " +
-                    ":: FINISH ## time = ${(System.currentTimeMillis() - logStartTime) * 0.001f} sec"
+                "Application - Load Initialization assets " +
+                        ":: FINISH ## time = ${(System.currentTimeMillis() - logStartTime) * 0.001f} sec"
         )
     }
 
@@ -88,15 +89,9 @@ class MainGame : KtxGame<KtxScreen>() {
     private fun initEngine(): Engine {
         return PooledEngine().apply {
             addSystem(DebugSystem())
-//            addSystem(StartGameSystem().apply { setProcessing(false) })
-            addSystem(ScreenInputSystem(gameViewport).apply { setProcessing(false) })
-//            addSystem(MainStackSystem().apply { setProcessing(false) }) // TODO : SIS Even Applier (Maybe SIS -> TASK)
-//            addSystem(DragCardSystem().apply { setProcessing(false) })  // TODO : SIS Even Applier
-//            addSystem(StackBindingSystem().apply { setProcessing(false) })
-//            addSystem(ReturnCardsSystem().apply { setProcessing(false) })
-//            addSystem(CardPositionSystem().apply { setProcessing(false) })
+//            addSystem(ScreenInputSystem(gameViewport).apply { setProcessing(false) })
+            addSystem(ScreenTouchSystem(gameViewport).apply { setProcessing(false) })
             addSystem(TaskExecutorSystem().apply { setProcessing(false) })
-//            addSystem(CalculateIsTouchableSystem().apply { setProcessing(false) })
             addSystem(RenderSystem(stage, gameViewport))
         }
     }

@@ -1,5 +1,6 @@
-package cardparser.event
+package cardparser.ashley.systems.input.screen
 
+import cardparser.ashley.systems.input.screen.TouchInputStatus.TOUCH
 import cardparser.entities.MainStack
 import cardparser.entities.Stack
 import cardparser.logger.loggerApp
@@ -7,13 +8,17 @@ import cardparser.tasks.CardPosition
 import cardparser.tasks.GameActionHistory
 import cardparser.tasks.TaskManager
 import cardparser.tasks.cancel.MainStackTouchCancel
-import kotlin.reflect.KClass
 
-@Deprecated("off")
-class MainStackListener(private val mainStack: MainStack, private val subStack: Stack) : GameEventListener {
+class MainStackListenerNew(
+        private val mainStack: MainStack,
+        private val subStack: Stack,
+        override val cursor: CursorInfo
+) : TouchInputListener {
 
-    override fun onEvent(event: GameEvent) {
-        if (mainStack.isNotInShape((event as GameEvent.TouchEvent).position)) return
+    override fun listeningActions(): Set<TouchInputStatus> = setOf(TOUCH)
+
+    override fun onAction() {
+        if (mainStack.isNotInShape(cursor.pos)) return
 
         when {
             mainStack.isNotEmpty() -> {
@@ -33,7 +38,6 @@ class MainStackListener(private val mainStack: MainStack, private val subStack: 
                 commitTasks()
             }
         }
-        if (mainStack.isEmpty() && subStack.isEmpty()) stopListeningMainStack()
     }
 
     private fun commitTasks() {
@@ -42,12 +46,7 @@ class MainStackListener(private val mainStack: MainStack, private val subStack: 
         TaskManager.commit(CardPosition(taskId))
     }
 
-    private fun stopListeningMainStack() = GameEventManager.removeListener(this)
-
-
     companion object {
-        val eventTypes = listOf<KClass<out GameEvent>>(GameEvent.TouchEvent::class)
-
-        private val logger by lazy { loggerApp<MainStackListener>() }
+        private val logger by lazy { loggerApp<MainStackListenerNew>() }
     }
 }

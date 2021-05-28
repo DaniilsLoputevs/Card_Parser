@@ -5,8 +5,7 @@ import cardparser.asset.CardBackAtlas
 import cardparser.asset.CardDeckAtlas
 import cardparser.asset.GeneralAsset
 import cardparser.logger.loggerApp
-import cardparser.utils.ImageButtonStyle
-import cardparser.utils.LabelStyles
+import cardparser.ui.LabelStyles
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
@@ -16,11 +15,12 @@ import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import ktx.actors.plus
 import ktx.actors.plusAssign
-import ktx.app.clearScreen
 import ktx.async.KtxAsync
 import ktx.collections.gdxArrayOf
-import ktx.scene2d.*
-import javax.swing.text.StyleConstants.setAlignment
+import ktx.scene2d.actors
+import ktx.scene2d.label
+import ktx.scene2d.stack
+import ktx.scene2d.table
 
 /**
  * Screen for loading assert, init and setup requirement elements for app:
@@ -29,7 +29,7 @@ import javax.swing.text.StyleConstants.setAlignment
  * -- prepare all others Screens for app
  */
 class LoadingScreen(
-    game: MainGame
+        game: MainGame
 ) : AbstractScreen(game) {
 
     private val logger = loggerApp<LoadingScreen>()
@@ -41,9 +41,9 @@ class LoadingScreen(
 
     override fun show() {
         val assetRefs = gdxArrayOf(
-            CardDeckAtlas.values().map { assets.loadAsync(it.desc) },
-            CardBackAtlas.values().map { assets.loadAsync(it.desc) },
-            GeneralAsset.values().map { assets.loadAsync(it.desc) },
+                CardDeckAtlas.values().map { assets.loadAsync(it.desc) },
+                CardBackAtlas.values().map { assets.loadAsync(it.desc) },
+                GeneralAsset.values().map { assets.loadAsync(it.desc) },
         ).flatten()
         KtxAsync.launch {
             assetRefs.joinAll()

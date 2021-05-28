@@ -1,9 +1,9 @@
 package cardparser.ashley.systems
 
-import cardparser.ashley.StackTouchLogic
 import cardparser.ashley.components.MainStackComp
 import cardparser.ashley.components.StackComp
 import cardparser.ashley.components.TransformComp
+import cardparser.ashley.logics.StackTouchLogic
 import cardparser.entities.Stack
 import cardparser.event.GameEvent
 import cardparser.event.GameEventListener

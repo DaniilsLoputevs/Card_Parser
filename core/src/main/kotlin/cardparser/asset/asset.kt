@@ -38,22 +38,22 @@ enum class GeneralAsset(
 }
 
 enum class UIAtlasAssets(
-    fileName: String,
-    directory: String = UI_DIR,
-    val desc: AssetDescriptor<TextureAtlas> = AssetDescriptor("$directory/$fileName", TextureAtlas::class.java)
+        fileName: String,
+        directory: String = UI_DIR,
+        val desc: AssetDescriptor<TextureAtlas> = AssetDescriptor("$directory/$fileName", TextureAtlas::class.java)
 ) {
     UI("ui.atlas")
 }
 
 enum class FontAsset(
-    fileName: String,
-    directory: String = FONT_DIR,
-    val desc: AssetDescriptor<BitmapFont> =
-        AssetDescriptor("$directory/$fileName",
-            BitmapFont::class.java,
-        BitmapFontLoader.BitmapFontParameter().apply {
-            atlasName = UIAtlasAssets.UI.desc.fileName
-        })
+        fileName: String,
+        directory: String = FONT_DIR,
+        val desc: AssetDescriptor<BitmapFont> =
+                AssetDescriptor("$directory/$fileName",
+                        BitmapFont::class.java,
+                        BitmapFontLoader.BitmapFontParameter().apply {
+                            atlasName = UIAtlasAssets.UI.desc.fileName
+                        })
 ) {
     FONT_46_WHITE("Purisa_46_white.fnt"),
     FONT_46_WHITE_BOLD("Purisa_46_white_bold.fnt"),

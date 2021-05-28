@@ -3,10 +3,10 @@ package cardparser.scenario
 import cardparser.CARD_HEIGHT
 import cardparser.CARD_WIDTH
 import cardparser.STACK_OPEN_CARD_OFFSET
-import cardparser.ashley.StackCanAddLogic
 import cardparser.ashley.components.*
 import cardparser.ashley.components.CardComp.CardRank
 import cardparser.ashley.components.CardComp.CardSuit
+import cardparser.ashley.logics.StackCanAddLogic
 import cardparser.asset.GeneralAsset
 import cardparser.entities.Card
 import cardparser.entities.MainStack

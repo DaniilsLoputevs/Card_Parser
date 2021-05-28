@@ -4,9 +4,11 @@ import cardparser.DISTANCE_CARD_MOVE_SLOW
 import cardparser.MAX_CARD_MOVE_SPEED_RATE
 import cardparser.MIN_CARD_MOVE_SPEED_RATE
 import cardparser.STACK_CLOSE_CARD_OFFSET
+import cardparser.common.DeltaTimerDown
 import cardparser.entities.Card
 import cardparser.entities.Stack
 import cardparser.logger.loggerApp
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.MathUtils.lerp
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
@@ -17,6 +19,10 @@ import kotlin.math.roundToInt
 class CardPosition(override val taskId: Int) : Task {
     override var isFinished: Boolean = false
 
+    /** sometimes this task can be endless but logical it's done(it's rounding decimal numbers problem).
+     *  it hit performance, so we set timeout.*/
+    private val timeoutTimer = DeltaTimerDown(1.5f)
+
     private var z = 0F
     private var nextZ = 0F
     private val nextPos: Vector2 = Vector2.Zero
@@ -26,7 +32,6 @@ class CardPosition(override val taskId: Int) : Task {
 
 
     override fun update() {
-//        z = 0F
         if (!hasCacheStacks) findStacksForRecalc(); hasCacheStacks = true
 //        logger.dev("update stacks", recalcStacks)
 
@@ -73,6 +78,7 @@ class CardPosition(override val taskId: Int) : Task {
 //        logger.dev("finish predicate", recalcStacks.isEmpty())
 
         if (recalcStacks.isEmpty()) isFinished = true
+        if (!timeoutTimer.update(Gdx.graphics.deltaTime)) isFinished = true
     }
 
     /** Real optimization */

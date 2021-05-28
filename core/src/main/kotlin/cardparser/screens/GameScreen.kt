@@ -14,7 +14,7 @@ class GameScreen(
     override fun show() {
         super.show()
         logger.info("Chosen $chosen")
-        engine.initKlondikeGame(assets, gameViewport)
+        engine.initKlondikeGame(assets)
     }
 
     override fun render(delta: Float) = engine.update(delta)

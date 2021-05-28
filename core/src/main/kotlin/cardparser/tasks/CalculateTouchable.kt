@@ -1,6 +1,6 @@
 package cardparser.tasks
 
-import cardparser.ashley.StackTouchLogic
+import cardparser.ashley.logics.StackTouchLogic
 import cardparser.entities.Stack
 import cardparser.logger.loggerApp
 

@@ -39,6 +39,9 @@ const val GAME_START_DELAY = 1f // ? second || percents 0.00f - 1.00f
  */
 const val TOUCH_RANGE = 3f // world units
 
+/** Time to make second touch after first touch for get double touch. */
+const val DOUBLE_TOUCH_TIMER = 0.75f
+
 /** [cardparser.tasks.GameActionHistory] */
 const val ACTION_HISTORY_SIZE = 25 // actions
 

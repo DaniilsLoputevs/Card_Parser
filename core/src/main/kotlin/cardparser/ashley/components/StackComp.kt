@@ -1,6 +1,6 @@
 package cardparser.ashley.components
 
-import cardparser.ashley.StackCanAddLogic
+import cardparser.ashley.logics.StackCanAddLogic
 import cardparser.entities.Card
 import cardparser.entities.Stack
 import com.badlogic.ashley.core.Component
@@ -12,15 +12,9 @@ interface StackAPI {
     var stackComp: StackComp
 
     operator fun get(index: Int) = stackComp.cardStack[index]
-    operator fun get(position: Vector2) = findCardByPos(position)
+    operator fun get(pos: Vector2) = stackComp.cardStack.findLast { it.open() && it.touchable() && it.isInShape(pos) }
     fun cards(): MutableList<Card> = stackComp.cardStack
 
-    /** If card doesn't found -> return null */
-    fun findCardByPos(position: Vector2): Card? {
-        return stackComp.cardStack
-                .filter { it.open() && it.touchable() && it.isInShape(position) }
-                .maxByOrNull { it.pos().z }
-    }
 
     /**
      * Remove [card] and all next GameCards to [list].
