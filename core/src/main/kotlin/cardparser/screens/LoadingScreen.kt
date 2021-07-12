@@ -36,7 +36,7 @@ class LoadingScreen(
     private lateinit var touchToBeginLabel: Label
 
     /** turn off to see GUI */
-    private val justStart = true
+    private val justStart = false
 
     override fun show() {
         val assetRefs = gdxArrayOf(
