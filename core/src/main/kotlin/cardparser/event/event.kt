@@ -20,6 +20,10 @@ sealed class GameEvent {
         override fun toString() = "StopGame"
     }
 
+    object WinGame : GameEvent() {
+        override fun toString() = "StopGame"
+    }
+
     object TouchEvent : GameEvent() {
         var position: Vector2 = Vector2().setZero()
 

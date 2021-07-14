@@ -97,6 +97,7 @@ class MainGame : KtxGame<KtxScreen>() {
             addSystem(DragCardSystem().apply { setProcessing(false) })
             addSystem(StackBindingSystem().apply { setProcessing(false) })
             addSystem(ReturnCardsSystem().apply { setProcessing(false) })
+            addSystem(WinStackSystem().apply { setProcessing(false) })
             addSystem(CardPositionSystem().apply { setProcessing(false) })
             addSystem(TaskExecutorSystem().apply { setProcessing(false) })
             addSystem(CalculateIsTouchableSystem().apply { setProcessing(false) })

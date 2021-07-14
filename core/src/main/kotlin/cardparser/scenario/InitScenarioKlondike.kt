@@ -48,6 +48,10 @@ fun Engine.initKlondikeGame(assets: AssetStorage, gameViewport: Viewport) {
         getSystem<StackBindingSystem>().apply {
             setProcessing(true)
         }
+        getSystem<WinStackSystem>().apply {
+            setProcessing(false)
+            total = 4
+        }
         getSystem<CardPositionSystem>().apply {
             setProcessing(true)
         }

@@ -5,7 +5,7 @@ import cardparser.logger.loggerApp
 import cardparser.scenario.initKlondikeGame
 
 class GameScreen(
-        game: MainGame
+    game: MainGame
 ) : AbstractScreen(game) {
     private val logger = loggerApp<GameScreen>()
     var chosen: String = "none"
@@ -13,7 +13,10 @@ class GameScreen(
     override fun show() {
         super.show()
         logger.info("Chosen $chosen")
-        engine.initKlondikeGame(assets, gameViewport)
+        when (chosen) {
+            GamesList.KLONDIKE_GAME.game -> engine.initKlondikeGame(assets, gameViewport)
+        }
+
     }
 
     override fun render(delta: Float) = engine.update(delta)

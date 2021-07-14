@@ -28,10 +28,10 @@ fun Engine.createCardDeck(textureAtlas: TextureAtlas): MutableList<Card> {
                 val rankName = rank.name.toLowerCase(Locale.ROOT)
 
                 this.add(
-                        createCard(
-                                textureAtlas, "${suitName}_${rankName}",
-                                suit, rank, false, 0f, 0f
-                        )
+                    createCard(
+                        textureAtlas, "${suitName}_${rankName}",
+                        suit, rank, false, 0f, 0f
+                    )
                 )
             }
         }
@@ -39,12 +39,12 @@ fun Engine.createCardDeck(textureAtlas: TextureAtlas): MutableList<Card> {
 }
 
 fun Engine.createCard(
-        textureAtlas: TextureAtlas,
-        textureRegion: String,
-        cardSuit: CardSuit,
-        cardRank: CardRank,
-        isCardOpen: Boolean = false,
-        posX: Float = 0f, posY: Float = 0f, posZ: Float = 1f
+    textureAtlas: TextureAtlas,
+    textureRegion: String,
+    cardSuit: CardSuit,
+    cardRank: CardRank,
+    isCardOpen: Boolean = false,
+    posX: Float = 0f, posY: Float = 0f, posZ: Float = 1f
 ): Card {
     return Card(this.entity {
         val texture: TextureAtlas.AtlasRegion = textureAtlas.findRegion(textureRegion)
@@ -63,8 +63,8 @@ fun Engine.createCard(
  * temple for create GameStack
  */
 fun Engine.createStack(
-        texture: Texture,
-        posX: Float, posY: Float, posZ: Float = 0f
+    texture: Texture,
+    posX: Float, posY: Float, posZ: Float = 0f
 ): Stack {
     val rsl = entity {
         with<TransformComp> {
@@ -85,14 +85,15 @@ fun Engine.createStack(
  * temple for create FoundationGameStack
  */
 fun Engine.createUpStack(
-        texture: Texture,
-        posX: Float, posY: Float, posZ: Float = 0f
+    texture: Texture,
+    posX: Float, posY: Float, posZ: Float = 0f
 ): Stack {
     val rsl = entity {
         with<TransformComp> {
             initThis(texture, posX, posY, posZ)
             setSize(CARD_WIDTH, CARD_HEIGHT)
         }
+        with<WinComp> {}
         with<GraphicComp> { setSpriteRegion(texture) }
         with<StackComp> {
             this.stackAddPredicate = StackAddPredicate.UPSTACKS
@@ -107,9 +108,9 @@ fun Engine.createUpStack(
  * temple for create GameStack
  */
 fun Engine.createMainStack(
-        texture: Texture,
-        posX: Float, posY: Float, posZ: Float = 0f,
-        _order: Int
+    texture: Texture,
+    posX: Float, posY: Float, posZ: Float = 0f,
+    _order: Int
 ): MainStack {
     val rsl = entity {
         with<TransformComp> {

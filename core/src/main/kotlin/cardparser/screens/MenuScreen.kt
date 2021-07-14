@@ -4,6 +4,7 @@ import cardparser.MainGame
 import cardparser.utils.AnglesButtonStyle
 import cardparser.utils.ImageButtonStyle
 import cardparser.utils.LabelStyles
+import com.badlogic.ashley.core.Engine
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.utils.Align
 import ktx.actors.onClick
@@ -11,7 +12,8 @@ import ktx.app.clearScreen
 import ktx.scene2d.*
 
 enum class GamesList(val game: String) {
-    KLONDIKE_GAME("Klondike")
+    KLONDIKE_GAME("Klondike"),
+    SPIDER_GAME("Spider"),
 }
 
 class MenuScreen(game: MainGame) : AbstractScreen(game) {
@@ -95,6 +97,7 @@ class MenuScreen(game: MainGame) : AbstractScreen(game) {
                             game.setScreen<GameScreen>()
                         }
                     }
+                    this.row()
                 }
                 setFillParent(true)
                 pack()
